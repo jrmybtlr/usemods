@@ -1,5 +1,41 @@
 # Changelog
 
+## v1.11.0
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.10.0...v1.11.0)
+
+### 🚀 Enhancements
+
+- Add debounce and throttle components with corresponding functionality ([3dd59dd](https://github.com/LittleFoxCompany/usemods/commit/3dd59dd))
+- Add ClickLog component to display click and execution metrics ([cf9c818](https://github.com/LittleFoxCompany/usemods/commit/cf9c818))
+
+### 🩹 Fixes
+
+- Enhance function pattern regex to support generic type parameters ([fc7adbc](https://github.com/LittleFoxCompany/usemods/commit/fc7adbc))
+
+### 💅 Refactors
+
+- Simplify generateHighResolutionTime usage and update documentation ([bccc3c6](https://github.com/LittleFoxCompany/usemods/commit/bccc3c6))
+
+### 📖 Documentation
+
+- Update decodeUuid7 function documentation to clarify purpose ([eca58d0](https://github.com/LittleFoxCompany/usemods/commit/eca58d0))
+
+### 🏡 Chore
+
+- Update dependencies to latest versions ([6d6e766](https://github.com/LittleFoxCompany/usemods/commit/6d6e766))
+- Update dependencies to latest versions ([50f496a](https://github.com/LittleFoxCompany/usemods/commit/50f496a))
+- Specify Node.js engine version in package.json ([f97a720](https://github.com/LittleFoxCompany/usemods/commit/f97a720))
+- Update Nuxt and Nitro build configuration ([f4260be](https://github.com/LittleFoxCompany/usemods/commit/f4260be))
+
+### ✅ Tests
+
+- Update throttle test to use async and fake timers ([2e2cf72](https://github.com/LittleFoxCompany/usemods/commit/2e2cf72))
+
+### ❤️ Contributors
+
+- Jeremy Butler <jeremy@jeremymbutler.com>
+
 ## v1.10.0
 
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.9.2...v1.10.0)
