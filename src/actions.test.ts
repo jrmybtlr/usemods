@@ -37,10 +37,16 @@ test('debounce with trailing', async () => {
   vi.useRealTimers()
 })
 
-test('throttle', () => {
+test('throttle', async () => {
+  vi.useFakeTimers()
   const fn = vi.fn()
   const throttled = mod.throttle(fn, 1000)
 
   throttled()
+  expect(fn).not.toHaveBeenCalled()
+
+  await vi.runAllTimersAsync()
   expect(fn).toHaveBeenCalledTimes(1)
+
+  vi.useRealTimers()
 })
