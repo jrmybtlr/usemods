@@ -273,6 +273,7 @@ export function generateLoremIpsum(count: number = 5, options?: { format: 'words
 
 /**
  * Helper function to get high-resolution time using process.hrtime, or performance.now as a fallback.
+ * @info Node.js times generated are in nanoseconds, browser-based falls back to converting performance.now to microseconds.
  */
 export function generateHighResolutionTime(): bigint {
   if (typeof process !== 'undefined' && process.hrtime && typeof process.hrtime.bigint === 'function') {
@@ -288,7 +289,7 @@ export function generateHighResolutionTime(): bigint {
 }
 
 /**
-  * Returns an array filled with cryptographically secure random bytes.
+  * Returns an array filled with cryptographic random bytes.
 */
 export function getSecureRandomValues(buffer: Uint8Array): Uint8Array {
   if (!isServerSide() && window.crypto?.getRandomValues) {
