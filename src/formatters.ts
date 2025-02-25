@@ -134,7 +134,7 @@ export function formatPercentage(
 export function formatCombinedDates(
   from: Date | string | number | null,
   to: Date | string | number | null,
-  options?: { locale?: string },
+  options?: { locale?: string, format?: 'short' | 'long' },
 ): string {
   const fromDate = from ? new Date(from) : new Date()
   const toDate = to ? new Date(to) : new Date()
@@ -145,28 +145,31 @@ export function formatCombinedDates(
 
   const safeLocale = options?.locale || 'en-US'
   const dateTimeFormatter = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(safeLocale, opts)
-  const fullFormat = { day: 'numeric', month: 'long', year: 'numeric' } as const
-  const shortFormat = { day: 'numeric', month: 'short', year: 'numeric' } as const
+  const monthFormat = options?.format ?? 'long'
+  const fullFormat = { day: 'numeric', month: monthFormat, year: 'numeric' } as const
+  const shortFormat = { day: 'numeric', month: monthFormat, year: 'numeric' } as const
 
   // Check if dates are the same
   if (fromDate.toISOString().split('T')[0] === toDate.toISOString().split('T')[0]) {
     return dateTimeFormatter(fullFormat).format(fromDate)
   }
 
+  // Check if dates are in the same month
   const isSameYear = fromDate.getFullYear() === toDate.getFullYear()
   const isSameMonth = isSameYear && fromDate.getMonth() === toDate.getMonth()
 
   if (isSameMonth) {
-    const monthYear = dateTimeFormatter({ month: 'long', year: 'numeric' }).format(fromDate)
+    const monthYear = dateTimeFormatter({ month: monthFormat, year: 'numeric' }).format(fromDate)
     return `${fromDate.getDate()}-${toDate.getDate()} ${monthYear}`
   }
 
+  // Check if dates are in the same year
   if (isSameYear) {
-    return `${dateTimeFormatter(shortFormat).format(fromDate)} - ${dateTimeFormatter(shortFormat).format(toDate)}, ${fromDate.getFullYear()}`
+    return `${dateTimeFormatter(shortFormat).format(fromDate)} - ${dateTimeFormatter(shortFormat).format(toDate)}`
   }
 
   // Different years format
-  return `${dateTimeFormatter({ day: 'numeric', month: 'long', year: 'numeric' }).format(fromDate).replace(',', '')} - ${dateTimeFormatter(fullFormat).format(toDate)}`
+  return `${dateTimeFormatter({ day: 'numeric', month: monthFormat, year: 'numeric' }).format(fromDate).replace(',', '')} - ${dateTimeFormatter(fullFormat).format(toDate)}`
 }
 
 /**
