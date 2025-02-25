@@ -13,6 +13,23 @@ test('formatNumber', () => {
   expect(mod.formatNumber(1000.95, { decimals: 2, locale: 'id-ID' })).toBe('1.000,95')
 })
 
+test('formatCombinedDates', () => {
+  // Same month
+  expect(mod.formatCombinedDates(new Date('2025-01-01'), new Date('2025-01-31'))).toBe('1-31 January 2025')
+  // Same year
+  expect(mod.formatCombinedDates(new Date('2025-01-01'), new Date('2025-01-31'))).toBe('1-31 January 2025')
+  // Same year, different month
+  expect(mod.formatCombinedDates(new Date('2025-01-01'), new Date('2025-02-01'))).toBe('January 1 - February 1, 2025')
+  // Leap year
+  expect(mod.formatCombinedDates(new Date('2025-01-01'), new Date('2025-02-29'))).toBe('January 1 - March 1, 2025')
+  // Different year
+  expect(mod.formatCombinedDates(new Date('2025-01-01'), new Date('2026-01-31'))).toBe('January 1, 2025 - January 31, 2026')
+  // Same Date
+  expect(mod.formatCombinedDates(new Date('2025-01-01'), new Date('2025-01-01'))).toBe('1 January 2025')
+  // Invalid Date
+  expect(mod.formatCombinedDates(new Date('2025-01-01'), new Date('invalid'))).toBe('')
+})
+
 test('formatCurrency', () => {
   expect(mod.formatCurrency(0.00)).toBe('$0.00')
   expect(mod.formatCurrency(0.10)).toBe('$0.10')

@@ -129,6 +129,47 @@ export function formatPercentage(
 }
 
 /**
+ * Combines two dates into a human-readable string.
+ */
+export function formatCombinedDates(
+  from: Date | string | number | null,
+  to: Date | string | number | null,
+  options?: { locale?: string },
+): string {
+  const fromDate = from ? new Date(from) : new Date()
+  const toDate = to ? new Date(to) : new Date()
+
+  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+    return ''
+  }
+
+  const safeLocale = options?.locale || 'en-US'
+  const dateTimeFormatter = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(safeLocale, opts)
+  const fullFormat = { day: 'numeric', month: 'long', year: 'numeric' } as const
+  const shortFormat = { day: 'numeric', month: 'short', year: 'numeric' } as const
+
+  // Check if dates are the same
+  if (fromDate.toISOString().split('T')[0] === toDate.toISOString().split('T')[0]) {
+    return dateTimeFormatter(fullFormat).format(fromDate)
+  }
+
+  const isSameYear = fromDate.getFullYear() === toDate.getFullYear()
+  const isSameMonth = isSameYear && fromDate.getMonth() === toDate.getMonth()
+
+  if (isSameMonth) {
+    const monthYear = dateTimeFormatter({ month: 'long', year: 'numeric' }).format(fromDate)
+    return `${fromDate.getDate()}-${toDate.getDate()} ${monthYear}`
+  }
+
+  if (isSameYear) {
+    return `${dateTimeFormatter(shortFormat).format(fromDate)} - ${dateTimeFormatter(shortFormat).format(toDate)}, ${fromDate.getFullYear()}`
+  }
+
+  // Different years format
+  return `${dateTimeFormatter({ day: 'numeric', month: 'long', year: 'numeric' }).format(fromDate).replace(',', '')} - ${dateTimeFormatter(fullFormat).format(toDate)}`
+}
+
+/**
  * Format time into a human-readable string
  */
 export function formatDurationLabels(

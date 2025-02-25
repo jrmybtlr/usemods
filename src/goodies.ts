@@ -113,10 +113,6 @@ export function readingTime(text: string, wordsPerMinute = 200): string {
   return formatDurationLabels(minutes * 60)
 }
 
-// title: Animators
-// description: Pixar without the budget or talent. Watch this page, there's more opinionated animations coming soon.
-// lead: Ruthlessly animate everything
-
 /**
  * Animate text by wrapping each character in a span with a delay.
  */
