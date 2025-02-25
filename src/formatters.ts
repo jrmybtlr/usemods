@@ -147,7 +147,7 @@ export function formatCombinedDates(
   const dateTimeFormatter = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(safeLocale, opts)
   const monthFormat = options?.format ?? 'long'
   const fullFormat = { day: 'numeric', month: monthFormat, year: 'numeric' } as const
-  const shortFormat = { day: 'numeric', month: monthFormat, year: 'numeric' } as const
+  const shortFormat = { day: 'numeric', month: monthFormat } as const
 
   // Check if dates are the same
   if (fromDate.toISOString().split('T')[0] === toDate.toISOString().split('T')[0]) {
@@ -165,11 +165,11 @@ export function formatCombinedDates(
 
   // Check if dates are in the same year
   if (isSameYear) {
-    return `${dateTimeFormatter(shortFormat).format(fromDate)} - ${dateTimeFormatter(shortFormat).format(toDate)}`
+    return `${dateTimeFormatter(shortFormat).format(fromDate)} - ${dateTimeFormatter(shortFormat).format(toDate)}, ${fromDate.getFullYear()}`
   }
 
   // Different years format
-  return `${dateTimeFormatter({ day: 'numeric', month: monthFormat, year: 'numeric' }).format(fromDate).replace(',', '')} - ${dateTimeFormatter(fullFormat).format(toDate)}`
+  return `${dateTimeFormatter({ day: 'numeric', month: monthFormat, year: 'numeric' }).format(fromDate).replace(',', '')} - ${dateTimeFormatter(fullFormat).format(toDate)}`.replace(',', '')
 }
 
 /**

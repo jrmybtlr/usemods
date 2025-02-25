@@ -31,10 +31,11 @@
 
 <script setup lang="ts">
 const from = ref('2025-01-01')
-const to = ref('2025-03-31')
+const to = ref('2025-02-02')
 const locale = ref<string | null>(null)
 const format = ref<'short' | 'long'>('short')
 
+// Demo Purposes Only
 const formattedCode = computed(() => {
   return generateFormatterCode('formatCombinedDates', from.value, to.value, {
     locale: locale.value,
