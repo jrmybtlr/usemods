@@ -1,0 +1,35 @@
+All code withing /src should use native javascript functions by default, refer to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/ when generating and reviewing code.
+
+# Best Practices
+- Write clear TypeScript code with:
+  - Explicit type annotations for function parameters and return types
+  - Proper interface and type definitions
+  - Consistent use of readonly and optional properties where applicable
+  - Descriptive variable and function names
+  - Proper use of TypeScript's strict mode features
+  - Clear documentation using TSDoc comments
+- Document any deviations from native JavaScript usage
+- Include MDN documentation references in comments for complex native methods
+- Prefer async/await over .then() chains where applicable
+- Implement native Intl API for internationalization
+
+# SSR
+- Use `export const getServerSideProps` for server-side data fetching
+- Implement proper error handling in SSR functions
+- Avoid client-side only code in SSR functions (window, document, etc)
+- Use proper TypeScript types for SSR functions:
+  ```typescript
+  export const getServerSideProps: GetServerSideProps = async (context) => {
+    return {
+      props: {
+        // Serializable data only
+      }
+    }
+  }
+  ```
+- Ensure all data passed through props is serializable
+- Handle authentication and redirects at the SSR level when possible
+- Cache SSR responses appropriately using cache-control headers
+- Implement proper loading states for SSR content
+- Use proper error boundaries for SSR components
+- Consider implementing Incremental Static Regeneration (ISR) for semi-static pages

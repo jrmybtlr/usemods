@@ -129,6 +129,53 @@ export function formatPercentage(
 }
 
 /**
+ * Collapses two dates (or timestamps) into a human-readable string
+ */
+export function formatCombinedDates(
+  from: Date | string | number,
+  to: Date | string | number,
+  options?: { locale?: string, format?: 'short' | 'long' },
+): string {
+  const fromDate = new Date(from ?? Date.now())
+  const toDate = new Date(to ?? Date.now())
+
+  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+    return ''
+  }
+
+  const safeLocale = options?.locale || 'en'
+  const isShort = options?.format === 'short'
+  const dateTimeFormatter = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(safeLocale, opts)
+  const fullFormat = { day: 'numeric', month: isShort ? 'short' : 'long', year: 'numeric' } as const
+  const shortFormat = { day: 'numeric', month: isShort ? 'short' : 'long' } as const
+  const timeFormat = {
+    hour: 'numeric' as const,
+    minute: 'numeric' as const,
+    hour12: true,
+  } as const
+
+  const fmt = (date: Date, opts: Intl.DateTimeFormatOptions) => dateTimeFormatter(opts).format(date)
+
+  // Same day check
+  if (fromDate.toISOString().split('T')[0] === toDate.toISOString().split('T')[0]) {
+    if (fromDate.getHours() !== toDate.getHours() || fromDate.getMinutes() !== toDate.getMinutes()) {
+      return `${fmt(fromDate, fullFormat)}, ${fmt(fromDate, timeFormat)} - ${fmt(toDate, timeFormat)}`
+    }
+    return fmt(fromDate, fullFormat)
+  }
+
+  const isSameYear = fromDate.getFullYear() === toDate.getFullYear()
+  const isSameMonth = isSameYear && fromDate.getMonth() === toDate.getMonth()
+
+  if (isSameMonth)
+    return `${fromDate.getDate()}-${toDate.getDate()} ${fmt(fromDate, { month: isShort ? 'short' : 'long', year: 'numeric' })}`
+
+  return isSameYear
+    ? `${fmt(fromDate, shortFormat)} - ${fmt(toDate, shortFormat)}, ${fromDate.getFullYear()}`
+    : `${fmt(fromDate, fullFormat)} - ${fmt(toDate, fullFormat)}`
+}
+
+/**
  * Format time into a human-readable string
  */
 export function formatDurationLabels(
