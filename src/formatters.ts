@@ -129,64 +129,50 @@ export function formatPercentage(
 }
 
 /**
- * Combines two dates into a human-readable string.
+ * Collapses two dates (or timestamps) into a human-readable string
  */
 export function formatCombinedDates(
-  from: Date | string | number | null,
-  to: Date | string | number | null,
-  options?: { 
-    locale?: string, 
-    format?: 'short' | 'long',
-    includeTime?: boolean 
-  },
+  from: Date | string | number,
+  to: Date | string | number,
+  options?: { locale?: string, format?: 'short' | 'long' },
 ): string {
-  const fromDate = from ? new Date(from) : new Date()
-  const toDate = to ? new Date(to) : new Date()
+  const fromDate = new Date(from ?? Date.now())
+  const toDate = new Date(to ?? Date.now())
 
   if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
     return ''
   }
 
-  const safeLocale = options?.locale || 'en-US'
+  const safeLocale = options?.locale || 'en'
+  const isShort = options?.format === 'short'
   const dateTimeFormatter = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(safeLocale, opts)
-  const monthFormat = options?.format ?? 'long'
-  const fullFormat = { day: 'numeric', month: monthFormat, year: 'numeric' } as const
-  const shortFormat = { day: 'numeric', month: monthFormat } as const
-  const timeFormat = { hour: 'numeric', minute: 'numeric' } as const
-  const fullTimeFormat = { ...fullFormat, ...timeFormat } as const
+  const fullFormat = { day: 'numeric', month: isShort ? 'short' : 'long', year: 'numeric' } as const
+  const shortFormat = { day: 'numeric', month: isShort ? 'short' : 'long' } as const
+  const timeFormat = {
+    hour: 'numeric' as const,
+    minute: 'numeric' as const,
+    hour12: true,
+  } as const
 
-  // Check if dates are the same
+  const fmt = (date: Date, opts: Intl.DateTimeFormatOptions) => dateTimeFormatter(opts).format(date)
+
+  // Same day check
   if (fromDate.toISOString().split('T')[0] === toDate.toISOString().split('T')[0]) {
-    // If times are different and includeTime is true, show time range
-    if (options?.includeTime && 
-        (fromDate.getHours() !== toDate.getHours() || 
-         fromDate.getMinutes() !== toDate.getMinutes())) {
-      return `${dateTimeFormatter(fullFormat).format(fromDate)}, ${dateTimeFormatter(timeFormat).format(fromDate)} - ${dateTimeFormatter(timeFormat).format(toDate)}`
+    if (fromDate.getHours() !== toDate.getHours() || fromDate.getMinutes() !== toDate.getMinutes()) {
+      return `${fmt(fromDate, fullFormat)}, ${fmt(fromDate, timeFormat)} - ${fmt(toDate, timeFormat)}`
     }
-    // If includeTime is true but times are the same, show single time
-    if (options?.includeTime) {
-      return dateTimeFormatter(fullTimeFormat).format(fromDate)
-    }
-    // Otherwise just show the date
-    return dateTimeFormatter(fullFormat).format(fromDate)
+    return fmt(fromDate, fullFormat)
   }
 
-  // Check if dates are in the same month
   const isSameYear = fromDate.getFullYear() === toDate.getFullYear()
   const isSameMonth = isSameYear && fromDate.getMonth() === toDate.getMonth()
 
-  if (isSameMonth) {
-    const monthYear = dateTimeFormatter({ month: monthFormat, year: 'numeric' }).format(fromDate)
-    return `${fromDate.getDate()}-${toDate.getDate()} ${monthYear}`
-  }
+  if (isSameMonth)
+    return `${fromDate.getDate()}-${toDate.getDate()} ${fmt(fromDate, { month: isShort ? 'short' : 'long', year: 'numeric' })}`
 
-  // Check if dates are in the same year
-  if (isSameYear) {
-    return `${dateTimeFormatter(shortFormat).format(fromDate)} - ${dateTimeFormatter(shortFormat).format(toDate)}, ${fromDate.getFullYear()}`
-  }
-
-  // Different years format
-  return `${dateTimeFormatter({ day: 'numeric', month: monthFormat, year: 'numeric' }).format(fromDate).replace(',', '')} - ${dateTimeFormatter(fullFormat).format(toDate)}`.replace(',', '')
+  return isSameYear
+    ? `${fmt(fromDate, shortFormat)} - ${fmt(toDate, shortFormat)}, ${fromDate.getFullYear()}`
+    : `${fmt(fromDate, fullFormat)} - ${fmt(toDate, fullFormat)}`
 }
 
 /**

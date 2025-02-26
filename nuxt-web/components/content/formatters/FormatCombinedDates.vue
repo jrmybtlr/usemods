@@ -1,14 +1,17 @@
 <template>
   <Example>
-    <ExampleInputs>
+    <ExampleInputs class="flex flex-col gap-2">
+      <div class="flex gap-2 w-full">
+        <FormInput
+          v-model="from"
+          label="From"
+          type="datetime-local" />
       <FormInput
-        v-model="from"
-        label="From"
-        type="date" />
-      <FormInput
-        v-model="to"
-        label="To"
-        type="date" />
+          v-model="to"
+          label="To"
+          type="datetime-local" />
+      </div>
+      <div class="flex gap-2 w-full">
       <FormSelectLocale v-model="locale" />
       <FormSelect
         v-model="format"
@@ -19,12 +22,9 @@
         </option>
         <option value="long">
           Long
-        </option>
-      </FormSelect>
-      <FormCheckbox
-        v-model="includeTime"
-        label="Include Time"
-        info="Show time when dates are the same" />
+          </option>
+        </FormSelect>
+      </div>
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />
     <ExampleResult>
@@ -36,18 +36,11 @@
 <script setup lang="ts">
 const from = ref('2025-01-01T10:00:00')
 const to = ref('2025-01-01T14:30:00')
-const locale = ref<string | null>(null)
-const format = ref<'short' | 'long'>('short')
-const includeTime = ref(true)
+const locale = ref('en-US')
+const format = ref('long')
 
 // Demo Purposes Only
 const formattedCode = computed(() => {
-  const options = {
-    locale: locale.value,
-    format: format.value,
-    includeTime: includeTime.value
-  }
-  
-  return generateFormatterCode('formatCombinedDates', [from.value, to.value, options])
+  return generateFormatterCode('formatCombinedDates', from.value, to.value, { locale: locale.value, format: format.value })
 })
 </script>
