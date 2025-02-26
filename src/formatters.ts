@@ -134,7 +134,11 @@ export function formatPercentage(
 export function formatCombinedDates(
   from: Date | string | number | null,
   to: Date | string | number | null,
-  options?: { locale?: string, format?: 'short' | 'long' },
+  options?: { 
+    locale?: string, 
+    format?: 'short' | 'long',
+    includeTime?: boolean 
+  },
 ): string {
   const fromDate = from ? new Date(from) : new Date()
   const toDate = to ? new Date(to) : new Date()
@@ -148,9 +152,22 @@ export function formatCombinedDates(
   const monthFormat = options?.format ?? 'long'
   const fullFormat = { day: 'numeric', month: monthFormat, year: 'numeric' } as const
   const shortFormat = { day: 'numeric', month: monthFormat } as const
+  const timeFormat = { hour: 'numeric', minute: 'numeric' } as const
+  const fullTimeFormat = { ...fullFormat, ...timeFormat } as const
 
   // Check if dates are the same
   if (fromDate.toISOString().split('T')[0] === toDate.toISOString().split('T')[0]) {
+    // If times are different and includeTime is true, show time range
+    if (options?.includeTime && 
+        (fromDate.getHours() !== toDate.getHours() || 
+         fromDate.getMinutes() !== toDate.getMinutes())) {
+      return `${dateTimeFormatter(fullFormat).format(fromDate)}, ${dateTimeFormatter(timeFormat).format(fromDate)} - ${dateTimeFormatter(timeFormat).format(toDate)}`
+    }
+    // If includeTime is true but times are the same, show single time
+    if (options?.includeTime) {
+      return dateTimeFormatter(fullTimeFormat).format(fromDate)
+    }
+    // Otherwise just show the date
     return dateTimeFormatter(fullFormat).format(fromDate)
   }
 
