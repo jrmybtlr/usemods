@@ -17,6 +17,7 @@ test('formatCombinedDates', () => {
   // Same Day with different times
   expect(mod.formatCombinedDates(new Date('2025-01-01T00:00:00'), new Date('2025-01-01T08:00:00'))).toBe('January 1, 2025, 12:00 AM - 8:00 AM')
   expect(mod.formatCombinedDates(new Date('2025-01-01T00:00:00'), new Date('2025-01-01T08:00:00'), { locale: 'en-AU', format: 'short' })).toBe('1 Jan 2025, 12:00 am - 8:00 am')
+  expect(mod.formatCombinedDates(new Date('2025-01-01T09:00:00'), new Date('2025-01-01T14:30:00'), { locale: 'en-AU', format: 'short' })).toBe('1 Jan 2025, 9:00 am - 2:30 pm')
 
   // Same month
   expect(mod.formatCombinedDates(new Date('2025-01-01'), new Date('2025-01-31'))).toBe('1-31 January 2025')

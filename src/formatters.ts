@@ -130,49 +130,54 @@ export function formatPercentage(
 
 /**
  * Collapses two dates (or timestamps) into a human-readable string
+ * @info Time is optional and will only be shown if day, month and year are the same
  */
 export function formatCombinedDates(
   from: Date | string | number,
   to: Date | string | number,
-  options?: { locale?: string, format?: 'short' | 'long' },
+  options: { locale?: string, format?: 'short' | 'long' } = { locale: 'en-US', format: 'long' },
 ): string {
+  // Parse dates only once
   const fromDate = new Date(from ?? Date.now())
   const toDate = new Date(to ?? Date.now())
 
-  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
-    return ''
-  }
+  // Early return for invalid dates
+  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) return ''
 
-  const safeLocale = options?.locale || 'en'
-  const isShort = options?.format === 'short'
-  const dateTimeFormatter = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(safeLocale, opts)
-  const fullFormat = { day: 'numeric', month: isShort ? 'short' : 'long', year: 'numeric' } as const
-  const shortFormat = { day: 'numeric', month: isShort ? 'short' : 'long' } as const
-  const timeFormat = {
-    hour: 'numeric' as const,
-    minute: 'numeric' as const,
-    hour12: true,
-  } as const
+  // Cache commonly used date components
+  const sameYear = fromDate.getFullYear() === toDate.getFullYear()
+  const sameMonth = sameYear && fromDate.getMonth() === toDate.getMonth()
+  const sameDay = sameMonth && fromDate.getDate() === toDate.getDate()
+  const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
 
-  const fmt = (date: Date, opts: Intl.DateTimeFormatOptions) => dateTimeFormatter(opts).format(date)
+  // Simplified format options
+  const monthFormat = options.format || 'long'
+  const locale = options.locale || 'en-US'
 
-  // Same day check
-  if (fromDate.toISOString().split('T')[0] === toDate.toISOString().split('T')[0]) {
-    if (fromDate.getHours() !== toDate.getHours() || fromDate.getMinutes() !== toDate.getMinutes()) {
-      return `${fmt(fromDate, fullFormat)}, ${fmt(fromDate, timeFormat)} - ${fmt(toDate, timeFormat)}`
+  // Formatting helper
+  const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(locale, opts).format(date)
+
+  // Same day
+  if (sameDay) {
+    // Same day, same time
+    if (sameTime) {
+      return format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })
     }
-    return fmt(fromDate, fullFormat)
+    // Same day, different time
+    return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}, ${format(fromDate, { hour: 'numeric', minute: 'numeric', hour12: true })} - ${format(toDate, { hour: 'numeric', minute: 'numeric', hour12: true })}`
   }
 
-  const isSameYear = fromDate.getFullYear() === toDate.getFullYear()
-  const isSameMonth = isSameYear && fromDate.getMonth() === toDate.getMonth()
+  if (sameMonth) {
+    return `${fromDate.getDate()}-${toDate.getDate()} ${format(fromDate, { month: monthFormat, year: 'numeric' })}`
+  }
 
-  if (isSameMonth)
-    return `${fromDate.getDate()}-${toDate.getDate()} ${fmt(fromDate, { month: isShort ? 'short' : 'long', year: 'numeric' })}`
+  if (sameYear) {
+    const yearStr = format(fromDate, { year: 'numeric' })
+    return `${format(fromDate, { day: 'numeric', month: monthFormat })} - ${format(toDate, { day: 'numeric', month: monthFormat })}, ${yearStr}`
+  }
 
-  return isSameYear
-    ? `${fmt(fromDate, shortFormat)} - ${fmt(toDate, shortFormat)}, ${fromDate.getFullYear()}`
-    : `${fmt(fromDate, fullFormat)} - ${fmt(toDate, fullFormat)}`
+  return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })} - ${format(toDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}`
 }
 
 /**

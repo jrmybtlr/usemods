@@ -3,6 +3,7 @@
     v-model="selectedLocale"
     label="Locale"
     info="Default: 'en-US'">
+
     <option
       value=""
       disabled>
@@ -18,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-const selectedLocale = ref('en-US')
+const selectedLocale = ref(undefined)
 const emit = defineEmits(['update:modelValue'])
 
 watch(selectedLocale, (newValue) => {

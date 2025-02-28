@@ -59,7 +59,18 @@ async function generateMarkdown(file, name) {
     const description = jsdoc.replace(/\/\*\*|\*\/|\*/g, '').replace(/@\w+.*$/gm, '').trim()
     const info = (jsdoc.match(/@info\s+(.*)/) || [])[1]?.trim() || ''
 
-    markdown += `::page-function{name="${name}" description="${description}"${info ? ` info="${info}"` : ''} }\n`
+    // Extract function signature
+    const signatureMatch = full.match(/export function \w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
+    const params = signatureMatch
+      ? signatureMatch[1].split(',').map((param) => {
+          const [name, type] = param.split(':').map(p => p.trim())
+          return { name, type }
+        })
+      : []
+
+    // const paramString = params.map(p => `${p.name}: ${p.type}`).join(', ')
+
+    markdown += `::page-function{name="${name}" description="${description}"${info ? ` info="${info}"` : ''} params="${params}"}\n`
     markdown += `:::${name}\n`
     markdown += ':::\n'
     markdown += '::\n\n'

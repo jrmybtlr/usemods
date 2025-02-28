@@ -82,7 +82,10 @@ export function checkPasswordStrength(text: string, options: { length?: number, 
 /**
  * Replaces placeholders in a string with values from an object.
  */
-export function mergeFields(text: string, fields: Record<string | number, string | number>): string {
+export function mergeFields(
+  text: string,
+  fields: Record<string | number, string | number>,
+): string {
   if (!text) {
     console.warn('[MODS] Warning: No text to merge')
     return ''
@@ -103,7 +106,10 @@ export function mergeFields(text: string, fields: Record<string | number, string
 /**
  * Returns the reading time of a string in Hours, Minutes, and Seconds.
  */
-export function readingTime(text: string, wordsPerMinute = 200): string {
+export function readingTime(
+  text: string,
+  wordsPerMinute = 200,
+): string {
   if (!text) {
     console.warn('[MODS] Warning: No text to read')
     return '0 minutes'

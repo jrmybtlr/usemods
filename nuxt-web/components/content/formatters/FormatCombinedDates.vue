@@ -12,17 +12,20 @@
           type="datetime-local" />
       </div>
       <div class="flex gap-2 w-full">
-      <FormSelectLocale v-model="locale" />
-      <FormSelect
-        v-model="format"
-        info="Default: 'short'"
-        label="Format">
-        <option value="short">
-          Short
-        </option>
-        <option value="long">
-          Long
+        <FormSelectLocale v-model="locale" />
+        <FormSelect
+          v-model="format"
+          info="Default: 'short'"
+          label="Format">
+          <option value="" disabled selected>
+            Select Format
           </option>
+          <option value="short">
+            Short
+          </option>
+          <option value="long">
+            Long
+            </option>
         </FormSelect>
       </div>
     </ExampleInputs>
@@ -36,11 +39,15 @@
 <script setup lang="ts">
 const from = ref('2025-01-01T10:00:00')
 const to = ref('2025-01-01T14:30:00')
-const locale = ref('en-US')
-const format = ref('long')
+const locale = ref(undefined)
+const format = ref(undefined)
+
 
 // Demo Purposes Only
 const formattedCode = computed(() => {
-  return generateFormatterCode('formatCombinedDates', from.value, to.value, { locale: locale.value, format: format.value })
+  return generateFormatterCode('formatCombinedDates', [from.value, to.value], {
+    locale: locale.value,
+    format: format.value,
+  })
 })
 </script>
