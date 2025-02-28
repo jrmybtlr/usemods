@@ -42,8 +42,6 @@
         <ContentDoc
           class="flex w-full grow flex-col" />
 
-        <!--  :class="route.params.slug?.at(0) === 'docs' ? 'divide-y divide-dashed divide-indigo-200 dark:divide-white/10' : ''" -->
-
         <!-- Jagger Swagger -->
         <Jagger v-if="route.fullPath === '/docs/actions'" />
 
@@ -58,9 +56,15 @@
 </template>
 
 <script setup lang="ts">
+// Add type definitions
+interface NavLink {
+  title: string;
+  _path: string;
+}
+
 const route = useRoute()
-const introLinks = inject('intro-links')
-const docLinks = inject('doc-links')
+const introLinks = inject<NavLink[]>('intro-links', [])
+const docLinks = inject<NavLink[]>('doc-links', [])
 </script>
 
 <style scoped>

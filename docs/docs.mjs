@@ -30,7 +30,7 @@ async function generateMarkdown(file, name) {
   // If Tailwind stop here
   // If you're reading this...it's a great first fix to contribute to the project.
 
-  if (name === '12.tailwind') return
+  if (name === '11.tailwind') return
 
   let markdown = ''
 
@@ -67,8 +67,6 @@ async function generateMarkdown(file, name) {
           return { name, type }
         })
       : []
-
-    // const paramString = params.map(p => `${p.name}: ${p.type}`).join(', ')
 
     markdown += `::page-function{name="${name}" description="${description}"${info ? ` info="${info}"` : ''} params="${params}"}\n`
     markdown += `:::${name}\n`
