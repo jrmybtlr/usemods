@@ -129,6 +129,58 @@ export function formatPercentage(
 }
 
 /**
+ * Collapses two dates (or timestamps) into a human-readable string
+ * @info Time is optional and will only be shown if day, month and year are the same
+ */
+export function formatCombinedDates(
+  from: Date | string | number,
+  to: Date | string | number,
+  options: { locale?: string, format?: 'short' | 'long' } = { locale: 'en-US', format: 'long' },
+): string {
+  // Parse dates only once
+  const fromDate = new Date(from ?? Date.now())
+  const toDate = new Date(to ?? Date.now())
+
+  // Early return for invalid dates
+  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) return ''
+
+  // Cache commonly used date components
+  const sameYear = fromDate.getFullYear() === toDate.getFullYear()
+  const sameMonth = sameYear && fromDate.getMonth() === toDate.getMonth()
+  const sameDay = sameMonth && fromDate.getDate() === toDate.getDate()
+  const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
+
+  // Simplified format options
+  const monthFormat = options.format || 'long'
+  const locale = options.locale || 'en-US'
+
+  // Formatting helper
+  const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(locale, opts).format(date)
+
+  // Same day
+  if (sameDay) {
+    // Same day, same time
+    if (sameTime) {
+      return format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })
+    }
+    // Same day, different time
+    return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}, ${format(fromDate, { hour: 'numeric', minute: 'numeric', hour12: true })} - ${format(toDate, { hour: 'numeric', minute: 'numeric', hour12: true })}`
+  }
+
+  if (sameMonth) {
+    return `${fromDate.getDate()}-${toDate.getDate()} ${format(fromDate, { month: monthFormat, year: 'numeric' })}`
+  }
+
+  if (sameYear) {
+    const yearStr = format(fromDate, { year: 'numeric' })
+    return `${format(fromDate, { day: 'numeric', month: monthFormat })} - ${format(toDate, { day: 'numeric', month: monthFormat })}, ${yearStr}`
+  }
+
+  return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })} - ${format(toDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}`
+}
+
+/**
  * Format time into a human-readable string
  */
 export function formatDurationLabels(

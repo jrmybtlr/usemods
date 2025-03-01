@@ -35,27 +35,7 @@ nuxt-web/utils/**/*.ts
 .VSCodeCounter/*
 
 # Include specific files
-!nuxt-web/content/2.docs/12.tailwind.md
+!nuxt-web/content/2.docs/11.tailwind.md
 .vercel
 
 .data
-my-module/.editorconfig
-my-module/.gitignore
-my-module/.npmrc
-my-module/eslint.config.mjs
-my-module/package.json
-my-module/README.md
-my-module/tsconfig.json
-my-module/.github/workflows/ci.yml
-my-module/playground/app.vue
-my-module/playground/nuxt.config.ts
-my-module/playground/package.json
-my-module/playground/tsconfig.json
-my-module/playground/server/tsconfig.json
-my-module/src/module.ts
-my-module/src/runtime/plugin.ts
-my-module/src/runtime/server/tsconfig.json
-my-module/test/basic.test.ts
-my-module/test/fixtures/basic/app.vue
-my-module/test/fixtures/basic/nuxt.config.ts
-my-module/test/fixtures/basic/package.json

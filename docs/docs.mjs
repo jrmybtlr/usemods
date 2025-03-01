@@ -20,7 +20,7 @@ const metadataPattern = /\s+(title|description|lead):\s+([^\r\n]*)/g
 const jsdocPattern = /\/\*\*([\s\S]*?)\*\//g
 
 // Files
-const files = ['formatters', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'animations', 'goodies', 'tailwind']
+const files = ['formatters', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
 
 async function generateMarkdown(file, name) {
   const content = await readFile(file, 'utf8')
@@ -30,7 +30,7 @@ async function generateMarkdown(file, name) {
   // If Tailwind stop here
   // If you're reading this...it's a great first fix to contribute to the project.
 
-  if (name === '12.tailwind') return
+  if (name === '11.tailwind') return
 
   let markdown = ''
 
@@ -59,7 +59,16 @@ async function generateMarkdown(file, name) {
     const description = jsdoc.replace(/\/\*\*|\*\/|\*/g, '').replace(/@\w+.*$/gm, '').trim()
     const info = (jsdoc.match(/@info\s+(.*)/) || [])[1]?.trim() || ''
 
-    markdown += `::page-function{name="${name}" description="${description}"${info ? ` info="${info}"` : ''} }\n`
+    // Extract function signature
+    const signatureMatch = full.match(/export function \w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
+    const params = signatureMatch
+      ? signatureMatch[1].split(',').map((param) => {
+          const [name, type] = param.split(':').map(p => p.trim())
+          return { name, type }
+        })
+      : []
+
+    markdown += `::page-function{name="${name}" description="${description}"${info ? ` info="${info}"` : ''} params="${params}"}\n`
     markdown += `:::${name}\n`
     markdown += ':::\n'
     markdown += '::\n\n'
