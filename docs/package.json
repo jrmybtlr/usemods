@@ -1,0 +1,7 @@
+{
+  "name": "usemods",
+  "description": "Zippy little modifiers and utilities for your frontend.",
+  "scripts": {
+    "bundle": "rollup -c"
+  }
+}
