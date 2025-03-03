@@ -1,5 +1,42 @@
 # Changelog
 
+## v1.12.0
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.11.0...v1.12.0)
+
+### 🚀 Enhancements
+
+- Add formatCombinedDates function and corresponding tests; remove animations package ([5103b4c](https://github.com/LittleFoxCompany/usemods/commit/5103b4c))
+- Enhance formatCombinedDates function to support long and short formats ([f873635](https://github.com/LittleFoxCompany/usemods/commit/f873635))
+- Update formatCombinedDates function to support format selection in the UI ([1c7ade4](https://github.com/LittleFoxCompany/usemods/commit/1c7ade4))
+- Update formatCombinedDates function to include year in same year formatting and adjust short format ([fd77933](https://github.com/LittleFoxCompany/usemods/commit/fd77933))
+- Enhance formatCombinedDates function to include time option for same day formatting ([7908597](https://github.com/LittleFoxCompany/usemods/commit/7908597))
+- Update formatCombinedDates function to support datetime-local inputs and simplify options ([f4d912b](https://github.com/LittleFoxCompany/usemods/commit/f4d912b))
+- Enhance formatCombinedDates function to handle optional parameters and improve date formatting logic ([b697b86](https://github.com/LittleFoxCompany/usemods/commit/b697b86))
+
+### 🩹 Fixes
+
+- Update condition for Tailwind documentation and add type definitions for injected links ([5954637](https://github.com/LittleFoxCompany/usemods/commit/5954637))
+- Remove duplicate export for tailwind in index.ts ([395a10c](https://github.com/LittleFoxCompany/usemods/commit/395a10c))
+- Update .gitignore to include the correct Tailwind documentation file and clean up unnecessary entries ([5f3174f](https://github.com/LittleFoxCompany/usemods/commit/5f3174f))
+- Remove unused modDevices import from Tailwind configuration ([c33670f](https://github.com/LittleFoxCompany/usemods/commit/c33670f))
+
+### 💅 Refactors
+
+- Remove animations.ts and integrate animateText function into goodies.ts ([bbb3a05](https://github.com/LittleFoxCompany/usemods/commit/bbb3a05))
+
+### 🏡 Chore
+
+- Update version to 1.11.0 in package.json and dependencies ([ad6843c](https://github.com/LittleFoxCompany/usemods/commit/ad6843c))
+
+### 🤖 CI
+
+- Add nuxthub workflow ([b706ae5](https://github.com/LittleFoxCompany/usemods/commit/b706ae5))
+
+### ❤️ Contributors
+
+- Jeremy Butler <jeremy@jeremymbutler.com>
+
 ## v1.11.0
 
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.10.0...v1.11.0)
