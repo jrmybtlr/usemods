@@ -1,7 +1,13 @@
 {
-  "name": "usemods",
-  "description": "Zippy little modifiers and utilities for your frontend.",
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "docs.mjs",
+  "type": "module",
   "scripts": {
-    "bundle": "rollup -c"
+    "dev": "node docs.mjs --watch",
+    "build": "node docs.mjs --build",
+    "generate": "node docs.mjs --build",
+    "bundle": "node docs.mjs --bundle"
   }
 }
