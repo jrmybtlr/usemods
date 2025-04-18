@@ -52,3 +52,15 @@ test('readingTime', () => {
   // Basic checks
   expect(mod.readingTime('Hello world', 200)).toBe('1 minute')
 })
+
+test('countBy', () => {
+  // Empty
+  expect(mod.countBy('')).toBe(0)
+  // Basic checks
+  expect(mod.countBy('Hello world', { by: 'word' })).toBe(2)
+  expect(mod.countBy('Hello world. This is a test.', { by: 'sentence' })).toBe(2)
+  expect(mod.countBy('Hello world. This is a test.', { by: 'paragraph' })).toBe(1)
+  expect(mod.countBy('Hello world. This is a test. World wide.', { by: 'unique', searchFor: 'world' })).toBe(2)
+  expect(mod.countBy('Hello world. This is a test.', { by: 'character' })).toBe(28)
+  expect(mod.countBy('Hello world. This is a test. World wide.', { by: 'unique', searchFor: 'world' })).toBe(2)
+})

@@ -58,6 +58,8 @@ importers:
         specifier: ^3.0.5
         version: 3.0.5(@types/debug@4.1.12)(@types/node@22.13.1)(jiti@2.4.2)(terser@5.38.1)(yaml@2.7.0)
 
+  docs: {}
+
   nuxt-web:
     dependencies:
       '@nuxt/content':

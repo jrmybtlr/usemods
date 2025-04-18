@@ -103,6 +103,7 @@ export function mergeFields(
   })
 }
 
+
 /**
  * Returns the reading time of a string in Hours, Minutes, and Seconds.
  */
@@ -117,6 +118,54 @@ export function readingTime(
   const words = text.split(' ').filter(word => word.trim() !== '').length
   const minutes = Math.ceil(words / wordsPerMinute)
   return formatDurationLabels(minutes * 60)
+}
+
+/**
+ * Count by character, word, sentence, paragraph or unique string.
+ */
+export function countBy(
+  text: string,
+  options: {
+    by?: 'character' | 'word' | 'sentence' | 'paragraph' | 'unique'
+    searchFor?: string
+  } = {},
+): number {
+  if (!text) return 0
+
+  const { by = 'character', searchFor = '' } = options
+
+  // Handle unique string counting
+  if (by === 'unique') {
+    if (!searchFor) {
+      console.warn('[MODS] Warning: No search string provided for unique counting')
+      return 0
+    }
+
+    // Native string counting
+    let count = 0
+    let pos = 0
+    const searchLower = searchFor.toLowerCase()
+    const textLower = text.toLowerCase()
+
+    while ((pos = textLower.indexOf(searchLower, pos)) !== -1) {
+      count++
+      pos += searchFor.length
+    }
+
+    return count
+  }
+
+  // Handle other counting methods
+  if (by === 'paragraph') {
+    // Split by one or more newlines to identify paragraphs
+    const paragraphs = text.split(/\n\s*\n/)
+    return paragraphs.filter(p => p.trim().length > 0).length
+  }
+
+  const delimiter = by === 'word' ? ' ' : by === 'sentence' ? '. ' : ''
+  const elements = text.split(delimiter)
+
+  return elements.length
 }
 
 /**
@@ -158,20 +207,3 @@ export function animateText(
   return splitBy === 'word' ? result.join(' ') : result.join('')
 }
 
-/**
- * Animate a group of elements by wrapping each in a span with an incremental delay.
- */
-// export function animateGroup(element: HTMLElement, options?: { time?: number; unit?: 'ms' | 's' }): void {
-//   const settings = {
-//     time: options?.time || 0.1,
-//     unit: options?.unit || 's'
-//   }
-
-//   let currentDelay = 0
-//   const elements = element.children
-
-//   Array.from(elements).forEach((child: Element) => {
-//     ;(child as HTMLElement).style.animationDelay = `${currentDelay}${settings.unit}`
-//     currentDelay += settings.time
-//   })
-// }
