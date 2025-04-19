@@ -10,7 +10,7 @@
           v-for="link in introLinks"
           :key="link.title"
           prefetch
-          :to="link._path"
+          :to="link.path"
           class="flex items-center gap-3 py-2 text-xl font-medium text-gray-500 dark:text-gray-500 dark:hover:text-white/75"
           active-class="active">
           <Icon
@@ -24,7 +24,7 @@
             v-for="link in docLinks"
             :key="link.title"
             prefetch
-            :to="link._path"
+            :to="link.path"
             class="flex items-center gap-3 py-2 font-medium text-gray-500 dark:text-gray-500 dark:hover:text-white/75"
             active-class="active">
             <Icon
@@ -40,17 +40,17 @@
         class="min-h-screen motion-preset-focus w-full text-gray-950 dark:text-white lg:w-7/12"
         :class="route.params.slug ?? null">
 
-        <ClientOnly>
-        <ContentDoc
+        <ContentRenderer
+          v-if="data"
+          :value="data"
           class="flex  w-full grow flex-col" />
-        
 
         <!-- Jagger Swagger -->
         <Jagger v-if="route.fullPath === '/docs/actions'" />
 
         <!-- PrevNext -->
         <LazyPrevNext class="motion-preset-focus delay-500" />
-        </ClientOnly>
+        
       </div>
 
       <!-- Table of Contents -->
@@ -62,12 +62,18 @@
 <script setup lang="ts">
 interface NavLink {
   title: string;
-  _path: string;
+  path: string;
 }
 
 const route = useRoute()
 const introLinks = inject<NavLink[]>('intro-links', [])
 const docLinks = inject<NavLink[]>('doc-links', [])
+
+const { data } = useAsyncData('data' + route.params.slug, () => {
+  return queryCollection('all').path(route.path).first()
+})
+
+provide('data', data)
 </script>
 
 <style scoped>

@@ -75,8 +75,8 @@ const props = defineProps({
 const showCopyToClipboard = ref(false)
 const showCopied = ref(false)
 const section = ref<HTMLElement>()
-const activeSections = useState('activeSections', () => [])
-const sectionIsVisible = useElementVisibility(section)
+const activeSections = useState<string[]>('activeSections', () => [])
+const sectionIsVisible = useElementVisibility(section, { threshold: 0.5 })
 
 function copied() {
   showCopied.value = true
@@ -88,13 +88,26 @@ function copied() {
 watch(
   sectionIsVisible,
   (isVisible) => {
-    if (isVisible) activeSections.value.push(props.name)
-    else activeSections.value = activeSections.value.filter(section => section !== props.name)
+    try {
+      if (isVisible) {
+        if (!activeSections.value.includes(props.name)) {
+          activeSections.value.push(props.name)
+        }
+      } else {
+        activeSections.value = activeSections.value.filter(section => section !== props.name)
+      }
+    } catch (error) {
+      console.warn(`[MODS] Failed to update active sections for ${props.name}:`, error)
+    }
   },
   { immediate: true },
 )
 
 onUnmounted(() => {
-  activeSections.value = activeSections.value.filter(section => section !== props.name)
+  try {
+    activeSections.value = activeSections.value.filter(section => section !== props.name)
+  } catch (error) {
+    console.warn(`[MODS] Failed to cleanup active sections for ${props.name}:`, error)
+  }
 })
 </script>

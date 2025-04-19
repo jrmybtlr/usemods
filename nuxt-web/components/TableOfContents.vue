@@ -6,20 +6,20 @@
 
     <ul>
       <li
-        v-for="item in data"
-        :key="item.id"
+        v-for="item in data?.meta?.toc ?? []"
+        :key="item"
         class="mt-0">
         <NuxtLink
-          v-if="item.id"
+          v-if="item"
           class="flex cursor-pointer gap-3 text-sm font-medium leading-none text-gray-500 hover:text-indigo-600 dark:hover:text-white/75"
-          @click="scrollToAnchor(item.id)">
+          @click="scrollToAnchor(item)">
           <div
             class="w-2 border-l transition-all"
-            :class="activeSections.includes(item.id) ? ' border-indigo-600 dark:border-amber-400 ' : 'border-gray-200 dark:border-white/15'" />
+            :class="activeSections.includes(item) ? ' border-indigo-600 dark:border-amber-400 ' : 'border-gray-200 dark:border-white/15'" />
           <div
             class="truncate py-1.5"
-            :class="activeSections.includes(item.id) ? 'text-indigo-600 dark:text-amber-400' : 'text-gray-500 dark:text-white/50'">
-            {{ item.title }}
+            :class="activeSections.includes(item) ? 'text-indigo-600 dark:text-amber-400' : 'text-gray-500 dark:text-white/50'">
+            {{ item }}
           </div>
         </NuxtLink>
       </li>
@@ -39,14 +39,9 @@
 
 <script setup lang="ts">
 const route = useRoute()
-const activeSections = useState('activeSections', () => [])
+const activeSections = useState<string[]>('activeSections', () => [])
 const pageId = useRoute().params.slug
-
-const { data } = useAsyncData('toc' + pageId, () => queryContent(route.path).only('body').findOne().then(
-  toc => toc.body?.children
-    .map(link => ({ id: link.props?.name ?? link.props?.id, title: link.children?.[0]?.value ?? link.props?.name ?? link.props?.id }))
-    .filter(link => link.id && link.title),
-))
+const data = inject<{ meta?: { toc?: string[] } }>('data')
 
 // Function to scroll to the anchor
 function scrollToAnchor(id: string) {

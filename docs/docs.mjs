@@ -78,7 +78,7 @@ async function generateMarkdown(file, name) {
 }
 
 async function generateAll() {
-  await Promise.all(files.map((file, index) => generateMarkdown(join(srcPath, `${file}.ts`), `${index + 1}.${file}`)))
+  await Promise.all(files.map((file, index) => generateMarkdown(join(srcPath, `${file}.ts`), `${String(index + 1).padStart(2, '0')}.${file}`)))
   await copyFile(join(srcPath, 'maps.ts'), join(nuxtWebPath, 'utils/mods/maps.ts'))
 }
 

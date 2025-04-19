@@ -6,20 +6,19 @@
 </template>
 
 <script setup lang="ts">
-const introLinks = await useAsyncData('intro-links', async () => {
-  const data = await queryContent('intro').only(['_path', 'title', 'lead']).find()
-  return data
+
+const { data: introLinks } = await useAsyncData('intro-links', (): Promise<any[]> => {
+  return queryCollection( 'intro').all()
 })
 
-const docLinks = await useAsyncData('doc-links', async () => {
-  const data = await queryContent('docs').only(['_path', 'title', 'lead']).find()
-  return data
+const { data: docLinks } = await useAsyncData('doc-links', (): Promise<any[]> => {
+  return queryCollection( 'docs').all()
 })
 
 onBeforeMount(() => {
   addDeviceClasses()
 })
 
-provide('intro-links', introLinks.data)
-provide('doc-links', docLinks.data)
+provide('intro-links', introLinks.value)
+provide('doc-links', docLinks.value)
 </script>
