@@ -18,9 +18,9 @@
 body {
   @apply relative min-h-screen w-screen select-text overflow-x-clip scroll-smooth bg-zinc-50 text-white antialiased selection:bg-amber-400 selection:text-zinc-950 dark:bg-zinc-950;
 
-  & * {
+  /* & * {
     @apply transition-colors duration-500;
-  }
+  } */
 }
 
 /* A better container */
@@ -31,13 +31,17 @@ body {
   margin-right: auto;
   padding-left: calc(env(safe-area-inset-left, 0rem) + 1.1rem);
   padding-right: calc(env(safe-area-inset-right, 0rem) + 1.1rem);
+}
 
-  @media screen(md) {
+@media screen and (min-width: 768px) {
+  .container {
     padding-left: calc(env(safe-area-inset-left, 0rem) + 2rem);
     padding-right: calc(env(safe-area-inset-right, 0rem) + 2rem);
   }
+}
 
-  @media screen(xl) {
+@media screen and (min-width: 1280px) {
+  .container {
     padding-left: calc(env(safe-area-inset-left, 0rem) + 3rem);
     padding-right: calc(env(safe-area-inset-right, 0rem) + 3rem);
   }

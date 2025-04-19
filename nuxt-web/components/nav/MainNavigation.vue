@@ -40,8 +40,8 @@
               <div class="grid grid-cols-2 md:grid-cols-3">
                 <NavDropdownItem
                   v-for="link in docLinks"
-                  :key="link._path"
-                  :to="link._path">
+                  :key="link.path"
+                  :to="link.path">
                   <Icon
                     :name="link.title"
                     class="mt-1 size-5 shrink-0 text-white/50" />
@@ -70,7 +70,7 @@
 <script setup lang="ts">
 interface Link {
   id: string
-  _path: string
+  path: string
   title: string
   lead: string
 }

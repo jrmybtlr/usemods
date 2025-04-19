@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     'nuxt-icon',
     '@nuxtjs/seo',
-    '@nuxtjs/sitemap',
+    // '@nuxtjs/sitemap',
     '@nuxthub/core',
   ],
 
@@ -25,11 +25,11 @@ export default defineNuxtConfig({
     },
   },
 
-  sitemap: {
-    sources: [
-      '/api/sitemap',
-    ],
-  },
+  // sitemap: {
+  //   sources: [
+  //     '/api/sitemap',
+  //   ],
+  // },
 
   site: {
     name: 'UseMods',
@@ -47,17 +47,6 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
-  },
-
-  content: {
-    highlight: {
-      theme: {
-        default: 'github-light',
-        dark: 'github-dark',
-      },
-      preload: ['javascript', 'typescript', 'json', 'html', 'css', 'yaml'],
-    },
-    ignores: ['\\.txt$'],
   },
 
   routeRules: {
@@ -83,6 +72,20 @@ export default defineNuxtConfig({
   eslint: {
     config: {
       stylistic: true,
+    },
+  },
+
+  tailwindcss: {
+    cssPath: '~/assets/css/main.css',
+    // configPath: 'tailwind.config.js',
+    exposeConfig: false,
+    viewer: true,
+    config: {
+      content: [
+        './components/**/*.{vue,js,ts,jsx,tsx}',
+        './layouts/**/*.{vue,js,ts,jsx,tsx}',
+        './pages/**/*.{vue,js,ts,jsx,tsx}',
+      ],
     },
   },
 
