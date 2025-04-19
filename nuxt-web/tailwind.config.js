@@ -33,4 +33,5 @@ export default {
       },
     },
   },
+  plugins: [require('tailwindcss-motion')], 
 }

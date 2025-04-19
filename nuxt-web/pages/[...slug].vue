@@ -37,16 +37,20 @@
 
       <!-- Content -->
       <div
-        class="min-h-screen w-full text-gray-950 dark:text-white lg:w-7/12"
+        class="min-h-screen motion-preset-focus w-full text-gray-950 dark:text-white lg:w-7/12"
         :class="route.params.slug ?? null">
+
+        <ClientOnly>
         <ContentDoc
-          class="flex w-full grow flex-col" />
+          class="flex  w-full grow flex-col" />
+        
 
         <!-- Jagger Swagger -->
         <Jagger v-if="route.fullPath === '/docs/actions'" />
 
         <!-- PrevNext -->
         <LazyPrevNext />
+        </ClientOnly>
       </div>
 
       <!-- Table of Contents -->
@@ -56,7 +60,6 @@
 </template>
 
 <script setup lang="ts">
-// Add type definitions
 interface NavLink {
   title: string;
   _path: string;
