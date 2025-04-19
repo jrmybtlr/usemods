@@ -50,7 +50,6 @@
 
         <!-- PrevNext -->
         <LazyPrevNext class="motion-preset-focus delay-500" />
-        
       </div>
 
       <!-- Table of Contents -->

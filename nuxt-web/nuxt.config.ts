@@ -41,6 +41,10 @@ export default defineNuxtConfig({
     prerender: {
       routes: ['/'],
       crawlLinks: true,
+      failOnError: false,
+      ignore: [
+        '/playground/**'
+      ]
     },
     esbuild: {
       options: {
@@ -51,8 +55,19 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
-    '/docs/**': { swr: true, prerender: true },
-    '/intro/**': { swr: true, prerender: true },
+    '/docs/**': { 
+      swr: true, 
+      prerender: true,
+      static: true
+    },
+    '/intro/**': { 
+      swr: true, 
+      prerender: true,
+      static: true
+    },
+    '/playground/**': { 
+      ssr: false 
+    }
   },
 
   image: {
