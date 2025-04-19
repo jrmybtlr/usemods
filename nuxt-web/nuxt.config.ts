@@ -23,7 +23,6 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: 'en' },
       meta: [{ property: 'og:image', content: '/og-image.jpg' }],
     },
-    pageTransition: { name: 'page', mode: 'out-in' },
   },
 
   // sitemap: {
@@ -42,7 +41,6 @@ export default defineNuxtConfig({
     prerender: {
       routes: ['/'],
       crawlLinks: true,
-      failOnError: false,
       ignore: [
         '/playground/**'
       ]
@@ -58,13 +56,11 @@ export default defineNuxtConfig({
     '/': { prerender: true },
     '/docs/**': { 
       swr: true, 
-      prerender: true,
-      static: true
+      prerender: true
     },
     '/intro/**': { 
       swr: true, 
-      prerender: true,
-      static: true
+      prerender: true
     },
     '/playground/**': { 
       ssr: false 
