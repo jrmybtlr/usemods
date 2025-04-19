@@ -49,7 +49,7 @@
         <Jagger v-if="route.fullPath === '/docs/actions'" />
 
         <!-- PrevNext -->
-        <LazyPrevNext class="motion-preset-focus delay-500" />
+        <!-- <LazyPrevNext class="motion-preset-focus delay-500" /> -->
       </div>
 
       <!-- Table of Contents -->

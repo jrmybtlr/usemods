@@ -19,7 +19,7 @@
               <NavDropdownItem
                 v-for="link in introLinks"
                 :key="link.id"
-                :to="link._path">
+                :to="link.path">
                 <Icon
                   :name="link.title"
                   class="mt-1 size-5 shrink-0 text-white/50" />
@@ -40,8 +40,8 @@
               <div class="grid grid-cols-2 md:grid-cols-3">
                 <NavDropdownItem
                   v-for="link in docLinks"
-                  :key="link._path"
-                  :to="link._path">
+                  :key="link.path"
+                  :to="link.path">
                   <Icon
                     :name="link.title"
                     class="mt-1 size-5 shrink-0 text-white/50" />
@@ -71,7 +71,6 @@
 interface Link {
   id: string
   path: string
-  _path: string
   title: string
   lead: string
 }
