@@ -23,6 +23,7 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: 'en' },
       meta: [{ property: 'og:image', content: '/og-image.jpg' }],
     },
+    pageTransition: { name: 'page', mode: 'out-in' },
   },
 
   // sitemap: {

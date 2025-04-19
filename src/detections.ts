@@ -145,6 +145,7 @@ export function detectUrlPath(format: 'array' | 'string' = 'array'): string[] | 
  * Returns a value from the URL by name
  */
 export function detectUrlParams(format: 'string' | 'object' = 'string'): ({ [key: string]: string }[] | string) | null {
+  if (typeof window === 'undefined') return null
   const searchParams = new URLSearchParams(window.location.search)
   if (format === 'string') return searchParams.toString()
 

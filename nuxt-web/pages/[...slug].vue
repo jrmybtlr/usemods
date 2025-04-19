@@ -68,8 +68,14 @@ const route = useRoute()
 const introLinks = inject<NavLink[]>('intro-links', [])
 const docLinks = inject<NavLink[]>('doc-links', [])
 
-const { data } = useAsyncData('data' + route.params.slug, () => {
+const { data, error } = useAsyncData('data' + route.params.slug, () => {
   return queryCollection('all').path(route.path).first()
+}, {
+  default: () => null,
+  transform: (result) => {
+    if (!result) return null
+    return result
+  }
 })
 
 provide('data', data)

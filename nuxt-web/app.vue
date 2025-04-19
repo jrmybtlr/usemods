@@ -7,12 +7,24 @@
 
 <script setup lang="ts">
 
-const { data: introLinks } = await useAsyncData('intro-links', (): Promise<any[]> => {
-  return queryCollection( 'intro').all()
+const { data: introLinks, error: introError } = await useAsyncData('intro-links', (): Promise<any[]> => {
+  return queryCollection('intro').all()
+}, {
+  default: () => [],
+  transform: (result) => {
+    if (!result) return []
+    return result
+  }
 })
 
-const { data: docLinks } = await useAsyncData('doc-links', (): Promise<any[]> => {
-  return queryCollection( 'docs').all()
+const { data: docLinks, error: docError } = await useAsyncData('doc-links', (): Promise<any[]> => {
+  return queryCollection('docs').all()
+}, {
+  default: () => [],
+  transform: (result) => {
+    if (!result) return []
+    return result
+  }
 })
 
 onBeforeMount(() => {
