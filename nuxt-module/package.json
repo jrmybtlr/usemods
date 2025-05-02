@@ -25,7 +25,7 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "pnpm run dev:prepare && pnpm run test && pnpm run prepack && pnpm publish",
+    "release": "pnpm run dev:prepare && pnpm run test && pnpm run prepack && pnpm publish --no-git-checks",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
