@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.13.0
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.12.0...v1.13.0)
+
+### 🚀 Enhancements
+
+- Add countBy function and CountBy component for text analysis ([61a5131](https://github.com/LittleFoxCompany/usemods/commit/61a5131))
+
+### 🏡 Chore
+
+- **release:** V1.12.0 ([f732d1f](https://github.com/LittleFoxCompany/usemods/commit/f732d1f))
+
+### ❤️ Contributors
+
+- Jeremy Butler <jeremy@jeremymbutler.com>
+
 ## v1.12.0
 
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.11.0...v1.12.0)
