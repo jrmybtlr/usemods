@@ -50,6 +50,18 @@ test('pluralize', () => {
   expect(mod.pluralize('sheep', 2)).toBe('sheep')
   // irregular plural
   expect(mod.pluralize('child', 2)).toBe('children')
+  // Words with consonant before y
+  expect(mod.pluralize('city', 2)).toBe('cities')
+  expect(mod.pluralize('party', 2)).toBe('parties')
+  expect(mod.pluralize('lady', 2)).toBe('ladies')
+  expect(mod.pluralize('story', 2)).toBe('stories')
+  expect(mod.pluralize('family', 2)).toBe('families')
+  // Words with vowel before y
+  expect(mod.pluralize('key', 2)).toBe('keys')
+  expect(mod.pluralize('boy', 2)).toBe('boys')
+  expect(mod.pluralize('toy', 2)).toBe('toys')
+  expect(mod.pluralize('day', 2)).toBe('days')
+  expect(mod.pluralize('monkey', 2)).toBe('monkeys')
 })
 
 test('singularize', () => {
@@ -69,6 +81,18 @@ test('singularize', () => {
   expect(mod.singularize('churches')).toBe('church')
   expect(mod.singularize('brushes')).toBe('brush')
   expect(mod.singularize('dresses')).toBe('dress')
+  // Words with consonant before y
+  expect(mod.singularize('cities')).toBe('city')
+  expect(mod.singularize('parties')).toBe('party')
+  expect(mod.singularize('ladies')).toBe('lady')
+  expect(mod.singularize('stories')).toBe('story')
+  expect(mod.singularize('families')).toBe('family')
+  // Words with vowel before y
+  expect(mod.singularize('keys')).toBe('key')
+  expect(mod.singularize('boys')).toBe('boy')
+  expect(mod.singularize('toys')).toBe('toy')
+  expect(mod.singularize('days')).toBe('day')
+  expect(mod.singularize('monkeys')).toBe('monkey')
 })
 
 test('stripHtml', () => {

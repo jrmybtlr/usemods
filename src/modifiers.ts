@@ -68,8 +68,15 @@ export function pluralize(word: string, count: number): string {
     ['us', 'i'],
     ['f', 'ves'],
     ['fe', 'ves'],
-    ['y', 'ies'],
   ])
+
+  // Handle words ending in 'y' with consonant before it
+  if (word.endsWith('y')) {
+    const beforeY = word.slice(-2, -1)
+    if (!['a', 'e', 'i', 'o', 'u'].includes(beforeY)) {
+      return word.slice(0, -1) + 'ies'
+    }
+  }
 
   for (const [suffix, replacement] of suffixRules) {
     if (word.endsWith(suffix)) {
@@ -96,7 +103,14 @@ export function singularize(value: string): string {
   const singularRules = new Map<string, (value: string) => string>([
     ['ives', value => value.slice(0, -4) + 'ife'],
     ['ves', value => value.slice(0, -3) + 'f'],
-    ['ies', value => value.slice(0, -3) + 'y'],
+    ['ies', (value) => {
+      // Check if the character before 'ies' is a consonant
+      const beforeIes = value.slice(-4, -3)
+      if (!['a', 'e', 'i', 'o', 'u'].includes(beforeIes)) {
+        return value.slice(0, -3) + 'y'
+      }
+      return value.slice(0, -2)
+    }],
     ['ches', value => value.slice(0, -2)],
     ['shes', value => value.slice(0, -2)],
     ['xes', value => value.slice(0, -2)],
