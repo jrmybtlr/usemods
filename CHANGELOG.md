@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.14.0
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.13.0...v1.14.0)
+
+### 🩹 Fixes
+
+- **release:** Update release script to use pnpm instead of npm ([a68f052](https://github.com/LittleFoxCompany/usemods/commit/a68f052))
+- **release:** Modify release script to skip git checks during publish ([20d628c](https://github.com/LittleFoxCompany/usemods/commit/20d628c))
+- Enhance pluralize and singularize functions to handle words with consonants and vowels before 'y' ([7ddd0b4](https://github.com/LittleFoxCompany/usemods/commit/7ddd0b4))
+
+### ❤️ Contributors
+
+- Jeremy Butler <jeremy@jeremymbutler.com>
+
 ## v1.13.0
 
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.12.0...v1.13.0)
