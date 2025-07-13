@@ -9,13 +9,12 @@ export function isServerSide(): boolean {
   return typeof window === 'undefined' || (typeof process !== 'undefined' && typeof process.versions === 'object' && 'node' in process.versions)
 }
 
-
 /**
  * Detects the user's device based on the user agent string and returns the information as an object.
  */
 export function detectUserDevice(userAgent?: string): object | string {
   if (isServerSide() && !userAgent) return 'server'
-  const result = userAgent || navigator.userAgent.toLowerCase()
+  const result = userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : '')
   return {
     os: detectOS(result),
     browser: detectBrowser(result),
@@ -51,12 +50,19 @@ export function detectDevice(userAgent?: string): string {
  * Detect the current browser
  */
 export function detectBrowser(userAgent?: string): string {
+  // Handle empty string case first
+  if (userAgent === '') return 'unknown'
+
   if (isServerSide() && !userAgent) return 'server'
-  const result = userAgent || navigator.userAgent.toLowerCase()
-  if (result.includes('chrome') && !result.includes('edg')) return 'Chrome'
-  if (result.includes('firefox')) return 'Firefox'
-  if (result.includes('safari') && !result.includes('chrome') && !result.includes('crios') && !result.includes('fxios')) return 'Safari'
-  if (result.includes('edg')) return 'Edge'
+  const result = userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : '')
+  if (!result) return 'unknown'
+  const lowerResult = result.toLowerCase()
+  if (lowerResult.includes('crios')) return 'Chrome'
+  if (lowerResult.includes('chrome') && !lowerResult.includes('edg')) return 'Chrome'
+  if (lowerResult.includes('fxios')) return 'Firefox'
+  if (lowerResult.includes('firefox')) return 'Firefox'
+  if (lowerResult.includes('safari') && !lowerResult.includes('chrome') && !lowerResult.includes('crios') && !lowerResult.includes('fxios')) return 'Safari'
+  if (lowerResult.includes('edg')) return 'Edge'
   return 'unknown'
 }
 
@@ -65,13 +71,15 @@ export function detectBrowser(userAgent?: string): string {
  */
 export function detectOS(userAgent?: string): string {
   if (isServerSide() && !userAgent) return 'server'
-  const result = userAgent || navigator.userAgent.toLowerCase()
-  if (result.includes('iphone') || result.includes('ipad')) return 'iOS'
-  if (result.includes('android')) return 'Android'
-  if (result.includes('windows')) return 'Windows'
-  if (result.includes('mac')) return 'Mac'
-  if (result.includes('linux')) return 'Linux'
-  if (result.includes('x11')) return 'UNIX'
+  const result = userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : '')
+  if (!result) return 'unknown'
+  const lowerResult = result.toLowerCase()
+  if (lowerResult.includes('iphone') || lowerResult.includes('ipad')) return 'iOS'
+  if (lowerResult.includes('android')) return 'Android'
+  if (lowerResult.includes('windows')) return 'Windows'
+  if (lowerResult.includes('mac')) return 'Mac'
+  if (lowerResult.includes('linux')) return 'Linux'
+  if (lowerResult.includes('x11')) return 'UNIX'
   return 'unknown'
 }
 
@@ -154,7 +162,7 @@ export function isSafari(userAgent?: string): boolean {
 export function isEdge(userAgent?: string): boolean {
   if (isServerSide() && !userAgent) return false
   const result = userAgent || navigator.userAgent
-  return /Edge/.test(result)
+  return /Edge|Edg/.test(result)
 }
 
 /**
@@ -172,7 +180,7 @@ export function isMobile(userAgent?: string): boolean {
 export function isTablet(userAgent?: string): boolean {
   if (isServerSide() && !userAgent) return false
   const result = userAgent || navigator.userAgent
-  return /Tablet/.test(result)
+  return /iPad|Tablet/.test(result)
 }
 
 /**
@@ -186,18 +194,22 @@ export function isDesktop(userAgent?: string): boolean {
 
 /**
  * Check if you're portrait
+ * @param win Optional window-like object for testability
  */
-export function isPortrait(): boolean {
-  if (isServerSide()) return false
-  return window.innerHeight > window.innerWidth
+export function isPortrait(win?: { innerWidth: number, innerHeight: number }): boolean {
+  if (!win && isServerSide()) return false
+  const w = win || (typeof globalThis !== 'undefined' && globalThis.window ? globalThis.window : window)
+  return w.innerHeight > w.innerWidth
 }
 
 /**
  * Check if you're landscape
+ * @param win Optional window-like object for testability
  */
-export function isLandscape(): boolean {
-  if (isServerSide()) return false
-  return window.innerWidth > window.innerHeight
+export function isLandscape(win?: { innerWidth: number, innerHeight: number }): boolean {
+  if (!win && isServerSide()) return false
+  const w = win || (typeof globalThis !== 'undefined' && globalThis.window ? globalThis.window : window)
+  return w.innerWidth > w.innerHeight
 }
 
 /**

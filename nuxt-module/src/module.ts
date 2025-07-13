@@ -19,7 +19,10 @@ export default defineNuxtModule<ModuleOptions>({
   },
   setup(options) {
     const aliasMap = new Map<string, string>(options.alias)
-    for (const name of Object.keys(utils)) {
+
+    const exportedFunctions = Object.keys(utils)
+
+    for (const name of exportedFunctions) {
       const alias = aliasMap.has(name) ? aliasMap.get(name)! : name
       addImports({
         name: name,

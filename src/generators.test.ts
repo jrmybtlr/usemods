@@ -60,12 +60,13 @@ test('generateShortId', () => {
 test('generatePassword', () => {
   const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const numberChars = '0123456789'
-  const specialChars = '!@#$%&()_+?'
+  // Use the same symbol set as the implementation
+  const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?'
   const allChars = 'abcdefghijklmnopqrstuvwxyz' + uppercaseChars + numberChars + specialChars
 
   // Defaults
   expect(mod.generatePassword()).toHaveLength(8)
-  expect(mod.generatePassword()).toMatch(new RegExp(`^[${allChars}]{8}$`))
+  expect(mod.generatePassword()).toMatch(new RegExp(`^[${allChars.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}]{8}$`))
 
   // Length
   expect(mod.generatePassword({ length: 12 })).toHaveLength(12)
@@ -75,10 +76,38 @@ test('generatePassword', () => {
   expect(mod.generatePassword({ uppercase: 2 })).toMatch(new RegExp('[A-Z]{1,}'))
 
   // Numbers
-  expect(mod.generatePassword({ number: 2 })).toMatch(new RegExp('[0-9]{1,}'))
+  expect(mod.generatePassword({ numbers: 2 })).toMatch(new RegExp('[0-9]{1,}'))
 
   // Special
-  expect(mod.generatePassword({ special: 2 })).toMatch(new RegExp(`[${specialChars}]{1,}`))
+  expect(mod.generatePassword({ symbols: 2 })).toMatch(new RegExp(`[${specialChars.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}]`))
+})
+
+test('generatePassword combinations', () => {
+  // Test numbers and symbols combination
+  const passwordWithNumbersAndSymbols = mod.generatePassword({ numbers: 1, symbols: 1, length: 8 })
+  expect(passwordWithNumbersAndSymbols).toHaveLength(8)
+  expect(passwordWithNumbersAndSymbols).toMatch(/[0-9]/) // Should contain at least one number
+  expect(passwordWithNumbersAndSymbols).toMatch(/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/) // Should contain at least one symbol
+
+  // Test uppercase and numbers combination
+  const passwordWithUppercaseAndNumbers = mod.generatePassword({ uppercase: 1, numbers: 1, length: 8 })
+  expect(passwordWithUppercaseAndNumbers).toHaveLength(8)
+  expect(passwordWithUppercaseAndNumbers).toMatch(/[A-Z]/) // Should contain at least one uppercase
+  expect(passwordWithUppercaseAndNumbers).toMatch(/[0-9]/) // Should contain at least one number
+
+  // Test all types combination
+  const passwordWithAllTypes = mod.generatePassword({ uppercase: 1, numbers: 1, symbols: 1, length: 8 })
+  expect(passwordWithAllTypes).toHaveLength(8)
+  expect(passwordWithAllTypes).toMatch(/[A-Z]/) // Should contain at least one uppercase
+  expect(passwordWithAllTypes).toMatch(/[0-9]/) // Should contain at least one number
+  expect(passwordWithAllTypes).toMatch(/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/) // Should contain at least one symbol
+
+  // Test multiple instances to ensure consistency
+  for (let i = 0; i < 10; i++) {
+    const password = mod.generatePassword({ numbers: 1, symbols: 1, length: 8 })
+    expect(password).toMatch(/[0-9]/)
+    expect(password).toMatch(/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/)
+  }
 })
 
 test('generateRandomIndex', () => {
