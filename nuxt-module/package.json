@@ -1,6 +1,6 @@
 {
   "name": "usemods-nuxt",
-  "version": "1.14.0",
+  "version": "1.14.1",
   "description": "Zippy little modifiers and utilities for your Nuxt app.",
   "repository": {
     "type": "git",
@@ -10,13 +10,13 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/types.d.ts",
+      "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
+      "require": "./dist/module.mjs"
     }
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
   "files": [
     "dist"
   ],
@@ -31,19 +31,19 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.15.4",
-    "usemods": "1.14.0"
+    "@nuxt/kit": "^3.15.4 || ^4.0.0",
+    "usemods": "1.14.1"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.7.0",
     "@nuxt/eslint-config": "^0.7.5",
     "@nuxt/module-builder": "^1.0.1",
-    "@nuxt/schema": "^3.15.4",
-    "@nuxt/test-utils": "^3.15.4",
+    "@nuxt/schema": "^3.15.4 || ^4.0.0",
+    "@nuxt/test-utils": "^3.15.4 || ^4.0.0",
     "@types/node": "^22.13.1",
     "changelogen": "^0.5.7",
     "eslint": "^9.19.0",
-    "nuxt": "^3.15.4",
+    "nuxt": "^3.15.4 || ^4.0.0",
     "typescript": "^5.7.3",
     "vitest": "^3.0.5",
     "vue-tsc": "^2.2.0"
