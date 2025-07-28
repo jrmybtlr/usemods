@@ -124,8 +124,8 @@ importers:
         specifier: 1.10.0
         version: 1.10.0
       vite-plugin-useclassy:
-        specifier: ^2.1.0
-        version: 2.1.0(react@18.3.1)(vite@6.3.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.43.1)(yaml@2.7.1))
+        specifier: ^2.3.0
+        version: 2.3.0(react@18.3.1)(vite@6.3.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.43.1)(yaml@2.7.1))
     devDependencies:
       '@css-inline/css-inline':
         specifier: ^0.14.3
@@ -7039,8 +7039,8 @@ packages:
       '@nuxt/kit':
         optional: true
 
-  vite-plugin-useclassy@2.1.0:
-    resolution: {integrity: sha512-RdUY3WQXAVQSinWca8XOd9mISWoRGHiYl9xeMFs8MQqTIJPDW14Gw/lka6Ue7WcrgmOCX/Y/2fxhdAT7amBxEg==}
+  vite-plugin-useclassy@2.3.0:
+    resolution: {integrity: sha512-axO94z72Rlv4lmeGnOFWMSOjDJ9/60idbs2PLOUnw+oPGTuttE+Vrbm4+jizG9VdQ/W8Ln2Uj0f/Z5ss9mRNGg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       vite: ^5.0.0 || ^6.0.0
@@ -16651,7 +16651,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-useclassy@2.1.0(react@18.3.1)(vite@6.3.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.43.1)(yaml@2.7.1)):
+  vite-plugin-useclassy@2.3.0(react@18.3.1)(vite@6.3.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.43.1)(yaml@2.7.1)):
     dependencies:
       arktype: 2.1.20
       react: 18.3.1
