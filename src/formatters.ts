@@ -135,7 +135,7 @@ export function formatPercentage(
 export function formatCombinedDates(
   from: Date | string | number,
   to: Date | string | number,
-  options: { locale?: string, format?: 'short' | 'long' } = { locale: 'en-US', format: 'long' },
+  options: { locale?: string, format?: 'short' | 'long', timeZone?: string } = { locale: 'en-US', format: 'long' },
 ): string {
   // Parse dates only once
   const fromDate = new Date(from ?? Date.now())
@@ -144,10 +144,24 @@ export function formatCombinedDates(
   // Early return for invalid dates
   if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) return ''
 
-  // Cache commonly used date components
-  const sameYear = fromDate.getFullYear() === toDate.getFullYear()
-  const sameMonth = sameYear && fromDate.getMonth() === toDate.getMonth()
-  const sameDay = sameMonth && fromDate.getDate() === toDate.getDate()
+  // Cache commonly used date components (timezone-aware)
+  const getDateComponents = (date: Date) => {
+    if (options.timeZone) {
+      const formatter = new Intl.DateTimeFormat('en-CA', { 
+        year: 'numeric', month: '2-digit', day: '2-digit', timeZone: options.timeZone 
+      })
+      const parts = formatter.format(date).split('-')
+      return { year: parseInt(parts[0]), month: parseInt(parts[1]) - 1, day: parseInt(parts[2]) }
+    }
+    return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() }
+  }
+  
+  const fromComponents = getDateComponents(fromDate)
+  const toComponents = getDateComponents(toDate)
+  
+  const sameYear = fromComponents.year === toComponents.year
+  const sameMonth = sameYear && fromComponents.month === toComponents.month
+  const sameDay = sameMonth && fromComponents.day === toComponents.day
   const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
 
   // Simplified format options
@@ -156,7 +170,7 @@ export function formatCombinedDates(
 
   // Formatting helper
   const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
-    new Intl.DateTimeFormat(locale, opts).format(date)
+    new Intl.DateTimeFormat(locale, { ...opts, timeZone: options.timeZone }).format(date)
 
   // Same day
   if (sameDay) {
@@ -169,7 +183,7 @@ export function formatCombinedDates(
   }
 
   if (sameMonth) {
-    return `${fromDate.getDate()}-${toDate.getDate()} ${format(fromDate, { month: monthFormat, year: 'numeric' })}`
+    return `${fromComponents.day}-${toComponents.day} ${format(fromDate, { month: monthFormat, year: 'numeric' })}`
   }
 
   if (sameYear) {

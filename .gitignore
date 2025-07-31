@@ -39,3 +39,4 @@ nuxt-web/utils/**/*.ts
 .vercel
 
 .data
+CLAUDE.md
