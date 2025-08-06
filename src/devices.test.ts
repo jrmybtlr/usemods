@@ -64,7 +64,12 @@ describe('addDeviceClasses', () => {
         },
       },
     }
+  }
+
+  beforeEach(() => {
+    ;(global as unknown as { document?: unknown }).document = createMockDocument()
   })
+
   afterEach(() => {
     delete (global as unknown as { document?: unknown }).document
   })
