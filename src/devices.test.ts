@@ -54,9 +54,9 @@ describe('detectUserDevice', () => {
 })
 
 describe('addDeviceClasses', () => {
-  beforeEach(() => {
-    // Mock document for testing
-    ;(global as unknown as { document: { body: { classList: { add: ReturnType<typeof vi.fn>, length: number } } } }).document = {
+  // Helper to create a mock document object
+  function createMockDocument() {
+    return {
       body: {
         classList: {
           add: vi.fn(),
