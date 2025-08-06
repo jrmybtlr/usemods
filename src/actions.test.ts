@@ -615,13 +615,12 @@ describe('throttle', () => {
     const throttled = mod.throttle(fn, 1000)
 
     // Mock performance.now to simulate time passing
-    const originalNow = performance.now
-    performance.now = vi.fn(() => 2000)
+    const performanceNowSpy = vi.spyOn(performance, 'now').mockReturnValue(2000)
 
     throttled()
     expect(fn).toHaveBeenCalledTimes(1)
 
-    performance.now = originalNow
+    performanceNowSpy.mockRestore()
   })
 
   test('should cancel pending execution', async () => {
