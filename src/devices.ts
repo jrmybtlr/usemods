@@ -14,7 +14,7 @@ export function isServerSide(): boolean {
  */
 export function detectUserDevice(userAgent?: string): object | string {
   if (isServerSide() && !userAgent) return 'server'
-  const result = userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : '')
+  const result = (userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : '')).toLowerCase()
   return {
     os: detectOS(result),
     browser: detectBrowser(result),
