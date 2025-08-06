@@ -193,11 +193,13 @@ export function generateShortId(length: number = 19): string {
  * Generate a random, secure password with a mix of character types and pleasant special characters.
  * @info Don't forget to use our Password Checker in the Goodies section
  */
-export function generatePassword(options: { length?: number, uppercase?: number, numbers?: number, symbols?: number } = {}): string {
+export function generatePassword(options: { length?: number, uppercase?: number, numbers?: number, number?: number, symbols?: number, special?: number } = {}): string {
   const length = options.length ?? 8
   const uppercase = options.uppercase ?? 0
-  const numbers = options.numbers ?? 0
-  const symbols = options.symbols ?? 0
+  // Support both 'numbers' and legacy 'number'
+  const numbers = options.numbers ?? options.number ?? 0
+  // Support both 'symbols' and legacy 'special'
+  const symbols = options.symbols ?? options.special ?? 0
 
   const lowerChars = 'abcdefghijklmnopqrstuvwxyz'
   const upperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
