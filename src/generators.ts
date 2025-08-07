@@ -193,35 +193,49 @@ export function generateShortId(length: number = 19): string {
  * Generate a random, secure password with a mix of character types and pleasant special characters.
  * @info Don't forget to use our Password Checker in the Goodies section
  */
-export function generatePassword(options?: { length?: number, uppercase?: number, number?: number, special?: number }): string {
-  const { length = 8, uppercase = 1, number = 1, special = 1 } = options || {}
-  const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+export function generatePassword(options: { length?: number, uppercase?: number, numbers?: number, number?: number, symbols?: number, special?: number } = {}): string {
+  const length = options.length ?? 8
+  const uppercase = options.uppercase ?? 0
+  // Support both 'numbers' and legacy 'number'
+  const numbers = options.numbers ?? options.number ?? 0
+  // Support both 'symbols' and legacy 'special'
+  const symbols = options.symbols ?? options.special ?? 0
+
+  const lowerChars = 'abcdefghijklmnopqrstuvwxyz'
+  const upperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const numberChars = '0123456789'
-  const specialChars = '!@#$%&()_+?'
-  const allChars = 'abcdefghijklmnopqrstuvwxyz' + uppercaseChars + numberChars + specialChars
+  const symbolChars = '!@#$%^&*()_+-=[]{}|;:,.<>?'
 
-  let password = ''
+  // Build the character pool based on requirements
+  let chars = lowerChars
+  if (uppercase > 0) chars += upperChars
+  if (numbers > 0) chars += numberChars
+  if (symbols > 0) chars += symbolChars
 
-  // Ensure the first character is a letter
-  password += allChars.charAt(generateRandomIndex(52)) // Selects a random letter from the first 52 characters (lowercase + uppercase)
-
-  for (let i = 1; i < length; i++) {
-    password += allChars.charAt(generateRandomIndex(allChars.length))
+  // Collect guaranteed characters
+  const guaranteed: string[] = []
+  for (let i = 0; i < uppercase; i++) {
+    guaranteed.push(upperChars[Math.floor(Math.random() * upperChars.length)])
+  }
+  for (let i = 0; i < numbers; i++) {
+    guaranteed.push(numberChars[Math.floor(Math.random() * numberChars.length)])
+  }
+  for (let i = 0; i < symbols; i++) {
+    guaranteed.push(symbolChars[Math.floor(Math.random() * symbolChars.length)])
   }
 
-  // Ensure the password meets the criteria
-  const ensureCriteria = (regex: RegExp, chars: string, count: number) => {
-    while ((password.match(regex) || []).length < count) {
-      const randomIndex = generateRandomIndex(password.length)
-      password = password.substring(0, randomIndex) + chars.charAt(Math.floor(generateRandomIndex(chars.length))) + password.substring(randomIndex + 1)
-    }
+  // Fill the rest with random characters from the pool
+  while (guaranteed.length < length) {
+    guaranteed.push(chars[Math.floor(Math.random() * chars.length)])
   }
 
-  ensureCriteria(/[A-Z]/g, uppercaseChars, uppercase)
-  ensureCriteria(/[0-9]/g, numberChars, number)
-  ensureCriteria(/[^a-zA-Z0-9]/g, specialChars, special)
+  // Shuffle the password to randomize the position of guaranteed characters
+  for (let i = guaranteed.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[guaranteed[i], guaranteed[j]] = [guaranteed[j], guaranteed[i]]
+  }
 
-  return password
+  return guaranteed.join('')
 }
 
 /**
