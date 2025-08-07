@@ -110,7 +110,7 @@ export function detectContainerBreakpoint(element: HTMLElement): string | null {
   if (typeof window === 'undefined') return null
   if (!element || !(element instanceof HTMLElement)) {
     console.log('element is not an instance of HTMLElement')
-    return '@xs'
+    return null
   }
 
   const width = element.getBoundingClientRect().width

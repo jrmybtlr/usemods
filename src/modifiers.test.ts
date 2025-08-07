@@ -123,8 +123,61 @@ test('stripHtml', () => {
   expect(mod.stripHtml('<p>  Spaces  </p>')).toBe('Spaces')
   expect(mod.stripHtml('No HTML at all')).toBe('No HTML at all')
 
-  // Empty string
-  expect(mod.stripHtml('')).toBe('')
+  // Non-string input (should return empty string)
+  expect(mod.stripHtml(null as unknown as string)).toBe('')
+  expect(mod.stripHtml(undefined as unknown as string)).toBe('')
+  expect(mod.stripHtml(123 as unknown as string)).toBe('')
+  expect(mod.stripHtml({} as unknown as string)).toBe('')
+
+  // HTML tags without closing brackets
+  expect(mod.stripHtml('<p>Hello world')).toBe('Hello world')
+  expect(mod.stripHtml('Hello world</p>')).toBe('Hello world')
+  expect(mod.stripHtml('<p>Hello<world')).toBe('Helloworld')
+  expect(mod.stripHtml('<p>Hello>world')).toBe('Hello>world')
+
+  // Complex tag scenarios
+  expect(mod.stripHtml('<p>Hello</p><div>World</div>')).toBe('HelloWorld')
+  expect(mod.stripHtml('<p>Hello<div>World</div></p>')).toBe('HelloWorld')
+  expect(mod.stripHtml('<p>Hello<div>World')).toBe('HelloWorld')
+
+  // Named entities that don't exist in the map (should return original)
+  expect(mod.stripHtml('&nonexistent;')).toBe('&nonexistent;')
+  expect(mod.stripHtml('&invalid')).toBe('&invalid')
+  expect(mod.stripHtml('&')).toBe('&')
+
+  // All named entities in the map
+  expect(mod.stripHtml('&amp;')).toBe('&')
+  expect(mod.stripHtml('&lt;')).toBe('<')
+  expect(mod.stripHtml('&gt;')).toBe('>')
+  expect(mod.stripHtml('&quot;')).toBe('"')
+  expect(mod.stripHtml('&apos;')).toBe('\'')
+  expect(mod.stripHtml('&nbsp;')).toBe('')
+  expect(mod.stripHtml('&copy;')).toBe('©')
+  expect(mod.stripHtml('&reg;')).toBe('®')
+  expect(mod.stripHtml('&trade;')).toBe('™')
+  expect(mod.stripHtml('&deg;')).toBe('°')
+  expect(mod.stripHtml('&pound;')).toBe('£')
+  expect(mod.stripHtml('&euro;')).toBe('€')
+  expect(mod.stripHtml('&cent;')).toBe('¢')
+  expect(mod.stripHtml('&sect;')).toBe('§')
+  expect(mod.stripHtml('&para;')).toBe('¶')
+  expect(mod.stripHtml('&middot;')).toBe('·')
+  expect(mod.stripHtml('&bull;')).toBe('•')
+  expect(mod.stripHtml('&ndash;')).toBe('–')
+  expect(mod.stripHtml('&mdash;')).toBe('—')
+  expect(mod.stripHtml('&lsquo;')).toBe('\'')
+  expect(mod.stripHtml('&rsquo;')).toBe('\'')
+  expect(mod.stripHtml('&ldquo;')).toBe('"')
+  expect(mod.stripHtml('&rdquo;')).toBe('"')
+
+  // Mixed content with various entity types
+  expect(mod.stripHtml('<p>Hello &amp; &lt;world&gt; &copy; 2024</p>')).toBe('Hello & <world> © 2024')
+  expect(mod.stripHtml('&#65;&amp;&#x42;&lt;&#67;')).toBe('A&B<C')
+
+  // Whitespace handling
+  expect(mod.stripHtml('  <p>Hello</p>  ')).toBe('Hello')
+  expect(mod.stripHtml('\n<p>Hello</p>\n')).toBe('Hello')
+  expect(mod.stripHtml('\t<p>Hello</p>\t')).toBe('Hello')
 })
 
 test('escapeHtml', () => {
