@@ -135,7 +135,7 @@ export function singularize(value: string): string {
 export function ordinalize(value: number): string {
   const suffixes = ['th', 'st', 'nd', 'rd']
   const remainder = value % 100
-  return value + (suffixes[(remainder - 20) % 10] || suffixes[remainder] || suffixes[0])
+  return value + (suffixes[(remainder - 20) % 10] || suffixes[remainder] || suffixes[0]!)
 }
 
 /**
@@ -199,45 +199,45 @@ export function stripHtml(text: string): string {
  * Strips whitespace from a string.
  */
 export function stripWhitespace(text: string): string {
-  return text.replace(/\s+/g, '')
+  return text.replaceAll(/\s+/g, '')
 }
 
 /**
  * Strips numbers from a string.
  */
 export function stripNumbers(text: string): string {
-  return text.replace(/[0-9]/g, '')
+  return text.replaceAll(/[0-9]/g, '')
 }
 
 /**
  * Strips punctuation from a string.
  */
 export function stripPunctuation(text: string): string {
-  return text.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, '')
+  return text.replaceAll(/[.,/#!$%^&*;:{}=\-_`~()]/g, '')
 }
 
 /**
  * Strips symbols from a string.
  */
 export function stripSymbols(text: string): string {
-  return text.replace(/[^\w\s]|_/g, '')
+  return text.replaceAll(/[^\w\s]|_/g, '')
 }
 
 /**
  * Strips emojis from a string (requires ES6 Unicode support) 🦊.
  */
 export function stripEmojis(text: string): string {
-  return text.replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
-    .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Miscellaneous Symbols and Pictographs
-    .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport and Map Symbols
-    .replace(/[\u{1F700}-\u{1F77F}]/gu, '') // Alchemical Symbols
-    .replace(/[\u{1F780}-\u{1F7FF}]/gu, '') // Geometric Shapes Extended
-    .replace(/[\u{1F800}-\u{1F8FF}]/gu, '') // Supplemental Arrows-C
-    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '') // Supplemental Symbols and Pictographs
-    .replace(/[\u{1FA00}-\u{1FA6F}]/gu, '') // Chess Symbols
-    .replace(/[\u{1FA70}-\u{1FAFF}]/gu, '') // Symbols and Pictographs Extended-A
-    .replace(/[\u{2600}-\u{26FF}]/gu, '') // Miscellaneous Symbols
-    .replace(/[\u{2700}-\u{27BF}]/gu, '') // Dingbats
+  return text.replaceAll(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
+    .replaceAll(/[\u{1F300}-\u{1F5FF}]/gu, '') // Miscellaneous Symbols and Pictographs
+    .replaceAll(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport and Map Symbols
+    .replaceAll(/[\u{1F700}-\u{1F77F}]/gu, '') // Alchemical Symbols
+    .replaceAll(/[\u{1F780}-\u{1F7FF}]/gu, '') // Geometric Shapes Extended
+    .replaceAll(/[\u{1F800}-\u{1F8FF}]/gu, '') // Supplemental Arrows-C
+    .replaceAll(/[\u{1F900}-\u{1F9FF}]/gu, '') // Supplemental Symbols and Pictographs
+    .replaceAll(/[\u{1FA00}-\u{1FA6F}]/gu, '') // Chess Symbols
+    .replaceAll(/[\u{1FA70}-\u{1FAFF}]/gu, '') // Symbols and Pictographs Extended-A
+    .replaceAll(/[\u{2600}-\u{26FF}]/gu, '') // Miscellaneous Symbols
+    .replaceAll(/[\u{2700}-\u{27BF}]/gu, '') // Dingbats
 }
 
 /**
@@ -246,15 +246,15 @@ export function stripEmojis(text: string): string {
 export function slugify(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^\w ]+/g, '')
-    .replace(/ +/g, '-')
+    .replaceAll(/[^\w ]+/g, '')
+    .replaceAll(/ +/g, '-')
 }
 
 /**
  * Converts a slug to a string.
  */
 export function deslugify(text: string): string {
-  return text.toLowerCase().replace(/-/g, ' ')
+  return text.toLowerCase().replaceAll('-', ' ')
 }
 
 /**
@@ -264,7 +264,7 @@ export function camelCase(text: string): string {
   if (!text) return ''
   return text
     .trim()
-    .replace(/[^\w\s-]/g, '')
+    .replaceAll(/[^\w\s-]/g, '')
     .split(/[-\s]/)
     .map((word, index) => {
       if (index === 0) return word.toLowerCase()
@@ -280,7 +280,7 @@ export function pascalCase(text: string): string {
   if (!text) return ''
   return text
     .trim()
-    .replace(/[^\w\s-]/g, '')
+    .replaceAll(/[^\w\s-]/g, '')
     .split(/[-\s]/)
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join('')
@@ -293,21 +293,21 @@ export function snakeCase(text: string): string {
   if (!text) return ''
   return text
     .trim()
-    .replace(/[^\w\s]/g, '')
-    .replace(/\s+/g, '_')
+    .replaceAll(/[^\w\s]/g, '')
+    .replaceAll(/\s+/g, '_')
     .toLowerCase()
 }
 
 /**
- * Replaces spaces with hyphens and converts to lowercase.
+ * Converts a string to kebab-case.
  */
 export function kebabCase(text: string): string {
   if (!text) return ''
   return text
     .trim()
+    .replaceAll(/[^\w\s-]/g, '')
+    .replaceAll(/\s+/g, '-')
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
 }
 
 /**

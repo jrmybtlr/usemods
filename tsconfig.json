@@ -2,8 +2,8 @@
   "compilerOptions": {
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
-    "target": "ESNext",
-    "module": "esnext",
+    "target": "ES2022",
+    "module": "ES2022",
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
@@ -17,6 +17,9 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "types": ["node"],
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true
   },
   "exclude": ["src/**/*.test.ts", "node_modules", "dist", "nuxt-web", "nuxt-module", "rollup.config.js", ],
   "include": ["src/**/*"]

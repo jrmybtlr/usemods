@@ -32,15 +32,20 @@ export function generateNumberBetween(from: number, to: number): number {
 }
 
 /**
- * Generate a Version 4 UUID (cryptographically random)
+ * Generate a Version 4 UUID using crypto.randomUUID() when available, falling back to manual generation
  */
 export function generateUuid4(): string {
+  if (globalThis.crypto?.randomUUID) {
+    return globalThis.crypto.randomUUID()
+  }
+
+  // Fallback to manual generation
   const bytes = new Uint8Array(16)
   getSecureRandomValues(bytes)
 
   // Set version 4 (random)
-  bytes[6] = (bytes[6] & 0x0f) | 0x40
-  bytes[8] = (bytes[8] & 0x3f) | 0x80
+  bytes[6] = (bytes[6]! & 0x0f) | 0x40
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80
 
   const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0'))
 
@@ -71,7 +76,7 @@ export function generateUuid7(): string {
   const timestampBytes = new Uint8Array(buffer)
 
   // Set version 7 (UUIDv7) in the timestamp (binary 01110000 in the high nibble of byte 6).
-  timestampBytes[6] = (timestampBytes[6] & 0x0f) | 0x70
+  timestampBytes[6] = (timestampBytes[6]! & 0x0f) | 0x70
 
   // Create an array for the full UUID (16 bytes total).
   const uuidBytes = new Uint8Array(16)
@@ -81,7 +86,7 @@ export function generateUuid7(): string {
   getSecureRandomValues(uuidBytes.subarray(8))
 
   // Set the variant for UUIDv7.
-  uuidBytes[8] = (uuidBytes[8] & 0x3f) | 0x80
+  uuidBytes[8] = (uuidBytes[8]! & 0x3f) | 0x80
 
   // Convert the UUID bytes to a hexadecimal string.
   const hex = Array.from(uuidBytes, b => b.toString(16).padStart(2, '0'))
@@ -100,7 +105,7 @@ export function generateUuid7(): string {
  * Decode a UUIDv7 string into a timestamp
  */
 export function decodeUuid7(uuid: string): string {
-  const hex = uuid.replace(/-/g, '')
+  const hex = uuid.replaceAll('-', '')
 
   // Check if the UUID7 is valid
   if (!/^[0-9a-f]{32}$/i.test(hex)) {
@@ -108,7 +113,7 @@ export function decodeUuid7(uuid: string): string {
   }
 
   // Check if it's a UUIDv7 by examining version bits
-  const version = (parseInt(hex[12], 16) & 0xf)
+  const version = (parseInt(hex[12]!, 16) & 0xf)
   if (version !== 7) {
     throw new Error('[MODS] Invalid UUID7: version is not v7.')
   }
@@ -131,7 +136,7 @@ export function decodeUuid7(uuid: string): string {
  */
 export function generateShortUuid(uuid: string): string {
   // Remove dashes and validate length
-  const hex = uuid.replace(/-/g, '')
+  const hex = uuid.replaceAll('-', '')
   if (hex.length !== 32) {
     throw new Error(`Invalid UUID: expected 32 hex chars, got length=${hex.length}.`)
   }
@@ -143,8 +148,8 @@ export function generateShortUuid(uuid: string): string {
   // Convert bytes to binary string, then to Base64
   const binary = String.fromCharCode(...bytes)
   const base64 = btoa(binary)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
+    .replaceAll('+', '-')
+    .replaceAll('/', '_')
     .replace(/=+$/, '')
   return base64
 }
@@ -154,7 +159,7 @@ export function generateShortUuid(uuid: string): string {
  */
 export function decodeShortUuid(shortUuid: string): string {
   // Convert URL-safe chars back to normal Base64 and pad with '='
-  let base64 = shortUuid.replace(/-/g, '+').replace(/_/g, '/')
+  let base64 = shortUuid.replaceAll('-', '+').replaceAll('_', '/')
   while (base64.length % 4 !== 0) {
     base64 += '='
   }
@@ -215,24 +220,24 @@ export function generatePassword(options: { length?: number, uppercase?: number,
   // Collect guaranteed characters
   const guaranteed: string[] = []
   for (let i = 0; i < uppercase; i++) {
-    guaranteed.push(upperChars[Math.floor(Math.random() * upperChars.length)])
+    guaranteed.push(upperChars[Math.floor(Math.random() * upperChars.length)]!)
   }
   for (let i = 0; i < numbers; i++) {
-    guaranteed.push(numberChars[Math.floor(Math.random() * numberChars.length)])
+    guaranteed.push(numberChars[Math.floor(Math.random() * numberChars.length)]!)
   }
   for (let i = 0; i < symbols; i++) {
-    guaranteed.push(symbolChars[Math.floor(Math.random() * symbolChars.length)])
+    guaranteed.push(symbolChars[Math.floor(Math.random() * symbolChars.length)]!)
   }
 
   // Fill the rest with random characters from the pool
   while (guaranteed.length < length) {
-    guaranteed.push(chars[Math.floor(Math.random() * chars.length)])
+    guaranteed.push(chars[Math.floor(Math.random() * chars.length)]!)
   }
 
   // Shuffle the password to randomize the position of guaranteed characters
   for (let i = guaranteed.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[guaranteed[i], guaranteed[j]] = [guaranteed[j], guaranteed[i]]
+    ;[guaranteed[i], guaranteed[j]] = [guaranteed[j]!, guaranteed[i]!]
   }
 
   return guaranteed.join('')
@@ -252,7 +257,7 @@ export function generateRandomIndex(max: number): number {
   let randomValue: number
 
   do {
-    randomValue = getSecureRandomValues(buffer)[0]
+    randomValue = getSecureRandomValues(buffer)[0]!
   } while (randomValue >= range)
 
   return randomValue % max
@@ -286,14 +291,11 @@ export function generateLoremIpsum(count: number = 5, options?: { format: 'words
 }
 
 /**
- * Helper function to get high-resolution time using process.hrtime, or performance.now as a fallback.
- * @info Node.js times generated are in nanoseconds, browser-based falls back to converting performance.now to microseconds.
+ * Helper function to get high-resolution time using modern performance APIs.
+ * @info Uses performance.now() for high precision timing in microseconds
  */
 export function generateHighResolutionTime(): bigint {
-  if (typeof process !== 'undefined' && process.hrtime && typeof process.hrtime.bigint === 'function') {
-    return process.hrtime.bigint()
-  }
-  else if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     return BigInt(Math.floor(performance.now() * 1e6))
   }
   else {

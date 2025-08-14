@@ -43,7 +43,7 @@ export function dataReverse<T extends object | string[] | number[]>(
  * Returns single unique values within an array or object
  */
 export function dataRemoveDuplicates<T extends string | number>(...arrays: T[][]): T[] {
-  return Array.from(new Set(arrays.flat()))
+  return [...new Set(arrays.flat())]
 }
 
 /**

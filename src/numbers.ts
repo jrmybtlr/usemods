@@ -77,7 +77,7 @@ export function median(numbers: number[]): number {
   if (numbers.length === 0) return 0
   const sorted = numbers.slice().sort((a, b) => a - b)
   const middle = Math.floor(sorted.length / 2)
-  return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle]
+  return sorted.length % 2 === 0 ? (sorted[middle - 1]! + sorted[middle]!) / 2 : sorted[middle]!
 }
 
 /**
@@ -85,7 +85,7 @@ export function median(numbers: number[]): number {
  */
 export function mode(numbers: number[]): number[] | null {
   if (numbers.length === 0) return null
-  if (numbers.length === 1) return [numbers[0]]
+  if (numbers.length === 1) return [numbers[0]!]
 
   const frequencyMap = new Map<number, number>()
   let maxFrequency = 0
@@ -101,8 +101,8 @@ export function mode(numbers: number[]): number[] | null {
   if (maxFrequency === 1) return null
 
   const modes = [...frequencyMap.entries()]
-    .filter(([_, freq]) => freq === maxFrequency)
-    .map(([num, _]) => num)
+    .filter(([, freq]) => freq === maxFrequency)
+    .map(([num]) => num)
 
   return modes
 }

@@ -147,18 +147,18 @@ export function formatCombinedDates(
   // Cache commonly used date components (timezone-aware)
   const getDateComponents = (date: Date) => {
     if (options.timeZone) {
-      const formatter = new Intl.DateTimeFormat('en-CA', { 
-        year: 'numeric', month: '2-digit', day: '2-digit', timeZone: options.timeZone 
+      const formatter = new Intl.DateTimeFormat('en-CA', {
+        year: 'numeric', month: '2-digit', day: '2-digit', timeZone: options.timeZone,
       })
       const parts = formatter.format(date).split('-')
-      return { year: parseInt(parts[0]), month: parseInt(parts[1]) - 1, day: parseInt(parts[2]) }
+      return { year: parseInt(parts[0] ?? '0'), month: parseInt(parts[1] ?? '1') - 1, day: parseInt(parts[2] ?? '1') }
     }
     return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() }
   }
-  
+
   const fromComponents = getDateComponents(fromDate)
   const toComponents = getDateComponents(toDate)
-  
+
   const sameYear = fromComponents.year === toComponents.year
   const sameMonth = sameYear && fromComponents.month === toComponents.month
   const sameDay = sameMonth && fromComponents.day === toComponents.day
@@ -286,7 +286,7 @@ export function formatFileSize(
       .find(unit => valueInBytes >= (map.bytesInUnit.get(unit) || 0)) || inputUnit
     : outputUnit
 
-  return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) || 1), { unit: targetUnit, decimals, unitDisplay, locale })
+  return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) || 1), { unit: targetUnit, ...(decimals !== undefined && { decimals }), unitDisplay, locale })
 }
 
 /**
@@ -319,7 +319,7 @@ export function formatLength(
       .find(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value || 0)) || inputUnit
     : outputUnit
 
-  return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value || 1), { unit: targetUnit, decimals, unitDisplay, locale })
+  return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value || 1), { unit: targetUnit, ...(decimals !== undefined && { decimals }), unitDisplay, locale })
 }
 
 /**
@@ -345,7 +345,7 @@ export function formatTemperature(
   }
 
   if (inputUnit === outputUnit || inputUnit === 'auto' || outputUnit === 'auto') {
-    return formatUnit(number, { unit: inputUnit, decimals, unitDisplay, locale })
+    return formatUnit(number, { unit: inputUnit, ...(decimals !== undefined && { decimals }), unitDisplay, locale })
   }
   else {
     let convertedNumber = number
@@ -355,7 +355,7 @@ export function formatTemperature(
     else if (inputUnit === 'fahrenheit' && outputUnit === 'celsius') {
       convertedNumber = (number - 32) * 5 / 9
     }
-    return formatUnit(convertedNumber, { unit: outputUnit, decimals, unitDisplay, locale })
+    return formatUnit(convertedNumber, { unit: outputUnit, ...(decimals !== undefined && { decimals }), unitDisplay, locale })
   }
 }
 
@@ -365,10 +365,10 @@ export function formatTemperature(
 export function formatNumberToWords(
   number: number,
 ): string {
-  if (number === 0) return map.numberUnderTwenty[0]
+  if (number === 0) return map.numberUnderTwenty[0]!
 
   const formatGroup = (num: number): string => {
-    if (num < 20) return map.numberUnderTwenty[num]
+    if (num < 20) return map.numberUnderTwenty[num]!
     if (num < 100) return `${map.numberTens[Math.floor(num / 10) - 2]}${num % 10 ? '-' + map.numberUnderTwenty[num % 10] : ''}`
     return `${map.numberUnderTwenty[Math.floor(num / 100)]} hundred${num % 100 ? ` and ${formatGroup(num % 100)}` : ''}`
   }
@@ -479,7 +479,7 @@ export function formatList(
   if (items.length <= 2) return items.join(items.length === 2 ? ` ${options?.conjunction || 'and'} ` : '')
 
   const effectiveLimit = options?.limit ?? items.length
-  if (items.length <= effectiveLimit) return items.slice(0, -1).join(', ') + ` ${options?.conjunction || 'and'} ` + items.slice(-1)
+  if (items.length <= effectiveLimit) return items.slice(0, -1).join(', ') + ` ${options?.conjunction || 'and'} ` + (items.at(-1) ?? '')
 
   const listedItems = items.slice(0, effectiveLimit).join(', ')
   const remaining = items.length - effectiveLimit
