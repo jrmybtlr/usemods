@@ -8,7 +8,7 @@
     <PageFunction
       name="scrollToAnchor"
       description="Smoothly scrolls to the element with the specified ID without scuffing up your URLs."
-      :params='[{"name":"id","type":"string"}]'
+      params='[{"name":"id","type":"string"}]'
     >
       <ScrollToAnchor />
     </PageFunction>
@@ -17,7 +17,7 @@
       name="toggleBodyScroll"
       description="Toggles the body scroll with specified class names and returns a promise"
       info="Use your own class names, or ensure fixed is within your Tailwindcss JIT"
-      :params='[{"name":"className","type":"string = \"fixed\""},{"name":"action","type":"\"add\" | \"remove\" | \"toggle\" = \"toggle\""}]'
+      params='[{"name":"className","type":"string = &#39;fixed&#39;"},{"name":"action","type":"&#39;add&#39; | &#39;remove&#39; | &#39;toggle&#39; = &#39;toggle&#39;"}]'
     >
       <ToggleBodyScroll />
     </PageFunction>
@@ -25,7 +25,7 @@
     <PageFunction
       name="toggleElementScroll"
       description="Toggles the element scroll with specified class names and returns a promise"
-      :params='[{"name":"element","type":"HTMLElement"}]'
+      params='[{"name":"element","type":"HTMLElement"}]'
     >
       <ToggleElementScroll />
     </PageFunction>
@@ -33,7 +33,7 @@
     <PageFunction
       name="toggleFullScreen"
       description="Copies a convereted string to the clipboard"
-      :params='[]'
+      params='[]'
     >
       <ToggleFullScreen />
     </PageFunction>
@@ -41,7 +41,7 @@
     <PageFunction
       name="resetForm"
       description="Resets a form to its initial state"
-      :params='[{"name":"form","type":"HTMLFormElement"}]'
+      params='[{"name":"form","type":"HTMLFormElement"}]'
     >
       <ResetForm />
     </PageFunction>
@@ -49,7 +49,7 @@
     <PageFunction
       name="focusOnInvalid"
       description="Focuses on and scrolls to the first invalid input, select, or textarea element within a form."
-      :params='[{"name":"container","type":"HTMLElement"}]'
+      params='[{"name":"container","type":"HTMLElement"}]'
     >
       <FocusOnInvalid />
     </PageFunction>
@@ -57,7 +57,7 @@
     <PageFunction
       name="focusOnNth"
       description="Focuses on the nth element within the specified form, where 0 is the first element and -1 is the last element."
-      :params='[{"name":"container","type":"HTMLElement"},{"name":"index","type":"number = 0"}]'
+      params='[{"name":"container","type":"HTMLElement"},{"name":"index","type":"number = 0"}]'
     >
       <FocusOnNth />
     </PageFunction>
@@ -65,7 +65,7 @@
     <PageFunction
       name="focusTrap"
       description="Sets up a keyboard trap within an HTML element, allowing the focus to cycle between the first and last focusable elements when the Tab key is pressed."
-      :params='[{"name":"container","type":"HTMLElement"}]'
+      params='[{"name":"container","type":"HTMLElement"}]'
     >
       <FocusTrap />
     </PageFunction>
@@ -73,7 +73,7 @@
     <PageFunction
       name="debounce"
       description="Runs a function only if there are no new calls during the delay"
-      :params='[]'
+      params='[]'
     >
       <Debounce />
     </PageFunction>
@@ -81,7 +81,7 @@
     <PageFunction
       name="throttle"
       description="Throttles a function to ensure it only runs once per threshold"
-      :params='[]'
+      params='[]'
     >
       <Throttle />
     </PageFunction>

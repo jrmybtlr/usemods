@@ -147,18 +147,18 @@ export function formatCombinedDates(
   // Cache commonly used date components (timezone-aware)
   const getDateComponents = (date: Date) => {
     if (options.timeZone) {
-      const formatter = new Intl.DateTimeFormat('en-CA', { 
-        year: 'numeric', month: '2-digit', day: '2-digit', timeZone: options.timeZone 
+      const formatter = new Intl.DateTimeFormat('en-CA', {
+        year: 'numeric', month: '2-digit', day: '2-digit', timeZone: options.timeZone,
       })
       const parts = formatter.format(date).split('-')
       return { year: parseInt(parts[0]), month: parseInt(parts[1]) - 1, day: parseInt(parts[2]) }
     }
     return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() }
   }
-  
+
   const fromComponents = getDateComponents(fromDate)
   const toComponents = getDateComponents(toDate)
-  
+
   const sameYear = fromComponents.year === toComponents.year
   const sameMonth = sameYear && fromComponents.month === toComponents.month
   const sameDay = sameMonth && fromComponents.day === toComponents.day

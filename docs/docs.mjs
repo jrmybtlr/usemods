@@ -195,9 +195,9 @@ async function generateVue(file, name) {
       .replace(/\s+/g, ' ')
       .trim()
 
-    // Escape single quotes in params for Vue attribute binding (since we use single quotes for the attribute)
-    // We need to escape single quotes with backslash for JavaScript string literals
-    const escapedParams = usage.params.replace(/'/g, '\\\'')
+    // Use single-quoted HTML attribute with JSON inside (JSON uses double quotes naturally)
+    // Escape single quotes using HTML entity &#39; since HTML doesn't use backslash escaping
+    const escapedParams = usage.params.replace(/'/g, "&#39;")
 
     vueContent += `    <PageFunction\n`
     vueContent += `      name="${usage.functionName}"\n`
@@ -205,7 +205,7 @@ async function generateVue(file, name) {
     if (usage.info) {
       vueContent += `      info="${escapedInfo}"\n`
     }
-    vueContent += `      :params='${escapedParams}'\n`
+    vueContent += `      params='${escapedParams}'\n`
     vueContent += '    >\n'
     vueContent += `      <${usage.componentName} />\n`
     vueContent += '    </PageFunction>\n\n'
