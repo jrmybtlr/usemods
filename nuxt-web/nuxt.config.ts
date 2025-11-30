@@ -1,4 +1,4 @@
-import useClassy from "../../useclassy/src/index";
+// import useClassy from "../../useclassy/src/index";
 
 export default defineNuxtConfig({
   modules: [
@@ -7,11 +7,6 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/color-mode",
     "@nuxt/eslint",
-    "nuxt-icon",
-    "@nuxtjs/seo",
-    // '@nuxtjs/sitemap',
-    "@nuxt/content",
-    "@nuxthub/core",
   ],
 
   css: ["~/assets/css/main.css"],
@@ -27,15 +22,15 @@ export default defineNuxtConfig({
     },
   },
 
-  site: {
-    name: "UseMods",
-    description:
-      "UseMods is a collection of helper functions for JavaScript and TypeScript.",
-    url: "https://usemods.com",
-  },
+  // site: {
+  //   name: "UseMods",
+  //   description:
+  //     "UseMods is a collection of helper functions for JavaScript and TypeScript.",
+  //   url: "https://usemods.com",
+  // },
 
   nitro: {
-    preset: 'cloudflare_pages',
+    preset: process.env.NODE_ENV === 'production' ? 'cloudflare_pages' : undefined,
     prerender: {
       routes: ["/"],
       crawlLinks: true,
@@ -48,14 +43,14 @@ export default defineNuxtConfig({
     },
   },
 
-  vite: {
-    plugins: [
-      useClassy({
-        language: "vue",
-        debug: true,
-      }) as any,
-    ],
-  },
+  // vite: {
+  //   plugins: [
+  //     useClassy({
+  //       language: "vue",
+  //       debug: true,
+  //     }) as any,
+  //   ],
+  // },
 
   routeRules: {
     "/": { prerender: true },
@@ -104,6 +99,13 @@ export default defineNuxtConfig({
         "./pages/**/*.{vue,js,ts,jsx,tsx}",
         "./.classy/output.classy.html",
       ],
+    },
+  },
+
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
     },
   },
 

@@ -40,9 +40,26 @@
 </template>
 
 <script setup lang="ts">
+import { introLinks, docLinks } from '~/utils/navigation'
+
 const route = useRoute()
-const { data } = await useAsyncData('next-prev' + route.fullPath, async () => {
-  const [prev, next] = await queryContent().only(['_path', 'title', 'lead']).findSurround(route.fullPath)
-  return { prev, next }
+
+// Build navigation array from intro and doc links
+const allLinks = [...introLinks, ...docLinks]
+
+// Find current link index
+const currentIndex = computed(() => {
+  return allLinks.findIndex(link => link.path === route.path)
+})
+
+// Get previous and next links
+const data = computed(() => {
+  const prev = currentIndex.value > 0 ? allLinks[currentIndex.value - 1] : null
+  const next = currentIndex.value < allLinks.length - 1 ? allLinks[currentIndex.value + 1] : null
+
+  return {
+    prev: prev ? { _path: prev.path, title: prev.title, lead: '' } : null,
+    next: next ? { _path: next.path, title: next.title, lead: '' } : null,
+  }
 })
 </script>

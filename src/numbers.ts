@@ -115,7 +115,10 @@ export function min(numbers: number[]): number {
     console.log('[MODS] min array is empty.')
     return 0
   }
-  return Math.min(...numbers)
+  // Use reduce for large arrays to avoid stack overflow with spread operator
+  return numbers.length > 65536
+    ? numbers.reduce((a, b) => (a < b ? a : b))
+    : Math.min(...numbers)
 }
 
 /**
@@ -126,7 +129,10 @@ export function max(numbers: number[]): number {
     console.log('[MODS] max array is empty.')
     return 0
   }
-  return Math.max(...numbers)
+  // Use reduce for large arrays to avoid stack overflow with spread operator
+  return numbers.length > 65536
+    ? numbers.reduce((a, b) => (a > b ? a : b))
+    : Math.max(...numbers)
 }
 
 /**

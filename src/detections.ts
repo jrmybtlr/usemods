@@ -162,13 +162,11 @@ export function detectUrlParams(format: 'string' | 'object' = 'string'): ({ [key
   const searchParams = new URLSearchParams(window.location.search)
   if (format === 'string') return searchParams.toString()
 
-  const paramsArray = []
-
-  for (const [key, value] of searchParams.entries()) {
-    paramsArray.push({ [key]: value })
-  }
-
-  return paramsArray.length > 0 ? paramsArray : null
+  // Use native iterator spread with map for cleaner transformation
+  const entries = [...searchParams.entries()]
+  return entries.length > 0
+    ? entries.map(([key, value]) => ({ [key]: value }))
+    : null
 }
 
 /**

@@ -6,7 +6,7 @@
 
     <ul>
       <li
-        v-for="item in data?.meta?.toc ?? []"
+        v-for="item in toc ?? []"
         :key="item"
         class="mt-0">
         <NuxtLink
@@ -26,7 +26,8 @@
     </ul>
 
     <NuxtLink
-      :to="`https://github.com/LittleFoxCompany/usemods/blob/main/src/${pageId.at(-1)}.ts`"
+      v-if="pageId"
+      :to="`https://github.com/LittleFoxCompany/usemods/blob/main/src/${pageId}.ts`"
       target="_blank"
       class="flex items-center gap-1.5 py-8 text-sm font-medium leading-none text-zinc-500">
       <Icon
@@ -38,14 +39,29 @@
 </template>
 
 <script setup lang="ts">
+interface Props {
+  toc?: string[]
+  pageId?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  toc: () => [],
+  pageId: undefined,
+})
+
 const route = useRoute()
 const activeSections = useState<string[]>('activeSections', () => [])
-const pageId = useRoute().params.slug
-const data = inject<{ meta?: { toc?: string[] } }>('data')
+
+// Try to get toc and pageId from provide/inject as fallback
+const injectedToc = inject<string[]>('toc', undefined)
+const injectedPageId = inject<string>('pageId', undefined)
+
+const toc = props.toc.length > 0 ? props.toc : (injectedToc ?? [])
+const pageId = props.pageId ?? injectedPageId ?? (route.params.slug?.at(-1) as string | undefined)
 
 // Function to scroll to the anchor
 function scrollToAnchor(id: string) {
-  const element = document.getElementById(id)
+  const element = document.getElementById(id.toLowerCase())
   if (element) {
     element.scrollIntoView({ behavior: 'smooth' })
   }

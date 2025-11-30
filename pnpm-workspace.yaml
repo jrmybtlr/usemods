@@ -1,4 +1,4 @@
 packages:
   - 'docs'
   - 'nuxt-web'
-  - 'nuxt-module'
+  # - 'nuxt-module'

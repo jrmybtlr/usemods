@@ -207,8 +207,7 @@ export function isPrime(value: number): boolean {
  * Check if the number is an integer.
  */
 export function isInteger(value: unknown): boolean {
-  if (typeof value !== 'number') return false
-  return (value) % 1 === 0
+  return Number.isInteger(value)
 }
 
 /**

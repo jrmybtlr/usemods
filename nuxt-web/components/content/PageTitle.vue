@@ -5,9 +5,9 @@
       <div>Docs</div>
       <div>/</div>
       <div
-        v-if="route.params.slug?.at(-1)"
+        v-if="pageName"
         class="capitalize">
-        {{ route.params.slug?.at(-1) }}
+        {{ pageName }}
       </div>
     </div>
     <div class="text-gray-950 dark:text-white">
@@ -18,6 +18,22 @@
 
 <script setup lang="ts">
 const route = useRoute()
+
+// Get page name from route - handle both catch-all and direct routes
+const pageName = computed(() => {
+  if (route.params.slug && Array.isArray(route.params.slug)) {
+    return route.params.slug.at(-1) as string
+  }
+  // For direct routes like /docs/formatters, extract from pathname
+  const pathParts = route.path.split('/').filter(Boolean)
+  if (pathParts.length >= 2 && pathParts[0] === 'docs') {
+    return pathParts[1]
+  }
+  if (pathParts.length >= 2 && pathParts[0] === 'intro') {
+    return pathParts[1]
+  }
+  return route.params.slug as string | undefined
+})
 </script>
 
 <style scoped>

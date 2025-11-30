@@ -20,7 +20,9 @@ export default defineNuxtModule<ModuleOptions>({
   setup(options) {
     const aliasMap = new Map<string, string>(options.alias)
 
-    const exportedFunctions = Object.keys(utils)
+    const exportedFunctions = Object.keys(utils).filter(
+      (name) => name !== 'default' && typeof utils[name as keyof typeof utils] === 'function'
+    )
 
     for (const name of exportedFunctions) {
       const alias = aliasMap.has(name) ? aliasMap.get(name)! : name

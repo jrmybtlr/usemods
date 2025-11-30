@@ -18,7 +18,10 @@ export function dataSortBy(items: object | string[] | number[], options?: { prop
     if (valueA > valueB) return order === 'asc' ? 1 : -1
     return 0
   }
-  return Array.isArray(items) ? items.sort(compare) : items
+  // Use toSorted (ES2023) for immutability, with spread fallback for older environments
+  return Array.isArray(items)
+    ? ('toSorted' in items ? (items as any).toSorted(compare) : [...items].sort(compare))
+    : items
 }
 
 /**
@@ -35,7 +38,9 @@ export function dataReverse<T extends object | string[] | number[]>(
     return Object.fromEntries(Object.entries(items).reverse()) as T
   }
   else {
-    return (items as string[] | number[]).reverse() as T
+    // Use toReversed (ES2023) for immutability, with spread fallback for older environments
+    const arr = items as string[] | number[]
+    return ('toReversed' in arr ? (arr as any).toReversed() : [...arr].reverse()) as T
   }
 }
 
