@@ -7,4 +7,3 @@
     </ExampleResult>
   </Example>
 </template>
-

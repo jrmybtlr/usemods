@@ -8,7 +8,7 @@
     <PageFunction
       name="dataSortBy"
       description="Sort an array or object by a property."
-      params='[{"name":"items","type":"object | string[] | number[]"},{"name":"options?","type":"{ property?: string, order?: &#39;asc&#39; | &#39;desc&#39; }"}]'
+      :params='[{"name":"items","type":"object | string[] | number[]"},{"name":"options?","type":"{ property?: string, order?: &#39;asc&#39; | &#39;desc&#39; }"}]'
     >
       <DataSortBy />
     </PageFunction>
@@ -16,7 +16,7 @@
     <PageFunction
       name="dataReverse"
       description="Reverse an array or object."
-      params='[]'
+      :params='[]'
     >
       <DataReverse />
     </PageFunction>
@@ -24,7 +24,7 @@
     <PageFunction
       name="dataRemoveDuplicates"
       description="Returns single unique values within an array or object"
-      params='[]'
+      :params='[]'
     >
       <DataRemoveDuplicates />
     </PageFunction>
@@ -32,7 +32,7 @@
     <PageFunction
       name="dataFlatten"
       description="Flatten an array of arrays or an object of objects into a single array or object. That was hard to say."
-      params='[]'
+      :params='[]'
     >
       <DataFlatten />
     </PageFunction>
@@ -40,7 +40,7 @@
     <PageFunction
       name="dataWithout"
       description="Returns an array without a property or properties."
-      params='[]'
+      :params='[]'
     >
       <DataWithout />
     </PageFunction>

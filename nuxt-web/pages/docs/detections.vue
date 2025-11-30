@@ -8,7 +8,7 @@
     <PageFunction
       name="detectScrollPosition"
       description="Detect the current scroll position of the window"
-      params='[]'
+      :params='[]'
     >
       <DetectScrollPosition />
     </PageFunction>
@@ -17,7 +17,7 @@
       name="detectMousePosition"
       description="Detect the absolute mouse position with the page"
       info="Don't forget to add a mousemove event listener to the window"
-      params='[{"name":"event","type":"MouseEvent"}]'
+      :params='[{"name":"event","type":"MouseEvent"}]'
     >
       <DetectMousePosition />
     </PageFunction>
@@ -26,7 +26,7 @@
       name="detectRelativeMousePosition"
       description="Detect the relative mouse position with the window size and returns a percentage value"
       info="Don't forget to add a mousemove event listener to the window"
-      params='[{"name":"event","type":"MouseEvent"}]'
+      :params='[{"name":"event","type":"MouseEvent"}]'
     >
       <DetectRelativeMousePosition />
     </PageFunction>
@@ -34,7 +34,7 @@
     <PageFunction
       name="detectWindowSize"
       description="Detect the browser's window size"
-      params='[]'
+      :params='[]'
     >
       <DetectWindowSize />
     </PageFunction>
@@ -42,7 +42,7 @@
     <PageFunction
       name="detectScreenSize"
       description="Detect the screen or monitor size"
-      params='[]'
+      :params='[]'
     >
       <DetectScreenSize />
     </PageFunction>
@@ -50,7 +50,7 @@
     <PageFunction
       name="detectActiveBrowser"
       description="Detect if the browser window is currently active or hidden."
-      params='[]'
+      :params='[]'
     >
       <DetectActiveBrowser />
     </PageFunction>
@@ -58,7 +58,7 @@
     <PageFunction
       name="detectColorScheme"
       description="Detect the current color scheme (Light or Dark)"
-      params='[]'
+      :params='[]'
     >
       <DetectColorScheme />
     </PageFunction>
@@ -66,7 +66,7 @@
     <PageFunction
       name="detectUserTimezone"
       description="Detect the current user's Timezone"
-      params='[]'
+      :params='[]'
     >
       <DetectUserTimezone />
     </PageFunction>
@@ -75,7 +75,7 @@
       name="detectBreakpoint"
       description="Detect the current breakpoint based on Tailwind CSS breakpoints"
       info="Add a listener to the window resize event to detect changes"
-      params='[]'
+      :params='[]'
     >
       <DetectBreakpoint />
     </PageFunction>
@@ -84,7 +84,7 @@
       name="detectContainerBreakpoint"
       description="Detect any container breakpoint based on Tailwind CSS breakpoints"
       info="Add a listener to the window resize event to detect changes"
-      params='[{"name":"element","type":"HTMLElement"}]'
+      :params='[{"name":"element","type":"HTMLElement"}]'
     >
       <DetectContainerBreakpoint />
     </PageFunction>
@@ -92,7 +92,7 @@
     <PageFunction
       name="detectNetworkStatus"
       description="Detect the current network status of the user (Online or Offline)"
-      params='[]'
+      :params='[]'
     >
       <DetectNetworkStatus />
     </PageFunction>
@@ -100,7 +100,7 @@
     <PageFunction
       name="detectUrl"
       description="Returns the current URL"
-      params='[]'
+      :params='[]'
     >
       <DetectUrl />
     </PageFunction>
@@ -108,7 +108,7 @@
     <PageFunction
       name="detectUrlPath"
       description="Returns the path of the current URL as an array or string"
-      params='[{"name":"format","type":"&#39;array&#39; | &#39;string&#39; = &#39;array&#39;"}]'
+      :params='[{"name":"format","type":"&#39;array&#39; | &#39;string&#39; = &#39;array&#39;"}]'
     >
       <DetectUrlPath />
     </PageFunction>
@@ -116,7 +116,7 @@
     <PageFunction
       name="detectUrlParams"
       description="Returns a value from the URL by name"
-      params='[{"name":"format","type":"&#39;string&#39; | &#39;object&#39; = &#39;string&#39;"}]'
+      :params='[{"name":"format","type":"&#39;string&#39; | &#39;object&#39; = &#39;string&#39;"}]'
     >
       <DetectUrlParams />
     </PageFunction>
@@ -124,7 +124,7 @@
     <PageFunction
       name="detectUrlHash"
       description="Returns a value from the URL hash by name"
-      params='[]'
+      :params='[]'
     >
       <DetectUrlHash />
     </PageFunction>
@@ -132,7 +132,7 @@
     <PageFunction
       name="detectHost"
       description="Returns the current host or domain name from the URL"
-      params='[]'
+      :params='[]'
     >
       <DetectHost />
     </PageFunction>
@@ -140,7 +140,7 @@
     <PageFunction
       name="detectHostName"
       description="Returns the current hostname from the URL"
-      params='[]'
+      :params='[]'
     >
       <DetectHostName />
     </PageFunction>
@@ -148,7 +148,7 @@
     <PageFunction
       name="detectPort"
       description="Returns the current port"
-      params='[]'
+      :params='[]'
     >
       <DetectPort />
     </PageFunction>
@@ -160,24 +160,24 @@
 import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
-import DetectActiveBrowser from '~/components/content/dectectors/DetectActiveBrowser.vue'
-import DetectBreakpoint from '~/components/content/dectectors/DetectBreakpoint.vue'
-import DetectColorScheme from '~/components/content/dectectors/DetectColorScheme.vue'
-import DetectContainerBreakpoint from '~/components/content/dectectors/DetectContainerBreakpoint.vue'
-import DetectHost from '~/components/content/dectectors/DetectHost.vue'
-import DetectHostName from '~/components/content/dectectors/DetectHostName.vue'
-import DetectMousePosition from '~/components/content/dectectors/DetectMousePosition.vue'
-import DetectNetworkStatus from '~/components/content/dectectors/DetectNetworkStatus.vue'
-import DetectPort from '~/components/content/dectectors/DetectPort.vue'
-import DetectRelativeMousePosition from '~/components/content/dectectors/DetectRelativeMousePosition.vue'
-import DetectScreenSize from '~/components/content/dectectors/DetectScreenSize.vue'
-import DetectScrollPosition from '~/components/content/dectectors/DetectScrollPosition.vue'
-import DetectUrl from '~/components/content/dectectors/DetectUrl.vue'
-import DetectUrlHash from '~/components/content/dectectors/DetectUrlHash.vue'
-import DetectUrlParams from '~/components/content/dectectors/DetectUrlParams.vue'
-import DetectUrlPath from '~/components/content/dectectors/DetectUrlPath.vue'
-import DetectUserTimezone from '~/components/content/dectectors/DetectUserTimezone.vue'
-import DetectWindowSize from '~/components/content/dectectors/DetectWindowSize.vue'
+import DetectActiveBrowser from '~/components/content/dectectors/DetectActiveBrowser.client.vue'
+import DetectBreakpoint from '~/components/content/dectectors/DetectBreakpoint.client.vue'
+import DetectColorScheme from '~/components/content/dectectors/DetectColorScheme.client.vue'
+import DetectContainerBreakpoint from '~/components/content/dectectors/DetectContainerBreakpoint.client.vue'
+import DetectHost from '~/components/content/dectectors/DetectHost.client.vue'
+import DetectHostName from '~/components/content/dectectors/DetectHostName.client.vue'
+import DetectMousePosition from '~/components/content/dectectors/DetectMousePosition.client.vue'
+import DetectNetworkStatus from '~/components/content/dectectors/DetectNetworkStatus.client.vue'
+import DetectPort from '~/components/content/dectectors/DetectPort.client.vue'
+import DetectRelativeMousePosition from '~/components/content/dectectors/DetectRelativeMousePosition.client.vue'
+import DetectScreenSize from '~/components/content/dectectors/DetectScreenSize.client.vue'
+import DetectScrollPosition from '~/components/content/dectectors/DetectScrollPosition.client.vue'
+import DetectUrl from '~/components/content/dectectors/DetectUrl.client.vue'
+import DetectUrlHash from '~/components/content/dectectors/DetectUrlHash.client.vue'
+import DetectUrlParams from '~/components/content/dectectors/DetectUrlParams.client.vue'
+import DetectUrlPath from '~/components/content/dectectors/DetectUrlPath.client.vue'
+import DetectUserTimezone from '~/components/content/dectectors/DetectUserTimezone.client.vue'
+import DetectWindowSize from '~/components/content/dectectors/DetectWindowSize.client.vue'
 
 const toc = ["detectScrollPosition","detectMousePosition","detectRelativeMousePosition","detectWindowSize","detectScreenSize","detectActiveBrowser","detectColorScheme","detectUserTimezone","detectBreakpoint","detectContainerBreakpoint","detectNetworkStatus","detectUrl","detectUrlPath","detectUrlParams","detectUrlHash","detectHost","detectHostName","detectPort"]
 const pageId = 'detections'

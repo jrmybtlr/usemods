@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { introLinks, docLinks } from '~/utils/navigation'
+import { introLinks, docLinks } from "~/utils/navigation";
 
 onBeforeMount(() => {
   addDeviceClasses();

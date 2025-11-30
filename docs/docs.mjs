@@ -5,7 +5,7 @@ import { rollup } from 'rollup'
 import typescript from 'rollup-plugin-typescript2'
 import terser from '@rollup/plugin-terser'
 
-const { readFile, writeFile, copyFile, readdir, unlink } = fsPromises
+const { readFile, writeFile, copyFile, readdir, unlink, access } = fsPromises
 
 // Arguments
 const args = argv.slice(2)
@@ -164,7 +164,20 @@ async function generateVue(file, name) {
       : []
 
     const componentName = getComponentName(functionName)
-    imports.add(`import ${componentName} from '~/components/content/${componentDir}/${componentName}.vue'`)
+
+    // Check if .client.vue exists, otherwise use .vue
+    const clientVuePath = join(nuxtWebPath, 'components/content', componentDir, `${componentName}.client.vue`)
+    const regularVuePath = join(nuxtWebPath, 'components/content', componentDir, `${componentName}.vue`)
+    let componentSuffix = '.vue'
+    try {
+      await access(clientVuePath)
+      componentSuffix = '.client.vue'
+    }
+    catch {
+      // .client.vue doesn't exist, use .vue
+    }
+
+    imports.add(`import ${componentName} from '~/components/content/${componentDir}/${componentName}${componentSuffix}'`)
 
     componentUsages.push({
       functionName,
@@ -197,7 +210,7 @@ async function generateVue(file, name) {
 
     // Use single-quoted HTML attribute with JSON inside (JSON uses double quotes naturally)
     // Escape single quotes using HTML entity &#39; since HTML doesn't use backslash escaping
-    const escapedParams = usage.params.replace(/'/g, "&#39;")
+    const escapedParams = usage.params.replace(/'/g, '&#39;')
 
     vueContent += `    <PageFunction\n`
     vueContent += `      name="${usage.functionName}"\n`
