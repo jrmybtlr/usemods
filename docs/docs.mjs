@@ -256,37 +256,37 @@ async function generateVue(file, name) {
 
 async function generateNavigation() {
   const docLinks = []
-  
+
   for (const file of files) {
     // Skip tailwind as it's not a doc page
     if (file === 'tailwind') continue
-    
+
     const filePath = join(srcPath, `${file}.ts`)
     const content = await readFile(filePath, 'utf8')
     const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
-    
+
     const link = {
       path: `/docs/${file}`,
       title: metadata.title || file,
       lead: metadata.description || '',
     }
-    
+
     // Only add icon if lead metadata exists
     if (metadata.lead) {
       link.icon = metadata.lead
     }
-    
+
     docLinks.push(link)
   }
-  
+
   // Sort docLinks to match the files array order (excluding tailwind)
   const sortedDocLinks = files
     .filter(file => file !== 'tailwind')
     .map(file => docLinks.find(link => link.path === `/docs/${file}`))
     .filter(Boolean)
-  
+
   // Format docLinks array as TypeScript
-  const docLinksString = sortedDocLinks.map(link => {
+  const docLinksString = sortedDocLinks.map((link) => {
     const parts = [
       `    path: "${link.path}",`,
       `    title: "${link.title}",`,
@@ -297,7 +297,7 @@ async function generateNavigation() {
     }
     return `  {\n${parts.join('\n')}\n  }`
   }).join(',\n')
-  
+
   const navigationContent = `interface NavLink {
   id?: string;
   path: string;
@@ -325,7 +325,7 @@ export const docLinks: NavLink[] = [
 ${docLinksString}
 ];
 `
-  
+
   const navigationPath = join(nuxtWebPath, 'utils', 'navigation.ts')
   await writeFile(navigationPath, navigationContent)
 }
