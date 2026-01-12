@@ -42,7 +42,7 @@
       description="Adds a prefix and suffix to a string if it doesn't already start and end with them."
       params='[{"name":"text","type":"string"},{"name":"start","type":"string"},{"name":"end","type":"string"}]'
     >
-      <surroundWith />
+      <SurroundWith />
     </PageFunction>
 
     <PageFunction
@@ -92,7 +92,7 @@
       description="Strips numbers from a string."
       params='[{"name":"text","type":"string"}]'
     >
-      <stripNumbers />
+      <StripNumbers />
     </PageFunction>
 
     <PageFunction
@@ -124,7 +124,7 @@
       description="Converts a string to-a-slug."
       params='[{"name":"text","type":"string"}]'
     >
-      <slugify />
+      <Slugify />
     </PageFunction>
 
     <PageFunction
@@ -132,7 +132,7 @@
       description="Converts a slug to a string."
       params='[{"name":"text","type":"string"}]'
     >
-      <deslugify />
+      <Deslugify />
     </PageFunction>
 
     <PageFunction
@@ -199,6 +199,7 @@ import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
 import CamelCase from '~/components/content/modifiers/CamelCase.vue'
+import Deslugify from '~/components/content/modifiers/deslugify.vue'
 import EndWith from '~/components/content/modifiers/EndWith.vue'
 import EndWithout from '~/components/content/modifiers/EndWithout.vue'
 import EscapeHtml from '~/components/content/modifiers/EscapeHtml.vue'
@@ -207,20 +208,19 @@ import Ordinalize from '~/components/content/modifiers/Ordinalize.vue'
 import PascalCase from '~/components/content/modifiers/PascalCase.vue'
 import Pluralize from '~/components/content/modifiers/Pluralize.vue'
 import Singularize from '~/components/content/modifiers/Singularize.vue'
+import Slugify from '~/components/content/modifiers/slugify.vue'
 import SnakeCase from '~/components/content/modifiers/SnakeCase.vue'
 import StartWith from '~/components/content/modifiers/StartWith.vue'
 import StartWithout from '~/components/content/modifiers/StartWithout.vue'
 import StripEmojis from '~/components/content/modifiers/StripEmojis.vue'
 import StripHtml from '~/components/content/modifiers/StripHtml.vue'
+import StripNumbers from '~/components/content/modifiers/stripNumbers.vue'
 import StripPunctuation from '~/components/content/modifiers/StripPunctuation.vue'
 import StripSymbols from '~/components/content/modifiers/StripSymbols.vue'
 import StripWhitespace from '~/components/content/modifiers/StripWhitespace.vue'
+import SurroundWith from '~/components/content/modifiers/surroundWith.vue'
 import TitleCase from '~/components/content/modifiers/TitleCase.vue'
 import UnescapeHtml from '~/components/content/modifiers/UnescapeHtml.vue'
-import deslugify from '~/components/content/modifiers/deslugify.vue'
-import slugify from '~/components/content/modifiers/slugify.vue'
-import stripNumbers from '~/components/content/modifiers/stripNumbers.vue'
-import surroundWith from '~/components/content/modifiers/surroundWith.vue'
 
 const toc = ["startWith","startWithout","endWith","endWithout","surroundWith","pluralize","singularize","ordinalize","stripHtml","stripWhitespace","stripNumbers","stripPunctuation","stripSymbols","stripEmojis","slugify","deslugify","camelCase","pascalCase","snakeCase","kebabCase","titleCase","escapeHtml","unescapeHtml"]
 const pageId = 'modifiers'

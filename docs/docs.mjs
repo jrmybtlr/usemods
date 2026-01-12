@@ -163,25 +163,93 @@ async function generateVue(file, name) {
       ? parseParams(signatureMatch[1])
       : []
 
-    const componentName = getComponentName(functionName)
+    let componentName = getComponentName(functionName)
+    const componentDirPath = join(nuxtWebPath, 'components/content', componentDir)
 
-    // Check if .client.vue exists, otherwise use .vue
-    const clientVuePath = join(nuxtWebPath, 'components/content', componentDir, `${componentName}.client.vue`)
-    const regularVuePath = join(nuxtWebPath, 'components/content', componentDir, `${componentName}.vue`)
+    // Find the actual component file name by checking what exists
     let componentSuffix = '.vue'
+    let actualComponentName = componentName
+    
+    // Normalize function name for comparison (lowercase, remove special chars)
+    const normalizeName = (name) => name.toLowerCase().replace(/[^a-z0-9]/g, '')
+    const targetNormalized = normalizeName(functionName)
+    
+    // List all files in the component directory
+    let componentFiles = []
     try {
-      await access(clientVuePath)
-      componentSuffix = '.client.vue'
+      componentFiles = await readdir(componentDirPath)
     }
     catch {
-      // .client.vue doesn't exist, use .vue
+      console.warn(`Warning: Component directory not found: ${componentDirPath}`)
+    }
+    
+    // Find matching component file (case-insensitive match)
+    let found = false
+    for (const file of componentFiles) {
+      if (!file.endsWith('.vue')) continue
+      
+      const baseName = file.replace(/\.(client\.)?vue$/, '')
+      const normalizedBase = normalizeName(baseName)
+      
+      // Check if this file matches the function name
+      if (normalizedBase === targetNormalized || 
+          normalizeName(componentName) === normalizedBase ||
+          normalizeName(functionName) === normalizedBase) {
+        actualComponentName = baseName
+        componentSuffix = file.endsWith('.client.vue') ? '.client.vue' : '.vue'
+        found = true
+        break
+      }
+    }
+    
+    if (!found) {
+      // Fallback: try common naming patterns
+      const patterns = [componentName, functionName]
+      
+      // Add acronym variations
+      if (functionName.includes('Ip')) patterns.push(functionName.replace(/Ip/g, 'IP'))
+      if (functionName.includes('Id')) patterns.push(functionName.replace(/Id/g, 'ID'))
+      if (functionName.includes('Url')) patterns.push(functionName.replace(/Url/g, 'URL'))
+      if (functionName.includes('Uuid')) patterns.push(functionName.replace(/Uuid/g, 'UUID'))
+      
+      for (const pattern of patterns) {
+        const clientPath = join(componentDirPath, `${pattern}.client.vue`)
+        const regularPath = join(componentDirPath, `${pattern}.vue`)
+        
+        try {
+          await access(clientPath)
+          actualComponentName = pattern
+          componentSuffix = '.client.vue'
+          found = true
+          break
+        }
+        catch {
+          try {
+            await access(regularPath)
+            actualComponentName = pattern
+            found = true
+            break
+          }
+          catch {
+            // Continue
+          }
+        }
+      }
+    }
+    
+    if (!found) {
+      console.warn(`Warning: Component not found for ${functionName} in ${componentDir}, using ${actualComponentName}`)
     }
 
-    imports.add(`import ${componentName} from '~/components/content/${componentDir}/${componentName}${componentSuffix}'`)
-
+    // Use PascalCase for component name in template and import (Vue convention)
+    // but keep the actual file name for the import path
+    const templateComponentName = actualComponentName.charAt(0).toUpperCase() + actualComponentName.slice(1)
+    
+    imports.add(`import ${templateComponentName} from '~/components/content/${componentDir}/${actualComponentName}${componentSuffix}'`)
+    
     componentUsages.push({
       functionName,
-      componentName,
+      componentName: templateComponentName,
       description,
       info,
       params: JSON.stringify(params),

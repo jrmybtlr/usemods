@@ -132,7 +132,7 @@
       description="Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction"
       params='[{"name":"items","type":"string | object | string[]"},{"name":"options?","type":"{\n    limit?: number\n    conjunction?: string\n  }"}]'
     >
-      <formatList />
+      <FormatList />
     </PageFunction>
 
     <PageFunction
@@ -148,7 +148,7 @@
       description="Format a sentence case string"
       params='[{"name":"text","type":"string"}]'
     >
-      <formatSentenceCase />
+      <FormatSentenceCase />
     </PageFunction>
 
     <PageFunction
@@ -174,18 +174,18 @@ import FormatDurationNumbers from '~/components/content/formatters/FormatDuratio
 import FormatFileSize from '~/components/content/formatters/FormatFileSize.vue'
 import FormatInitials from '~/components/content/formatters/FormatInitials.vue'
 import FormatLength from '~/components/content/formatters/FormatLength.vue'
+import FormatList from '~/components/content/formatters/formatList.vue'
 import FormatNumber from '~/components/content/formatters/FormatNumber.vue'
 import FormatNumberToWords from '~/components/content/formatters/FormatNumberToWords.vue'
 import FormatParagraphs from '~/components/content/formatters/FormatParagraphs.vue'
 import FormatPercentage from '~/components/content/formatters/FormatPercentage.vue'
+import FormatSentenceCase from '~/components/content/formatters/formatSentenceCase.vue'
 import FormatTemperature from '~/components/content/formatters/FormatTemperature.vue'
 import FormatTextWrap from '~/components/content/formatters/FormatTextWrap.vue'
 import FormatTitle from '~/components/content/formatters/FormatTitle.vue'
 import FormatUnit from '~/components/content/formatters/FormatUnit.vue'
 import FormatUnixTime from '~/components/content/formatters/FormatUnixTime.vue'
 import FormatValuation from '~/components/content/formatters/FormatValuation.vue'
-import formatList from '~/components/content/formatters/formatList.vue'
-import formatSentenceCase from '~/components/content/formatters/formatSentenceCase.vue'
 
 const toc = ["formatNumber","formatCurrency","formatValuation","formatUnit","formatPercentage","formatCombinedDates","formatDurationLabels","formatDurationNumbers","formatFileSize","formatLength","formatTemperature","formatNumberToWords","formatParagraphs","formatInitials","formatUnixTime","formatList","formatTitle","formatSentenceCase","formatTextWrap"]
 const pageId = 'formatters'

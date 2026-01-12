@@ -42,7 +42,7 @@
       description="Decode a UUIDv7 string into a timestamp"
       params='[{"name":"uuid","type":"string"}]'
     >
-      <decodeUuid7 />
+      <DecodeUuid7 />
     </PageFunction>
 
     <PageFunction
@@ -50,7 +50,7 @@
       description="Encodes a standard UUID (with dashes) into a URL-safe Base64 variant"
       params='[{"name":"uuid","type":"string"}]'
     >
-      <generateShortUuid />
+      <GenerateShortUuid />
     </PageFunction>
 
     <PageFunction
@@ -58,7 +58,7 @@
       description="Decodes a short URL-safe Base64-encoded string back into a standard UUID"
       params='[{"name":"shortUuid","type":"string"}]'
     >
-      <decodeShortUuid />
+      <DecodeShortUuid />
     </PageFunction>
 
     <PageFunction
@@ -83,7 +83,7 @@
       description="Random number generator using cryptographic methods to avoid random()."
       params='[{"name":"max","type":"number"}]'
     >
-      <generateRandomIndex />
+      <GenerateRandomIndex />
     </PageFunction>
 
     <PageFunction
@@ -100,7 +100,7 @@
       info="Node.js times generated are in nanoseconds, browser-based falls back to converting performance.now to microseconds."
       params='[]'
     >
-      <generateHighResolutionTime />
+      <GenerateHighResolutionTime />
     </PageFunction>
 
     <PageFunction
@@ -118,19 +118,19 @@
 import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
+import DecodeShortUuid from '~/components/content/generators/decodeShortUuid.vue'
+import DecodeUuid7 from '~/components/content/generators/decodeUuid7.vue'
+import GenerateHighResolutionTime from '~/components/content/generators/generateHighResolutionTime.vue'
 import GenerateLoremIpsum from '~/components/content/generators/GenerateLoremIpsum.client.vue'
 import GenerateNumber from '~/components/content/generators/GenerateNumber.vue'
 import GenerateNumberBetween from '~/components/content/generators/GenerateNumberBetween.vue'
 import GeneratePassword from '~/components/content/generators/GeneratePassword.client.vue'
+import GenerateRandomIndex from '~/components/content/generators/generateRandomIndex.client.vue'
 import GenerateShortId from '~/components/content/generators/GenerateShortId.client.vue'
+import GenerateShortUuid from '~/components/content/generators/generateShortUuid.vue'
 import GenerateUuid4 from '~/components/content/generators/GenerateUuid4.client.vue'
 import GenerateUuid7 from '~/components/content/generators/GenerateUuid7.vue'
 import GetSecureRandomValues from '~/components/content/generators/GetSecureRandomValues.vue'
-import decodeShortUuid from '~/components/content/generators/decodeShortUuid.vue'
-import decodeUuid7 from '~/components/content/generators/decodeUuid7.vue'
-import generateHighResolutionTime from '~/components/content/generators/generateHighResolutionTime.vue'
-import generateRandomIndex from '~/components/content/generators/generateRandomIndex.client.vue'
-import generateShortUuid from '~/components/content/generators/generateShortUuid.vue'
 
 const toc = ["generateNumber","generateNumberBetween","generateUuid4","generateUuid7","decodeUuid7","generateShortUuid","decodeShortUuid","generateShortId","generatePassword","generateRandomIndex","generateLoremIpsum","generateHighResolutionTime","getSecureRandomValues"]
 const pageId = 'generators'
