@@ -8,7 +8,7 @@
     <PageFunction
       name="sum"
       description="Calculates the sum of an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Sum />
     </PageFunction>
@@ -16,7 +16,7 @@
     <PageFunction
       name="mean"
       description="Calculates the mean of an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Mean />
     </PageFunction>
@@ -24,7 +24,7 @@
     <PageFunction
       name="average"
       description="Calculates the mean of an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Average />
     </PageFunction>
@@ -32,7 +32,7 @@
     <PageFunction
       name="margin"
       description="Calculates the margin based on a percentage."
-      :params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <Margin />
     </PageFunction>
@@ -40,7 +40,7 @@
     <PageFunction
       name="addMargin"
       description="Adds the margin to the value."
-      :params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <AddMargin />
     </PageFunction>
@@ -48,7 +48,7 @@
     <PageFunction
       name="subtractMargin"
       description="Subtracts the margin from the value."
-      :params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <SubtractMargin />
     </PageFunction>
@@ -56,7 +56,7 @@
     <PageFunction
       name="addMarkup"
       description="Adds the markup to the value."
-      :params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <AddMarkup />
     </PageFunction>
@@ -64,7 +64,7 @@
     <PageFunction
       name="subtractMarkup"
       description="Calculates the markup based on a percentage."
-      :params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <SubtractMarkup />
     </PageFunction>
@@ -72,7 +72,7 @@
     <PageFunction
       name="median"
       description="Calculates the median of an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Median />
     </PageFunction>
@@ -80,7 +80,7 @@
     <PageFunction
       name="mode"
       description="Calculates the mode of an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Mode />
     </PageFunction>
@@ -88,7 +88,7 @@
     <PageFunction
       name="min"
       description="Finds the minimum value in an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Min />
     </PageFunction>
@@ -96,7 +96,7 @@
     <PageFunction
       name="max"
       description="Finds the maximum value in an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Max />
     </PageFunction>
@@ -104,7 +104,7 @@
     <PageFunction
       name="minMax"
       description="Returns the minimum and maximum values in an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <MinMax />
     </PageFunction>
@@ -112,7 +112,7 @@
     <PageFunction
       name="range"
       description="Returns the difference between two values, expressed as a positive number."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Range />
     </PageFunction>
@@ -120,7 +120,7 @@
     <PageFunction
       name="standardDeviation"
       description="Returns the standard deviation of an array of numbers."
-      :params='[{"name":"numbers","type":"number[]"},{"name":"options?","type":"{ method: &#39;sample&#39; | &#39;population&#39; }"}]'
+      params='[{"name":"numbers","type":"number[]"},{"name":"options?","type":"{ method: &#39;sample&#39; | &#39;population&#39; }"}]'
     >
       <StandardDeviation />
     </PageFunction>
@@ -128,7 +128,7 @@
     <PageFunction
       name="skewness"
       description="Returns the measure of asymmetry of the probability distribution of an array of numbers. The skewness value can be positive, zero, negative, or undefined."
-      :params='[{"name":"numbers","type":"number[]"}]'
+      params='[{"name":"numbers","type":"number[]"}]'
     >
       <Skewness />
     </PageFunction>

@@ -8,7 +8,7 @@
     <PageFunction
       name="detectScrollPosition"
       description="Detect the current scroll position of the window"
-      :params='[]'
+      params='[]'
     >
       <DetectScrollPosition />
     </PageFunction>
@@ -17,7 +17,7 @@
       name="detectMousePosition"
       description="Detect the absolute mouse position with the page"
       info="Don't forget to add a mousemove event listener to the window"
-      :params='[{"name":"event","type":"MouseEvent"}]'
+      params='[{"name":"event","type":"MouseEvent"}]'
     >
       <DetectMousePosition />
     </PageFunction>
@@ -26,7 +26,7 @@
       name="detectRelativeMousePosition"
       description="Detect the relative mouse position with the window size and returns a percentage value"
       info="Don't forget to add a mousemove event listener to the window"
-      :params='[{"name":"event","type":"MouseEvent"}]'
+      params='[{"name":"event","type":"MouseEvent"}]'
     >
       <DetectRelativeMousePosition />
     </PageFunction>
@@ -34,7 +34,7 @@
     <PageFunction
       name="detectWindowSize"
       description="Detect the browser's window size"
-      :params='[]'
+      params='[]'
     >
       <DetectWindowSize />
     </PageFunction>
@@ -42,7 +42,7 @@
     <PageFunction
       name="detectScreenSize"
       description="Detect the screen or monitor size"
-      :params='[]'
+      params='[]'
     >
       <DetectScreenSize />
     </PageFunction>
@@ -50,7 +50,7 @@
     <PageFunction
       name="detectActiveBrowser"
       description="Detect if the browser window is currently active or hidden."
-      :params='[]'
+      params='[]'
     >
       <DetectActiveBrowser />
     </PageFunction>
@@ -58,7 +58,7 @@
     <PageFunction
       name="detectColorScheme"
       description="Detect the current color scheme (Light or Dark)"
-      :params='[]'
+      params='[]'
     >
       <DetectColorScheme />
     </PageFunction>
@@ -66,7 +66,7 @@
     <PageFunction
       name="detectUserTimezone"
       description="Detect the current user's Timezone"
-      :params='[]'
+      params='[]'
     >
       <DetectUserTimezone />
     </PageFunction>
@@ -75,7 +75,7 @@
       name="detectBreakpoint"
       description="Detect the current breakpoint based on Tailwind CSS breakpoints"
       info="Add a listener to the window resize event to detect changes"
-      :params='[]'
+      params='[]'
     >
       <DetectBreakpoint />
     </PageFunction>
@@ -84,7 +84,7 @@
       name="detectContainerBreakpoint"
       description="Detect any container breakpoint based on Tailwind CSS breakpoints"
       info="Add a listener to the window resize event to detect changes"
-      :params='[{"name":"element","type":"HTMLElement"}]'
+      params='[{"name":"element","type":"HTMLElement"}]'
     >
       <DetectContainerBreakpoint />
     </PageFunction>
@@ -92,7 +92,7 @@
     <PageFunction
       name="detectNetworkStatus"
       description="Detect the current network status of the user (Online or Offline)"
-      :params='[]'
+      params='[]'
     >
       <DetectNetworkStatus />
     </PageFunction>
@@ -100,7 +100,7 @@
     <PageFunction
       name="detectUrl"
       description="Returns the current URL"
-      :params='[]'
+      params='[]'
     >
       <DetectUrl />
     </PageFunction>
@@ -108,7 +108,7 @@
     <PageFunction
       name="detectUrlPath"
       description="Returns the path of the current URL as an array or string"
-      :params='[{"name":"format","type":"&#39;array&#39; | &#39;string&#39; = &#39;array&#39;"}]'
+      params='[{"name":"format","type":"&#39;array&#39; | &#39;string&#39; = &#39;array&#39;"}]'
     >
       <DetectUrlPath />
     </PageFunction>
@@ -116,7 +116,7 @@
     <PageFunction
       name="detectUrlParams"
       description="Returns a value from the URL by name"
-      :params='[{"name":"format","type":"&#39;string&#39; | &#39;object&#39; = &#39;string&#39;"}]'
+      params='[{"name":"format","type":"&#39;string&#39; | &#39;object&#39; = &#39;string&#39;"}]'
     >
       <DetectUrlParams />
     </PageFunction>
@@ -124,7 +124,7 @@
     <PageFunction
       name="detectUrlHash"
       description="Returns a value from the URL hash by name"
-      :params='[]'
+      params='[]'
     >
       <DetectUrlHash />
     </PageFunction>
@@ -132,7 +132,7 @@
     <PageFunction
       name="detectHost"
       description="Returns the current host or domain name from the URL"
-      :params='[]'
+      params='[]'
     >
       <DetectHost />
     </PageFunction>
@@ -140,7 +140,7 @@
     <PageFunction
       name="detectHostName"
       description="Returns the current hostname from the URL"
-      :params='[]'
+      params='[]'
     >
       <DetectHostName />
     </PageFunction>
@@ -148,7 +148,7 @@
     <PageFunction
       name="detectPort"
       description="Returns the current port"
-      :params='[]'
+      params='[]'
     >
       <DetectPort />
     </PageFunction>
