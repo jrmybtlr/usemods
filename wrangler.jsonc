@@ -1,5 +1,9 @@
 {
   "name": "usemods-website",
   "compatibility_date": "2024-11-14",
-  "pages_build_output_dir": "./nuxt-web/dist"
+  "main": "./nuxt-web/.output/server/index.mjs",
+  "assets": {
+    "directory": "./nuxt-web/.output/public"
+  }
 }
+

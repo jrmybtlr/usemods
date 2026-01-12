@@ -23,15 +23,8 @@ export default defineNuxtConfig({
     },
   },
 
-  // site: {
-  //   name: "UseMods",
-  //   description:
-  //     "UseMods is a collection of helper functions for JavaScript and TypeScript.",
-  //   url: "https://usemods.com",
-  // },
-
   nitro: {
-    preset: process.env.NODE_ENV === 'production' ? 'cloudflare_pages' : undefined,
+    preset: process.env.NODE_ENV === 'production' ? 'cloudflare' : undefined,
     prerender: {
       routes: ["/"],
       crawlLinks: true,
