@@ -24,16 +24,15 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: process.env.NODE_ENV === 'production' ? 'cloudflare' : undefined,
+    preset: "cloudflare_module",
+    cloudflare: {
+        deployConfig: true,
+        nodeCompat: true
+      },
     prerender: {
       routes: ["/"],
       crawlLinks: true,
       ignore: ["/playground/**"],
-    },
-    esbuild: {
-      options: {
-        target: "esnext",
-      },
     },
   },
 
