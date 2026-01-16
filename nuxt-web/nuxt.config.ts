@@ -101,6 +101,43 @@ export default defineNuxtConfig({
     defaultTheme: "one-light",
   },
 
+  icon: {
+    // Bundle icons at build time for Cloudflare compatibility
+    clientBundle: {
+      // Explicitly list critical icons to ensure they're bundled
+      icons: [
+        "fa6-brands:github",
+        "heroicons:moon-solid",
+        "heroicons:sun-solid",
+        "heroicons:arrow-right",
+        "heroicons:arrow-left-circle",
+        "heroicons:arrow-right-circle",
+        "heroicons:arrow-up",
+        "heroicons:hashtag",
+        "heroicons:information-circle-solid",
+        "lucide:terminal",
+        "logos:nuxt-icon",
+        "logos:nextjs-icon",
+        "logos:vue",
+        "logos:react",
+        "logos:svelte-icon",
+        "logos:solidjs-icon",
+        "logos:nodejs-icon",
+      ],
+      // Automatically scan components to detect additional used icons
+      scan: true,
+      // Size limit to prevent bundle bloat (increased from 200)
+      sizeLimitKb: 512,
+    },
+    // Configure server bundle for Cloudflare edge runtime
+    serverBundle: {
+      // Use 'auto' mode which will use remote for serverless/edge environments
+      mode: "auto",
+    },
+    // Provider setting to ensure proper behavior
+    provider: "iconify",
+  },
+
   devtools: { enabled: true },
   compatibilityDate: "2024-11-14",
 });
