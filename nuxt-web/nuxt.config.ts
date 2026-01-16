@@ -30,6 +30,7 @@ export default defineNuxtConfig({
         nodeCompat: true
       },
     prerender: {
+      autoSubfolderIndex: false,
       routes: ["/"],
       crawlLinks: true,
       ignore: ["/playground/**"],
