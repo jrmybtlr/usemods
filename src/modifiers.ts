@@ -32,8 +32,8 @@ export function endWith(text: string, end: string): string {
  * Removes a suffix from a string if it ends with the suffix.
  */
 export function endWithout(text: string, end: string): string {
-  if (text.endsWith(end)) return text.substring(0, text.length - end.length)
-  return text
+  if (!end || !text.endsWith(end)) return text
+  return text.slice(0, -end.length)
 }
 
 /**
@@ -227,17 +227,7 @@ export function stripSymbols(text: string): string {
  * Strips emojis from a string (requires ES6 Unicode support) 🦊.
  */
 export function stripEmojis(text: string): string {
-  return text.replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
-    .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Miscellaneous Symbols and Pictographs
-    .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport and Map Symbols
-    .replace(/[\u{1F700}-\u{1F77F}]/gu, '') // Alchemical Symbols
-    .replace(/[\u{1F780}-\u{1F7FF}]/gu, '') // Geometric Shapes Extended
-    .replace(/[\u{1F800}-\u{1F8FF}]/gu, '') // Supplemental Arrows-C
-    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '') // Supplemental Symbols and Pictographs
-    .replace(/[\u{1FA00}-\u{1FA6F}]/gu, '') // Chess Symbols
-    .replace(/[\u{1FA70}-\u{1FAFF}]/gu, '') // Symbols and Pictographs Extended-A
-    .replace(/[\u{2600}-\u{26FF}]/gu, '') // Miscellaneous Symbols
-    .replace(/[\u{2700}-\u{27BF}]/gu, '') // Dingbats
+  return text.replace(/[\u{1F300}-\u{1F9FF}\u{1FA00}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '')
 }
 
 /**

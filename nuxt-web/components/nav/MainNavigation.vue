@@ -2,11 +2,7 @@
   <nav>
     <div class="container mx-auto grid grid-cols-3 items-center justify-between py-6 text-gray-800 dark:text-white">
       <!-- Logo -->
-      <NuxtLink
-        alt="Home"
-        to="/"
-        aria-label="Home"
-        prefetch>
+      <NuxtLink alt="Home" to="/" aria-label="Home" prefetch>
         <LogoFull class="h-6 max-md:hidden" />
         <LogoMark class="h-6 md:hidden" />
       </NuxtLink>
@@ -16,18 +12,11 @@
         <NavDropdown label="Docs">
           <div class="flex w-full items-stretch gap-3 divide-x divide-white/5 p-1">
             <div class="flex shrink flex-col">
-              <NavDropdownItem
-                v-for="link in introLinks"
-                :key="link.id"
-                :to="link.path">
-                <Icon
-                  :name="link.title"
-                  class="mt-1 size-5 shrink-0 text-white/50" />
+              <NavDropdownItem v-for="link in introLinks" :key="link.id" :to="link.path">
+                <Icon :name="link.title" class="mt-1 size-5 shrink-0 text-white/50" />
                 <div>
                   {{ link.title }}
-                  <div class="whitespace-nowrap text-xs text-gray-500 dark:text-white/50">
-                    {{ link.lead }}
-                  </div>
+
                 </div>
               </NavDropdownItem>
             </div>
@@ -38,17 +27,12 @@
           <div class="flex w-full items-stretch gap-3 divide-x divide-white/5 p-1">
             <div class="flex w-fit flex-col md:w-[720px]">
               <div class="grid grid-cols-2 md:grid-cols-3">
-                <NavDropdownItem
-                  v-for="link in docLinks"
-                  :key="link.path"
-                  :to="link.path">
-                  <Icon
-                    :name="link.title"
-                    class="mt-1 size-5 shrink-0 text-white/50" />
+                <NavDropdownItem v-for="link in docLinks" :key="link.path" :to="link.path">
+                  <Icon :name="link.title" class="mt-1 size-5 shrink-0 text-white/50" />
                   <div>
                     {{ link.title }}
-                    <div class="whitespace-nowrap text-xs text-gray-500 dark:text-white/50 max-md:hidden">
-                      {{ link.lead }}
+                    <div class="whitespace-nowrap text-xs text-gray-500 dark:text-white/50 max-md:hidden truncate">
+                      {{ link.icon || link.lead }}
                     </div>
                   </div>
                 </NavDropdownItem>
@@ -73,6 +57,7 @@ interface Link {
   path: string
   title: string
   lead: string
+  icon?: string
 }
 
 const introLinks = inject('intro-links') as Link[] | undefined

@@ -1,4 +1,4 @@
-import useClassy from "../../useclassy/src/index";
+// import useClassy from "../../useclassy/src/index";
 
 export default defineNuxtConfig({
   modules: [
@@ -7,11 +7,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/color-mode",
     "@nuxt/eslint",
-    "nuxt-icon",
-    "@nuxtjs/seo",
-    // '@nuxtjs/sitemap',
-    "@nuxt/content",
-    "@nuxthub/core",
+    "@nuxt/icon",
   ],
 
   css: ["~/assets/css/main.css"],
@@ -27,34 +23,18 @@ export default defineNuxtConfig({
     },
   },
 
-  site: {
-    name: "UseMods",
-    description:
-      "UseMods is a collection of helper functions for JavaScript and TypeScript.",
-    url: "https://usemods.com",
-  },
-
   nitro: {
-    preset: 'cloudflare_pages',
+    preset: "cloudflare_module",
+    cloudflare: {
+        deployConfig: true,
+        nodeCompat: true
+    },
     prerender: {
+      autoSubfolderIndex: false,
       routes: ["/"],
       crawlLinks: true,
       ignore: ["/playground/**"],
     },
-    esbuild: {
-      options: {
-        target: "esnext",
-      },
-    },
-  },
-
-  vite: {
-    plugins: [
-      useClassy({
-        language: "vue",
-        debug: true,
-      }) as any,
-    ],
   },
 
   routeRules: {
@@ -74,7 +54,7 @@ export default defineNuxtConfig({
 
   image: {
     cloudflare: {
-      baseURL: "https://usemods.com/",
+      baseURL: "https://public.usemods.com/",
       modifiers: {
         format: "auto",
         quality: 85,
@@ -104,6 +84,13 @@ export default defineNuxtConfig({
         "./pages/**/*.{vue,js,ts,jsx,tsx}",
         "./.classy/output.classy.html",
       ],
+    },
+  },
+
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
     },
   },
 

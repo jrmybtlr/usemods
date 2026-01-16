@@ -212,26 +212,26 @@ export function generatePassword(options: { length?: number, uppercase?: number,
   if (numbers > 0) chars += numberChars
   if (symbols > 0) chars += symbolChars
 
-  // Collect guaranteed characters
+  // Collect guaranteed characters using cryptographic random
   const guaranteed: string[] = []
   for (let i = 0; i < uppercase; i++) {
-    guaranteed.push(upperChars[Math.floor(Math.random() * upperChars.length)])
+    guaranteed.push(upperChars[generateRandomIndex(upperChars.length)])
   }
   for (let i = 0; i < numbers; i++) {
-    guaranteed.push(numberChars[Math.floor(Math.random() * numberChars.length)])
+    guaranteed.push(numberChars[generateRandomIndex(numberChars.length)])
   }
   for (let i = 0; i < symbols; i++) {
-    guaranteed.push(symbolChars[Math.floor(Math.random() * symbolChars.length)])
+    guaranteed.push(symbolChars[generateRandomIndex(symbolChars.length)])
   }
 
   // Fill the rest with random characters from the pool
   while (guaranteed.length < length) {
-    guaranteed.push(chars[Math.floor(Math.random() * chars.length)])
+    guaranteed.push(chars[generateRandomIndex(chars.length)])
   }
 
-  // Shuffle the password to randomize the position of guaranteed characters
+  // Shuffle the password using Fisher-Yates with cryptographic random
   for (let i = guaranteed.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
+    const j = generateRandomIndex(i + 1)
     ;[guaranteed[i], guaranteed[j]] = [guaranteed[j], guaranteed[i]]
   }
 
