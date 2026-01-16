@@ -37,15 +37,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // vite: {
-  //   plugins: [
-  //     useClassy({
-  //       language: "vue",
-  //       debug: true,
-  //     }) as any,
-  //   ],
-  // },
-
   routeRules: {
     "/": { prerender: true },
     "/docs/**": {
