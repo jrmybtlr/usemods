@@ -29,6 +29,7 @@
     "@vueuse/nuxt": "^12.8.2",
     "nuxt-schema-org": "^5.0.6",
     "nuxt-seo-utils": "^7.0.14",
+    "nuxt-shiki": "^0.3.2",
     "nuxt-site-config": "^3.2.2",
     "vite-plugin-useclassy": "^2.6.0"
   }

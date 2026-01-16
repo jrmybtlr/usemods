@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "@nuxtjs/color-mode",
     "@nuxt/eslint",
     "@nuxt/icon",
+    "nuxt-shiki",
   ],
 
   css: ["~/assets/css/main.css"],
@@ -92,6 +93,12 @@ export default defineNuxtConfig({
       tailwindcss: {},
       autoprefixer: {},
     },
+  },
+
+  shiki: {
+    bundledThemes: ["nord", "one-light"],
+    bundledLangs: ["bash", "vue", "typescript", "javascript", "json"],
+    defaultTheme: "one-light",
   },
 
   devtools: { enabled: true },
