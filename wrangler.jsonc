@@ -1,5 +1,5 @@
 {
-  "name": "usemods-website",
+  "name": "usemods",
   "compatibility_date": "2024-11-14",
   "assets": {
     "directory": "./dist"
