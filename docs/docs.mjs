@@ -447,6 +447,17 @@ async function generateSitemap() {
   const baseUrl = 'https://usemods.com'
   const currentDate = new Date().toISOString()
   
+  // Helper function to get file modification time
+  async function getFileModTime(filePath) {
+    try {
+      const stats = await fsPromises.stat(filePath)
+      return stats.mtime.toISOString()
+    }
+    catch {
+      return currentDate
+    }
+  }
+  
   // Start XML sitemap
   let sitemapContent = '<?xml version="1.0" encoding="UTF-8"?>\n'
   sitemapContent += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -461,14 +472,17 @@ async function generateSitemap() {
   
   // Add intro pages
   const introPages = [
-    { path: '/intro/introduction', priority: '0.9' },
-    { path: '/intro/installation', priority: '0.9' }
+    { path: '/intro/introduction', file: '1.intro/1.introduction.md', priority: '0.9' },
+    { path: '/intro/installation', file: '1.intro/2.installation.md', priority: '0.9' }
   ]
   
   for (const page of introPages) {
+    const contentPath = join(nuxtWebPath, 'content', page.file)
+    const lastmod = await getFileModTime(contentPath)
+    
     sitemapContent += '  <url>\n'
     sitemapContent += `    <loc>${baseUrl}${page.path}</loc>\n`
-    sitemapContent += `    <lastmod>${currentDate}</lastmod>\n`
+    sitemapContent += `    <lastmod>${lastmod}</lastmod>\n`
     sitemapContent += '    <changefreq>monthly</changefreq>\n'
     sitemapContent += `    <priority>${page.priority}</priority>\n`
     sitemapContent += '  </url>\n'
@@ -477,9 +491,12 @@ async function generateSitemap() {
   // Add doc pages (excluding tailwind)
   const docFiles = files.filter(file => file !== 'tailwind')
   for (const file of docFiles) {
+    const srcPath = join(nuxtWebPath, '../src', `${file}.ts`)
+    const lastmod = await getFileModTime(srcPath)
+    
     sitemapContent += '  <url>\n'
     sitemapContent += `    <loc>${baseUrl}/docs/${file}</loc>\n`
-    sitemapContent += `    <lastmod>${currentDate}</lastmod>\n`
+    sitemapContent += `    <lastmod>${lastmod}</lastmod>\n`
     sitemapContent += '    <changefreq>weekly</changefreq>\n'
     sitemapContent += '    <priority>0.8</priority>\n'
     sitemapContent += '  </url>\n'
@@ -493,8 +510,12 @@ async function generateSitemap() {
   try {
     await fsPromises.mkdir(publicDir, { recursive: true })
   }
-  catch {
-    // Directory might already exist
+  catch (err) {
+    // Only ignore EEXIST errors, log others
+    if (err.code !== 'EEXIST') {
+      console.error('Error creating public directory:', err)
+      throw err
+    }
   }
   
   await writeFile(join(publicDir, 'sitemap.xml'), sitemapContent)
