@@ -51,6 +51,12 @@ export default defineNuxtConfig({
     "/playground/**": {
       ssr: false,
     },
+    "/api/docs/**": {
+      cors: true,
+      headers: {
+        "Cache-Control": "public, max-age=3600",
+      },
+    },
   },
 
   image: {

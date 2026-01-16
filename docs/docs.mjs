@@ -322,6 +322,127 @@ async function generateVue(file, name) {
   await writeFile(join(docsDir, `${fileBaseName}.vue`), vueContent)
 }
 
+async function generateMarkdown(file, name) {
+  const content = await readFile(file, 'utf8')
+  const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
+
+  // If Tailwind stop here (same as Vue generation)
+  if (name === '11.tailwind') return
+
+  const fileBaseName = basename(file, extname(file))
+
+  // Functions
+  const functions = [...content.matchAll(functionPattern)]
+
+  // Build markdown content
+  let markdownContent = `# ${metadata.title || fileBaseName}\n\n`
+  markdownContent += `${metadata.description || ''}\n\n`
+  markdownContent += `## Functions\n\n`
+
+  for (const match of functions) {
+    const [full] = match.slice(0)
+    const [, functionName] = match.slice(1)
+    const jsdoc = full.match(jsdocPattern)?.[0] || ''
+    const description = jsdoc.replace(/\/\*\*|\*\/|\*/g, '').replace(/@\w+.*$/gm, '').trim()
+    const info = (jsdoc.match(/@info\s+(.*)/) || [])[1]?.trim() || ''
+
+    // Extract function signature for return type
+    const signatureMatch = full.match(/export function \w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
+    const params = signatureMatch
+      ? parseParams(signatureMatch[1])
+      : []
+    const returnType = signatureMatch?.[2]?.trim() || 'void'
+
+    markdownContent += `### ${functionName}\n\n`
+    markdownContent += `**Description:** ${description || 'No description available.'}\n\n`
+
+    if (params.length > 0) {
+      markdownContent += `**Parameters:**\n`
+      for (const param of params) {
+        markdownContent += `- \`${param.name}\` (\`${param.type}\`)\n`
+      }
+      markdownContent += `\n`
+    }
+
+    markdownContent += `**Returns:** \`${returnType}\`\n\n`
+
+    if (info) {
+      markdownContent += `${info}\n\n`
+    }
+  }
+
+  // Ensure content directory exists
+  const contentDir = join(nuxtWebPath, 'content', '2.docs')
+  try {
+    await fsPromises.mkdir(contentDir, { recursive: true })
+  }
+  catch {
+    // Directory might already exist
+  }
+
+  await writeFile(join(contentDir, `${fileBaseName}.md`), markdownContent)
+}
+
+async function generateAllMarkdown() {
+  const contentDir = join(nuxtWebPath, 'content', '2.docs')
+  
+  // Ensure content directory exists
+  try {
+    await fsPromises.mkdir(contentDir, { recursive: true })
+  }
+  catch {
+    // Directory might already exist
+  }
+
+  // Get all markdown files (excluding all.md and README.txt)
+  const allFiles = files.filter(file => file !== 'tailwind')
+  const markdownFiles = []
+  const tocEntries = []
+
+  // Read metadata for table of contents
+  for (const file of allFiles) {
+    const filePath = join(srcPath, `${file}.ts`)
+    try {
+      const content = await readFile(filePath, 'utf8')
+      const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
+      tocEntries.push({
+        name: file,
+        title: metadata.title || file,
+      })
+    }
+    catch {
+      // File might not exist, skip
+    }
+  }
+
+  // Build table of contents
+  let allMarkdownContent = `# UseMods Documentation\n\n`
+  allMarkdownContent += `Complete documentation for all UseMods functions, optimized for AI and LLM consumption.\n\n`
+  allMarkdownContent += `## Table of Contents\n\n`
+  for (const entry of tocEntries) {
+    // Create anchor-friendly slug from title
+    const anchor = entry.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    allMarkdownContent += `- [${entry.title}](#${anchor})\n`
+  }
+  allMarkdownContent += `\n---\n\n`
+
+  // Read and combine all markdown files
+  for (const file of allFiles) {
+    const markdownPath = join(contentDir, `${file}.md`)
+    try {
+      const content = await readFile(markdownPath, 'utf8')
+      allMarkdownContent += content
+      allMarkdownContent += `\n---\n\n`
+    }
+    catch {
+      // Markdown file might not exist yet, skip
+      console.warn(`Warning: Markdown file not found: ${markdownPath}`)
+    }
+  }
+
+  await writeFile(join(contentDir, 'all.md'), allMarkdownContent)
+}
+
 async function generateNavigation() {
   const docLinks = []
 
@@ -400,19 +521,23 @@ ${docLinksString}
 
 async function generateAll() {
   await Promise.all(files.map((file, index) => generateVue(join(srcPath, `${file}.ts`), `${String(index + 1).padStart(2, '0')}.${file}`)))
+  await Promise.all(files.map((file, index) => generateMarkdown(join(srcPath, `${file}.ts`), `${String(index + 1).padStart(2, '0')}.${file}`)))
   await copyFile(join(srcPath, 'maps.ts'), join(nuxtWebPath, 'utils/mods/maps.ts'))
   await generateNavigation()
+  await generateAllMarkdown()
 }
 
 async function clearAll() {
-  const [webFiles, docFiles] = await Promise.all([
+  const [webFiles, docFiles, contentFiles] = await Promise.all([
     readdir(join(nuxtWebPath, 'utils/mods')).catch(() => []),
     readdir(join(nuxtWebPath, 'pages/docs')).catch(() => []),
+    readdir(join(nuxtWebPath, 'content/2.docs')).catch(() => []),
   ])
 
   await Promise.all([
     ...webFiles.filter(file => file.endsWith('.ts')).map(file => unlink(join(nuxtWebPath, 'utils/mods', file))),
     ...docFiles.filter(file => file.endsWith('.vue') && files.includes(basename(file, '.vue'))).map(file => unlink(join(nuxtWebPath, 'pages/docs', file))),
+    ...contentFiles.filter(file => (file.endsWith('.md') && files.includes(basename(file, '.md'))) || file === 'all.md').map(file => unlink(join(nuxtWebPath, 'content/2.docs', file))),
   ])
 }
 

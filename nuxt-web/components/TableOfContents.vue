@@ -8,12 +8,12 @@
           class="flex cursor-pointer gap-3 text-sm font-medium leading-none text-gray-500 hover:text-indigo-600 dark:hover:text-white/75"
           @click="scrollToAnchor(item)">
           <div class="w-2 border-l transition-all" :class="activeSections.includes(item)
-              ? ' border-indigo-600 dark:border-amber-400 '
-              : 'border-gray-200 dark:border-white/15'
+            ? ' border-indigo-600 dark:border-amber-400 '
+            : 'border-gray-200 dark:border-white/15'
             " />
           <div class="truncate py-1.5" :class="activeSections.includes(item)
-              ? 'text-indigo-600 dark:text-amber-400'
-              : 'text-gray-500 dark:text-white/50'
+            ? 'text-indigo-600 dark:text-amber-400'
+            : 'text-gray-500 dark:text-white/50'
             ">
             {{ item }}
           </div>
@@ -21,11 +21,19 @@
       </li>
     </ul>
 
-    <NuxtLink v-if="pageId" :to="`https://github.com/LittleFoxCompany/usemods/blob/main/src/${pageId}.ts`"
-      target="_blank" class="flex items-center gap-1.5 py-8 text-sm font-medium leading-none text-zinc-500">
-      <Icon name="fa6-brands:github" class="-mt-px mr-1.5 size-4" />
-      View on GitHub
-    </NuxtLink>
+    <div class="flex flex-col py-8 gap-4">
+      <NuxtLink v-if="pageId" :to="`https://github.com/LittleFoxCompany/usemods/blob/main/src/${pageId}.ts`"
+        target="_blank" class="flex items-center gap-1.5 text-sm font-medium leading-none text-zinc-500">
+        <Icon name="fa6-brands:github" class="-mt-px mr-1.5 size-4" />
+        View on GitHub
+      </NuxtLink>
+
+      <NuxtLink v-if="pageId" :to="`/api/docs/${pageId}.md`" target="_blank"
+        class="flex items-center gap-1.5 text-sm font-medium leading-none text-zinc-500">
+        <Icon name="lucide:file-text" class="-mt-px mr-1.5 size-4" />
+        View Markdown
+      </NuxtLink>
+    </div>
   </nav>
 </template>
 
