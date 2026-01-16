@@ -443,6 +443,64 @@ async function generateAllMarkdown() {
   await writeFile(join(contentDir, 'all.md'), allMarkdownContent)
 }
 
+async function generateSitemap() {
+  const baseUrl = 'https://usemods.com'
+  const currentDate = new Date().toISOString()
+  
+  // Start XML sitemap
+  let sitemapContent = '<?xml version="1.0" encoding="UTF-8"?>\n'
+  sitemapContent += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+  
+  // Add homepage
+  sitemapContent += '  <url>\n'
+  sitemapContent += `    <loc>${baseUrl}/</loc>\n`
+  sitemapContent += `    <lastmod>${currentDate}</lastmod>\n`
+  sitemapContent += '    <changefreq>weekly</changefreq>\n'
+  sitemapContent += '    <priority>1.0</priority>\n'
+  sitemapContent += '  </url>\n'
+  
+  // Add intro pages
+  const introPages = [
+    { path: '/intro/introduction', priority: '0.9' },
+    { path: '/intro/installation', priority: '0.9' }
+  ]
+  
+  for (const page of introPages) {
+    sitemapContent += '  <url>\n'
+    sitemapContent += `    <loc>${baseUrl}${page.path}</loc>\n`
+    sitemapContent += `    <lastmod>${currentDate}</lastmod>\n`
+    sitemapContent += '    <changefreq>monthly</changefreq>\n'
+    sitemapContent += `    <priority>${page.priority}</priority>\n`
+    sitemapContent += '  </url>\n'
+  }
+  
+  // Add doc pages (excluding tailwind)
+  const docFiles = files.filter(file => file !== 'tailwind')
+  for (const file of docFiles) {
+    sitemapContent += '  <url>\n'
+    sitemapContent += `    <loc>${baseUrl}/docs/${file}</loc>\n`
+    sitemapContent += `    <lastmod>${currentDate}</lastmod>\n`
+    sitemapContent += '    <changefreq>weekly</changefreq>\n'
+    sitemapContent += '    <priority>0.8</priority>\n'
+    sitemapContent += '  </url>\n'
+  }
+  
+  // Close XML
+  sitemapContent += '</urlset>'
+  
+  // Write sitemap to public directory
+  const publicDir = join(nuxtWebPath, 'public')
+  try {
+    await fsPromises.mkdir(publicDir, { recursive: true })
+  }
+  catch {
+    // Directory might already exist
+  }
+  
+  await writeFile(join(publicDir, 'sitemap.xml'), sitemapContent)
+  console.log('Generated sitemap.xml')
+}
+
 async function generateNavigation() {
   const docLinks = []
 
@@ -525,6 +583,7 @@ async function generateAll() {
   await copyFile(join(srcPath, 'maps.ts'), join(nuxtWebPath, 'utils/mods/maps.ts'))
   await generateNavigation()
   await generateAllMarkdown()
+  await generateSitemap()
 }
 
 async function clearAll() {
