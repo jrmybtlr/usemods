@@ -54,7 +54,7 @@ export default defineNuxtConfig({
 
   image: {
     cloudflare: {
-      baseURL: "https://usemods.com/",
+      baseURL: "https://public.usemods.com/",
       modifiers: {
         format: "auto",
         quality: 85,
