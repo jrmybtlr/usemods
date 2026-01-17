@@ -1,14 +1,11 @@
 <template>
   <Example>
     <ExampleInputs>
-      <FormInput
-        v-model="value"
-        label="Number"
-        type="text" />
+      <FormInput v-model="value" label="Number" type="number" />
     </ExampleInputs>
     <ExampleCode :code="`formatNumberToWords(${value})`" />
     <ExampleResult>
-      {{ formatNumberToWords(value) }}
+      {{ formatNumberToWords(Number(value)) }}
     </ExampleResult>
   </Example>
 </template>
