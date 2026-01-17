@@ -44,7 +44,7 @@ export function formatCurrency(
     currencyDisplay: 'narrowSymbol',
     minimumFractionDigits: safeDecimals,
     maximumFractionDigits: safeDecimals,
-    currency: map.currencySymbols.get(options?.locale ?? 'en-US') || 'USD',
+    currency: map.currencySymbols.get(options?.locale ?? 'en-US') ?? 'USD',
   }
 
   return new Intl.NumberFormat(options?.locale ?? 'en-US', config).format(number)
@@ -278,15 +278,15 @@ export function formatFileSize(
   },
 ): string {
   const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options || {}
-  const valueInBytes = number * (map.bytesInUnit.get(inputUnit) || 1)
+  const valueInBytes = number * (map.bytesInUnit.get(inputUnit) ?? 1)
 
   const targetUnit = outputUnit === 'auto'
     ? Array.from(map.bytesInUnit.keys())
       .reverse()
-      .find(unit => valueInBytes >= (map.bytesInUnit.get(unit) || 0)) || inputUnit
+      .find(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
     : outputUnit
 
-  return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) || 1), { unit: targetUnit, decimals, unitDisplay, locale })
+  return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) ?? 1), { unit: targetUnit, decimals, unitDisplay, locale })
 }
 
 /**
@@ -316,10 +316,10 @@ export function formatLength(
     ? Array.from(map.lengthUnitConversions.keys())
       .filter(unit => map.lengthUnitConversions.get(unit)?.system === inputUnitValue.system)
       .reverse()
-      .find(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value || 0)) || inputUnit
+      .find(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value ?? 0)) ?? inputUnit
     : outputUnit
 
-  return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value || 1), { unit: targetUnit, decimals, unitDisplay, locale })
+  return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value ?? 1), { unit: targetUnit, decimals, unitDisplay, locale })
 }
 
 /**
@@ -369,7 +369,7 @@ export function formatNumberToWords(
 
   const formatGroup = (num: number): string => {
     if (num < 20) return map.numberUnderTwenty[num]
-    if (num < 100) return `${map.numberTens[Math.floor(num / 10) - 2]}${num % 10 ? '-' + map.numberUnderTwenty[num % 10] : ''}`
+    if (num < 100) return `${map.numberTens[Math.floor(num / 10) - 2]}${num % 10 ? `-${map.numberUnderTwenty[num % 10]}` : ''}`
     return `${map.numberUnderTwenty[Math.floor(num / 100)]} hundred${num % 100 ? ` and ${formatGroup(num % 100)}` : ''}`
   }
 
@@ -379,7 +379,7 @@ export function formatNumberToWords(
   while (number > 0) {
     const groupValue = number % 1000
     if (groupValue > 0) {
-      result = `${formatGroup(groupValue)}${map.numberScales[scaleIndex]}${result ? ', ' + result : ''}`
+      result = `${formatGroup(groupValue)}${map.numberScales[scaleIndex]}${result ? `, ${result}` : ''}`
     }
     number = Math.floor(number / 1000)
     scaleIndex++
@@ -400,7 +400,7 @@ export function formatParagraphs(
   },
 ): string {
   const { minSentenceCount = 3, minCharacterCount = 100 } = options || {}
-  function isValidSentenceEnd(text: string, index: number): boolean {
+  const isValidSentenceEnd = (text: string, index: number): boolean => {
     return text[index] === '.' && (index === text.length - 1 || text[index + 1] === ' ') && !/\d\.\d/.test(text.slice(index - 1, index + 2))
   }
 
@@ -538,6 +538,6 @@ export function formatTextWrap(
     return ''
   }
   const space: number = text.lastIndexOf(' ')
-  if (space !== -1) return text.substring(0, space) + '&nbsp;' + text.substring(space + 1)
+  if (space !== -1) return `${text.substring(0, space)}&nbsp;${text.substring(space + 1)}`
   return text
 }

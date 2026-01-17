@@ -156,7 +156,7 @@ export function stripHtml(text: string): string {
       .join('')
   }
 
-  function decodeEntities(str: string) {
+  const decodeEntities = (str: string) => {
     return str
       // Handle numeric entities
       .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(code))

@@ -114,39 +114,23 @@ export function toggleFullScreen(): Promise<void> {
 /**
  * Resets a form to its initial state
  */
-export function resetForm(
+export async function resetForm(
   form: HTMLFormElement,
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    try {
-      form.reset()
-      resolve()
-    }
-    catch (error) {
-      reject(error)
-    }
-  })
+  form.reset()
 }
 
 /**
  * Focuses on and scrolls to the first invalid input, select, or textarea element within a form.
  */
-export function focusOnInvalid(
+export async function focusOnInvalid(
   container: HTMLElement,
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    try {
-      const input = container.querySelector('input:invalid, select:invalid, textarea:invalid') as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-      if (input) {
-        input.focus()
-        input.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      }
-      resolve()
-    }
-    catch (error) {
-      reject(error)
-    }
-  })
+  const input = container.querySelector('input:invalid, select:invalid, textarea:invalid') as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  if (input) {
+    input.focus()
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
 }
 
 /**
@@ -176,7 +160,7 @@ export function focusOnNth(
       resolve()
     }
     catch (error) {
-      reject(new Error('[MODS] Failed to focus on the element.' + error))
+      reject(new Error(`[MODS] Failed to focus on the element.${error}`))
     }
   })
 }
