@@ -365,7 +365,7 @@ export function formatTemperature(
 export function formatNumberToWords(
   number: number,
 ): string {
-  if (number === 0) return map.numberUnderTwenty[0]
+  if (number === 0 || Object.is(number, -0)) return map.numberUnderTwenty[0]
 
   const formatGroup = (num: number): string => {
     if (num < 20) return map.numberUnderTwenty[num]
