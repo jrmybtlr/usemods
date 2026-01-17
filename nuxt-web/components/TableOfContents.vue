@@ -52,8 +52,8 @@ const route = useRoute();
 const activeSections = useState<string[]>("activeSections", () => []);
 
 // Try to get toc and pageId from provide/inject as fallback
-const injectedToc = inject<string[]>("toc", undefined);
-const injectedPageId = inject<string>("pageId", undefined);
+const injectedToc = inject<string[]>("toc", []);
+const injectedPageId = inject<string>("pageId", "");
 
 const toc = props.toc.length > 0 ? props.toc : injectedToc ?? [];
 const pageId =

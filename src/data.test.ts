@@ -3,10 +3,10 @@ import * as mod from './data'
 
 const arrayExample = [{ name: 'John', age: 25 }, { name: 'Jane', age: 30 }, { name: 'Jimmy', age: 2 }, { name: 'Jake', age: 20 }]
 
-const objectExample: { name: string; age: number; country: string } = {
+const objectExample: { name: string, age: number, country: string } = {
   name: 'John',
   age: 25,
-  country: 'USA'
+  country: 'USA',
 }
 
 const nestedArray = [1, [2, 3], [4, [5, 6]]]
@@ -17,29 +17,29 @@ const mixedArray = [1, 2, 3, 4, 5]
 test('dataSortBy', () => {
   // Empty
   expect(mod.dataSortBy(arrayExample)).toStrictEqual([
-    { name: 'John', age: 25 }, { name: 'Jane', age: 30 }, { name: 'Jimmy', age: 2 }, { name: 'Jake', age: 20 }
+    { name: 'John', age: 25 }, { name: 'Jane', age: 30 }, { name: 'Jimmy', age: 2 }, { name: 'Jake', age: 20 },
   ])
 
   // Sort by age (asc)
   expect(mod.dataSortBy(arrayExample, { property: 'age', order: 'asc' })).toStrictEqual([
-    { name: 'Jimmy', age: 2 }, { name: 'Jake', age: 20 }, { name: 'John', age: 25 }, { name: 'Jane', age: 30 }
+    { name: 'Jimmy', age: 2 }, { name: 'Jake', age: 20 }, { name: 'John', age: 25 }, { name: 'Jane', age: 30 },
   ])
 
   // Sort by age (desc)
   expect(mod.dataSortBy(arrayExample, { property: 'age', order: 'desc' })).toStrictEqual([
-    { name: 'Jane', age: 30 }, { name: 'John', age: 25 }, { name: 'Jake', age: 20 }, { name: 'Jimmy', age: 2 }
+    { name: 'Jane', age: 30 }, { name: 'John', age: 25 }, { name: 'Jake', age: 20 }, { name: 'Jimmy', age: 2 },
   ])
 
   // Sort by name (asc)
   expect(mod.dataSortBy(arrayExample, { property: 'name', order: 'asc' })).toStrictEqual([
-    { name: 'Jake', age: 20 }, { name: 'Jane', age: 30 }, { name: 'Jimmy', age: 2 }, { name: 'John', age: 25 }
+    { name: 'Jake', age: 20 }, { name: 'Jane', age: 30 }, { name: 'Jimmy', age: 2 }, { name: 'John', age: 25 },
   ])
 
   // Return Object as-is
   expect(mod.dataSortBy(objectExample)).toMatchObject({
     name: 'John',
     age: 25,
-    country: 'USA'
+    country: 'USA',
   })
 
   // Sort number array (asc)
@@ -53,13 +53,13 @@ test('dataSortBy', () => {
     [
       { name: 'Charlie', age: 25 },
       { name: 'Alice', age: 30 },
-      { name: 'Bob', age: 20 }
+      { name: 'Bob', age: 20 },
     ],
-    { property: 'name', order: 'asc' }
+    { property: 'name', order: 'asc' },
   )).toEqual([
     { name: 'Alice', age: 30 },
     { name: 'Bob', age: 20 },
-    { name: 'Charlie', age: 25 }
+    { name: 'Charlie', age: 25 },
   ])
 
   // Sort by name (desc)
@@ -67,13 +67,13 @@ test('dataSortBy', () => {
     [
       { name: 'Charlie', age: 25 },
       { name: 'Alice', age: 30 },
-      { name: 'Bob', age: 20 }
+      { name: 'Bob', age: 20 },
     ],
-    { property: 'name', order: 'desc' }
+    { property: 'name', order: 'desc' },
   )).toEqual([
     { name: 'Charlie', age: 25 },
     { name: 'Bob', age: 20 },
-    { name: 'Alice', age: 30 }
+    { name: 'Alice', age: 30 },
   ])
 })
 
@@ -82,7 +82,7 @@ test('dataReverse', () => {
   expect(mod.dataReverse(arrayExample)).toStrictEqual([
     { name: 'Jake', age: 20 },
     { name: 'Jane', age: 30 },
-    { name: 'John', age: 25 }
+    { name: 'John', age: 25 },
   ])
   expect(mod.dataReverse(objectExample)).toMatchObject({
     country: 'USA',
@@ -100,12 +100,11 @@ test('dataRemoveDuplicates', () => {
 })
 
 test('dataFlatten', () => {
-
   // Nested Array
   expect(mod.dataFlatten(nestedArray)).toStrictEqual([1, 2, 3, 4, 5, 6])
 
   // Nested Object
-  expect(mod.dataFlatten({ a: 1, b: { c: 2, d: { e: 3 } } })).toStrictEqual({ a: 1, 'b.c': 2, 'b.d.e': 3 })
+  expect(mod.dataFlatten({ a: 1, b: { c: 2, d: { e: 3 } } })).toStrictEqual({ 'a': 1, 'b.c': 2, 'b.d.e': 3 })
 
   // Empty Items
   expect(mod.dataFlatten([])).toStrictEqual([])
@@ -127,4 +126,3 @@ test('dataWithout', () => {
   // Empty Items
   expect(mod.dataWithout([], [])).toStrictEqual([])
 })
-
