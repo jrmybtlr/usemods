@@ -6,6 +6,22 @@
     </PageTitle>
 
     <PageFunction
+      name="debounce"
+      description="Runs a function only if there are no new calls during the delay"
+      params='[]'
+    >
+      <Debounce />
+    </PageFunction>
+
+    <PageFunction
+      name="throttle"
+      description="Throttles a function to ensure it only runs once per threshold"
+      params='[]'
+    >
+      <Throttle />
+    </PageFunction>
+
+    <PageFunction
       name="scrollToAnchor"
       description="Smoothly scrolls to the element with the specified ID without scuffing up your URLs."
       params='[{"name":"id","type":"string"}]'
@@ -31,8 +47,16 @@
     </PageFunction>
 
     <PageFunction
-      name="toggleFullScreen"
+      name="copyToClipboard"
       description="Copies a convereted string to the clipboard"
+      params='[{"name":"value","type":"string | number"}]'
+    >
+      <CopyToClipboard />
+    </PageFunction>
+
+    <PageFunction
+      name="toggleFullScreen"
+      description="Toggles the fullscreen mode"
       params='[]'
     >
       <ToggleFullScreen />
@@ -70,22 +94,6 @@
       <FocusTrap />
     </PageFunction>
 
-    <PageFunction
-      name="debounce"
-      description="Runs a function only if there are no new calls during the delay"
-      params='[]'
-    >
-      <Debounce />
-    </PageFunction>
-
-    <PageFunction
-      name="throttle"
-      description="Throttles a function to ensure it only runs once per threshold"
-      params='[]'
-    >
-      <Throttle />
-    </PageFunction>
-
   </DocsLayout>
 </template>
 
@@ -93,6 +101,7 @@
 import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
+import CopyToClipboard from '~/components/content/actions/CopyToClipboard.vue'
 import Debounce from '~/components/content/actions/Debounce.vue'
 import FocusOnInvalid from '~/components/content/actions/FocusOnInvalid.vue'
 import FocusOnNth from '~/components/content/actions/FocusOnNth.vue'
@@ -104,7 +113,7 @@ import ToggleBodyScroll from '~/components/content/actions/ToggleBodyScroll.vue'
 import ToggleElementScroll from '~/components/content/actions/ToggleElementScroll.vue'
 import ToggleFullScreen from '~/components/content/actions/ToggleFullScreen.vue'
 
-const toc = ["scrollToAnchor","toggleBodyScroll","toggleElementScroll","toggleFullScreen","resetForm","focusOnInvalid","focusOnNth","focusTrap","debounce","throttle"]
+const toc = ["debounce","throttle","scrollToAnchor","toggleBodyScroll","toggleElementScroll","copyToClipboard","toggleFullScreen","resetForm","focusOnInvalid","focusOnNth","focusTrap"]
 const pageId = 'actions'
 
 provide('toc', toc)

@@ -213,16 +213,11 @@ export function generatePassword(options: { length?: number, uppercase?: number,
   if (symbols > 0) chars += symbolChars
 
   // Collect guaranteed characters using cryptographic random
-  const guaranteed: string[] = []
-  for (let i = 0; i < uppercase; i++) {
-    guaranteed.push(upperChars[generateRandomIndex(upperChars.length)])
-  }
-  for (let i = 0; i < numbers; i++) {
-    guaranteed.push(numberChars[generateRandomIndex(numberChars.length)])
-  }
-  for (let i = 0; i < symbols; i++) {
-    guaranteed.push(symbolChars[generateRandomIndex(symbolChars.length)])
-  }
+  const guaranteed: string[] = [
+    ...Array.from({ length: uppercase }, () => upperChars[generateRandomIndex(upperChars.length)]),
+    ...Array.from({ length: numbers }, () => numberChars[generateRandomIndex(numberChars.length)]),
+    ...Array.from({ length: symbols }, () => symbolChars[generateRandomIndex(symbolChars.length)]),
+  ]
 
   // Fill the rest with random characters from the pool
   while (guaranteed.length < length) {

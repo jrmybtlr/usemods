@@ -15,7 +15,7 @@ const srcPath = resolve(import.meta.dirname, '../src')
 const nuxtWebPath = resolve(import.meta.dirname, '../nuxt-web')
 
 // Functions
-const functionPattern = /\/\*\*[\s\S]*?\*\/\s*(export\s+function\s+([a-zA-Z0-9_]+)\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\([\s\S]*?\)\s*:\s*([\w<>,[\]\s]+(?:\{[\s\S]*?})?)?)/gms
+const functionPattern = /\/\*\*[\s\S]*?\*\/\s*(export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\([\s\S]*?\)\s*:\s*([\w<>,[\]\s]+(?:\{[\s\S]*?})?)?)/gms
 const metadataPattern = /\/\/\s+(title|description|lead):\s+([^\r\n]*)/g
 const jsdocPattern = /\/\*\*([\s\S]*?)\*\//g
 
@@ -158,7 +158,7 @@ async function generateVue(file, name) {
     const info = (jsdoc.match(/@info\s+(.*)/) || [])[1]?.trim() || ''
 
     // Extract function signature
-    const signatureMatch = full.match(/export function \w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
+    const signatureMatch = full.match(/export\s+(?:async\s+)?function\s+\w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
     const params = signatureMatch
       ? parseParams(signatureMatch[1])
       : []
@@ -169,11 +169,11 @@ async function generateVue(file, name) {
     // Find the actual component file name by checking what exists
     let componentSuffix = '.vue'
     let actualComponentName = componentName
-    
+
     // Normalize function name for comparison (lowercase, remove special chars)
-    const normalizeName = (name) => name.toLowerCase().replace(/[^a-z0-9]/g, '')
+    const normalizeName = name => name.toLowerCase().replace(/[^a-z0-9]/g, '')
     const targetNormalized = normalizeName(functionName)
-    
+
     // List all files in the component directory
     let componentFiles = []
     try {
@@ -182,40 +182,40 @@ async function generateVue(file, name) {
     catch {
       console.warn(`Warning: Component directory not found: ${componentDirPath}`)
     }
-    
+
     // Find matching component file (case-insensitive match)
     let found = false
     for (const file of componentFiles) {
       if (!file.endsWith('.vue')) continue
-      
+
       const baseName = file.replace(/\.(client\.)?vue$/, '')
       const normalizedBase = normalizeName(baseName)
-      
+
       // Check if this file matches the function name
-      if (normalizedBase === targetNormalized || 
-          normalizeName(componentName) === normalizedBase ||
-          normalizeName(functionName) === normalizedBase) {
+      if (normalizedBase === targetNormalized
+        || normalizeName(componentName) === normalizedBase
+        || normalizeName(functionName) === normalizedBase) {
         actualComponentName = baseName
         componentSuffix = file.endsWith('.client.vue') ? '.client.vue' : '.vue'
         found = true
         break
       }
     }
-    
+
     if (!found) {
       // Fallback: try common naming patterns
       const patterns = [componentName, functionName]
-      
+
       // Add acronym variations
       if (functionName.includes('Ip')) patterns.push(functionName.replace(/Ip/g, 'IP'))
       if (functionName.includes('Id')) patterns.push(functionName.replace(/Id/g, 'ID'))
       if (functionName.includes('Url')) patterns.push(functionName.replace(/Url/g, 'URL'))
       if (functionName.includes('Uuid')) patterns.push(functionName.replace(/Uuid/g, 'UUID'))
-      
+
       for (const pattern of patterns) {
         const clientPath = join(componentDirPath, `${pattern}.client.vue`)
         const regularPath = join(componentDirPath, `${pattern}.vue`)
-        
+
         try {
           await access(clientPath)
           actualComponentName = pattern
@@ -236,7 +236,7 @@ async function generateVue(file, name) {
         }
       }
     }
-    
+
     if (!found) {
       console.warn(`Warning: Component not found for ${functionName} in ${componentDir}, using ${actualComponentName}`)
     }
@@ -244,9 +244,9 @@ async function generateVue(file, name) {
     // Use PascalCase for component name in template and import (Vue convention)
     // but keep the actual file name for the import path
     const templateComponentName = actualComponentName.charAt(0).toUpperCase() + actualComponentName.slice(1)
-    
+
     imports.add(`import ${templateComponentName} from '~/components/content/${componentDir}/${actualComponentName}${componentSuffix}'`)
-    
+
     componentUsages.push({
       functionName,
       componentName: templateComponentName,
@@ -347,7 +347,7 @@ async function generateMarkdown(file, name) {
     const info = (jsdoc.match(/@info\s+(.*)/) || [])[1]?.trim() || ''
 
     // Extract function signature for return type
-    const signatureMatch = full.match(/export function \w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
+    const signatureMatch = full.match(/export\s+(?:async\s+)?function\s+\w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
     const params = signatureMatch
       ? parseParams(signatureMatch[1])
       : []
@@ -385,7 +385,7 @@ async function generateMarkdown(file, name) {
 
 async function generateAllMarkdown() {
   const contentDir = join(nuxtWebPath, 'content', '2.docs')
-  
+
   // Ensure content directory exists
   try {
     await fsPromises.mkdir(contentDir, { recursive: true })
@@ -446,7 +446,7 @@ async function generateAllMarkdown() {
 async function generateSitemap() {
   const baseUrl = 'https://usemods.com'
   const currentDate = new Date().toISOString()
-  
+
   // Helper function to get file modification time
   async function getFileModTime(filePath) {
     try {
@@ -457,11 +457,11 @@ async function generateSitemap() {
       return currentDate
     }
   }
-  
+
   // Start XML sitemap
   let sitemapContent = '<?xml version="1.0" encoding="UTF-8"?>\n'
   sitemapContent += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-  
+
   // Add homepage
   sitemapContent += '  <url>\n'
   sitemapContent += `    <loc>${baseUrl}/</loc>\n`
@@ -469,17 +469,17 @@ async function generateSitemap() {
   sitemapContent += '    <changefreq>weekly</changefreq>\n'
   sitemapContent += '    <priority>1.0</priority>\n'
   sitemapContent += '  </url>\n'
-  
+
   // Add intro pages
   const introPages = [
     { path: '/intro/introduction', file: '1.intro/1.introduction.md', priority: '0.9' },
-    { path: '/intro/installation', file: '1.intro/2.installation.md', priority: '0.9' }
+    { path: '/intro/installation', file: '1.intro/2.installation.md', priority: '0.9' },
   ]
-  
+
   for (const page of introPages) {
     const contentPath = join(nuxtWebPath, 'content', page.file)
     const lastmod = await getFileModTime(contentPath)
-    
+
     sitemapContent += '  <url>\n'
     sitemapContent += `    <loc>${baseUrl}${page.path}</loc>\n`
     sitemapContent += `    <lastmod>${lastmod}</lastmod>\n`
@@ -487,13 +487,13 @@ async function generateSitemap() {
     sitemapContent += `    <priority>${page.priority}</priority>\n`
     sitemapContent += '  </url>\n'
   }
-  
+
   // Add doc pages (excluding tailwind)
   const docFiles = files.filter(file => file !== 'tailwind')
   for (const file of docFiles) {
     const srcPath = join(nuxtWebPath, '../src', `${file}.ts`)
     const lastmod = await getFileModTime(srcPath)
-    
+
     sitemapContent += '  <url>\n'
     sitemapContent += `    <loc>${baseUrl}/docs/${file}</loc>\n`
     sitemapContent += `    <lastmod>${lastmod}</lastmod>\n`
@@ -501,10 +501,10 @@ async function generateSitemap() {
     sitemapContent += '    <priority>0.8</priority>\n'
     sitemapContent += '  </url>\n'
   }
-  
+
   // Close XML
   sitemapContent += '</urlset>'
-  
+
   // Write sitemap to public directory
   const publicDir = join(nuxtWebPath, 'public')
   try {
@@ -517,7 +517,7 @@ async function generateSitemap() {
       throw err
     }
   }
-  
+
   await writeFile(join(publicDir, 'sitemap.xml'), sitemapContent)
   console.log('Generated sitemap.xml')
 }
