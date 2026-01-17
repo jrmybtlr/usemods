@@ -1,0 +1,1677 @@
+# UseMods - Full Documentation
+
+Complete documentation for all UseMods functions, optimized for AI and LLM consumption.
+
+Base URL: https://usemods.com
+
+---
+
+# UseMods Documentation
+
+Complete documentation for all UseMods functions, optimized for AI and LLM consumption.
+
+## Table of Contents
+
+- [Formatters](#formatters)
+- [Modifiers](#modifiers)
+- [Generators](#generators)
+- [Actions](#actions)
+- [Numbers](#numbers)
+- [Data](#data)
+- [Validators](#validators)
+- [Detections](#detections)
+- [Devices](#devices)
+- [Goodies](#goodies)
+
+---
+
+# Formatters
+
+Wrangle wild data types into submission. Spruce up numbers, give strings smarts, and make complex content dazzle.
+
+## Functions
+
+### formatNumber
+
+**Description:** Format numbers into neat and formatted strings for people
+
+**Parameters:**
+- `number` (`number`)
+- `options?` (`{
+    decimals?: number
+    locale?: string
+  }`)
+
+**Returns:** `string`
+
+### formatCurrency
+
+**Description:** Format numbers into local currency with extra smarts
+
+**Parameters:**
+- `number` (`number`)
+- `options?` (`{
+    decimals?: number
+    locale?: string
+  }`)
+
+**Returns:** `string`
+
+### formatValuation
+
+**Description:** Format numbers into valuations displayed in thousands, millions or billions
+
+**Parameters:**
+- `number` (`number`)
+- `options?` (`{
+    decimals?: number
+    locale?: string
+    currency?: string
+  }`)
+
+**Returns:** `string`
+
+### formatUnit
+
+**Description:** Format a number into a your unit of choice
+
+**Parameters:**
+- `number` (`number`)
+- `options` (`{
+    unit: string
+    decimals?: number
+    unitDisplay?: 'short' | 'long'
+    locale?: string
+  }`)
+
+**Returns:** `string`
+
+### formatPercentage
+
+**Description:** Format a number into a percentage
+
+**Parameters:**
+- `number` (`number`)
+- `options?` (`{
+    decimals?: number
+    locale?: string
+  }`)
+
+**Returns:** `string`
+
+### formatCombinedDates
+
+**Description:** Collapses two dates (or timestamps) into a human-readable string
+
+**Parameters:**
+- `from` (`Date | string | number`)
+- `to` (`Date | string | number`)
+- `options` (`{ locale?: string, format?: 'short' | 'long', timeZone?: string } = { locale: 'en-US', format: 'long' }`)
+
+**Returns:** `string`
+
+Time is optional and will only be shown if day, month and year are the same
+
+### formatDurationLabels
+
+**Description:** Format time into a human-readable string
+
+**Parameters:**
+- `seconds` (`number`)
+- `options?` (`{
+    labels?: 'short' | 'long'
+    round?: boolean
+    decimals?: number
+  }`)
+
+**Returns:** `string`
+
+### formatDurationNumbers
+
+**Description:** Format time into duration 00:00:00
+
+**Parameters:**
+- `seconds` (`number`)
+
+**Returns:** `string`
+
+### formatFileSize
+
+**Description:** Format and auto calculate file size into human-readable string
+
+**Parameters:**
+- `number` (`number`)
+- `options?` (`{
+    decimals?: number
+    inputUnit?: string
+    outputUnit?: string
+    unitDisplay?: 'short' | 'long'
+    locale?: string
+  }`)
+
+**Returns:** `string`
+
+### formatLength
+
+**Description:** Format and auto calculate length into human-readable string
+
+**Parameters:**
+- `number` (`number`)
+- `options?` (`{
+    decimals?: number
+    inputUnit?: string
+    outputUnit?: string
+    unitDisplay?: 'short' | 'long'
+    locale?: string
+  }`)
+
+**Returns:** `string`
+
+### formatTemperature
+
+**Description:** Format and auto calculate temperature into human-readable string
+
+**Parameters:**
+- `number` (`number`)
+- `options?` (`{
+    decimals?: number
+    inputUnit?: string
+    outputUnit?: string
+    unitDisplay?: 'short' | 'long'
+    locale?: string
+  }`)
+
+**Returns:** `string`
+
+### formatNumberToWords
+
+**Description:** Format numbers into words
+
+**Parameters:**
+- `number` (`number`)
+
+**Returns:** `string`
+
+### formatParagraphs
+
+**Description:** Formats content into paragraphs with a minimum number of characters per sentence and minimum number of sentences per paragraph
+
+**Parameters:**
+- `text` (`string`)
+- `options?` (`{
+    minSentenceCount?: number
+    minCharacterCount?: number
+  }`)
+
+**Returns:** `string`
+
+Use whitespace-pre-wrap to ensure the whitespace is preserved
+
+### formatInitials
+
+**Description:** Generate initials from any string while ignoring common titles
+
+**Parameters:**
+- `text` (`string`)
+- `options?` (`{ length?: number }`)
+
+**Returns:** `string`
+
+### formatUnixTime
+
+**Description:** Format Unix timestamp into a datetime string
+
+**Parameters:**
+- `timestamp?` (`number`)
+
+**Returns:** `string`
+
+### formatList
+
+**Description:** Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction
+
+**Parameters:**
+- `items` (`string | object | string[]`)
+- `options?` (`{
+    limit?: number
+    conjunction?: string
+  }`)
+
+**Returns:** `string`
+
+### formatTitle
+
+**Description:** Converts a string to title case following the Chicago Manual of Style rules.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### formatSentenceCase
+
+**Description:** Format a sentence case string
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### formatTextWrap
+
+**Description:** Adds a space between the last two words in a string to prevent lonely words.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+Remember `text-wrap: pretty` and `text-wrap: balance` are available for most browsers.
+
+
+---
+
+# Modifiers
+
+Modify and transform your content with our collection of efficient and easy-to-use functions designed to dicipher, manipulate, and transform strings.
+
+## Functions
+
+### startWith
+
+**Description:** Adds a prefix to a string if it doesn't already start with the prefix.
+
+**Parameters:**
+- `value` (`string`)
+- `start` (`string`)
+
+**Returns:** `string`
+
+### startWithout
+
+**Description:** Removes a prefix from a string if it starts with the prefix.
+
+**Parameters:**
+- `value` (`string`)
+- `start` (`string`)
+
+**Returns:** `string`
+
+### endWith
+
+**Description:** Adds a suffix to a string if it doesn't already end with the suffix.
+
+**Parameters:**
+- `text` (`string`)
+- `end` (`string`)
+
+**Returns:** `string`
+
+### endWithout
+
+**Description:** Removes a suffix from a string if it ends with the suffix.
+
+**Parameters:**
+- `text` (`string`)
+- `end` (`string`)
+
+**Returns:** `string`
+
+### surroundWith
+
+**Description:** Adds a prefix and suffix to a string if it doesn't already start and end with them.
+
+**Parameters:**
+- `text` (`string`)
+- `start` (`string`)
+- `end` (`string`)
+
+**Returns:** `string`
+
+### pluralize
+
+**Description:** Adds plurals to a string except for excluded words.
+
+**Parameters:**
+- `word` (`string`)
+- `count` (`number`)
+
+**Returns:** `string`
+
+This handles most english pluralisation rules, but there are exceptions.
+
+### singularize
+
+**Description:** Removes plurals from a string.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `string`
+
+This handles most english pluralisation rules, but there are exceptions.
+
+### ordinalize
+
+**Description:** Converts a number to a string with ordinal suffix.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `string`
+
+### stripHtml
+
+**Description:** Strip HTML tags from a string efficiently, compatible with SSR.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### stripWhitespace
+
+**Description:** Strips whitespace from a string.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### stripNumbers
+
+**Description:** Strips numbers from a string.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### stripPunctuation
+
+**Description:** Strips punctuation from a string.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### stripSymbols
+
+**Description:** Strips symbols from a string.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### stripEmojis
+
+**Description:** Strips emojis from a string (requires ES6 Unicode support) 🦊.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### slugify
+
+**Description:** Converts a string to-a-slug.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### deslugify
+
+**Description:** Converts a slug to a string.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### camelCase
+
+**Description:** Removes spaces and capitalizes the first letter of each word except for the first word.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### pascalCase
+
+**Description:** Removes spaces and capitalizes the first letter of each word.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### snakeCase
+
+**Description:** Replaces spaces with underscores and converts to lowercase.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### kebabCase
+
+**Description:** Replaces spaces with hyphens and converts to lowercase.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### titleCase
+
+**Description:** Converts to title case by capitalizing the first letter of each word.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### escapeHtml
+
+**Description:** Escape HTML entities in a string.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### unescapeHtml
+
+**Description:** Unescape HTML entities in a string.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+
+---
+
+# Generators
+
+A collection of magical functions that conjure data out of thin air.
+
+## Functions
+
+### generateNumber
+
+**Description:** Generate a random number
+
+**Parameters:**
+- `length` (`number`)
+
+**Returns:** `number`
+
+### generateNumberBetween
+
+**Description:** Generate a random number within an inclusive range.
+
+**Parameters:**
+- `from` (`number`)
+- `to` (`number`)
+
+**Returns:** `number`
+
+### generateUuid4
+
+**Description:** Generate a Version 4 UUID (cryptographically random)
+
+**Returns:** `string`
+
+### generateUuid7
+
+**Description:** Generate a Version 7 UUID encoding a Unix timestamp in the first 6 bytes and filling the rest with random bytes.
+
+**Returns:** `string`
+
+### decodeUuid7
+
+**Description:** Decode a UUIDv7 string into a timestamp
+
+**Parameters:**
+- `uuid` (`string`)
+
+**Returns:** `string`
+
+### generateShortUuid
+
+**Description:** Encodes a standard UUID (with dashes) into a URL-safe Base64 variant
+
+**Parameters:**
+- `uuid` (`string`)
+
+**Returns:** `string`
+
+### decodeShortUuid
+
+**Description:** Decodes a short URL-safe Base64-encoded string back into a standard UUID
+
+**Parameters:**
+- `shortUuid` (`string`)
+
+**Returns:** `string`
+
+### generateShortId
+
+**Description:** Generate a unique short ID based on the current timestamp
+
+**Parameters:**
+- `length` (`number = 19`)
+
+**Returns:** `string`
+
+### generatePassword
+
+**Description:** Generate a random, secure password with a mix of character types and pleasant special characters.
+
+**Parameters:**
+- `options` (`{ length?: number, uppercase?: number, numbers?: number, number?: number, symbols?: number, special?: number } = {}`)
+
+**Returns:** `string`
+
+Don't forget to use our Password Checker in the Goodies section
+
+### generateRandomIndex
+
+**Description:** Random number generator using cryptographic methods to avoid random().
+
+**Parameters:**
+- `max` (`number`)
+
+**Returns:** `number`
+
+### generateLoremIpsum
+
+**Description:** Generate Lorem Ipsum text in various formats.
+
+**Parameters:**
+- `count` (`number = 5`)
+- `options?` (`{ format: 'words' | 'sentences' | 'paragraphs' }`)
+
+**Returns:** `string`
+
+### generateHighResolutionTime
+
+**Description:** Helper function to get high-resolution time using process.hrtime, or performance.now as a fallback.
+
+**Returns:** `bigint`
+
+Node.js times generated are in nanoseconds, browser-based falls back to converting performance.now to microseconds.
+
+### getSecureRandomValues
+
+**Description:** Returns an array filled with cryptographic random bytes.
+
+**Parameters:**
+- `buffer` (`Uint8Array`)
+
+**Returns:** `Uint8Array`
+
+
+---
+
+# Actions
+
+A stack of handy functions you could write yourself, but don't want to.
+
+## Functions
+
+### scrollToAnchor
+
+**Description:** Smoothly scrolls to the element with the specified ID without scuffing up your URLs.
+
+**Parameters:**
+- `id` (`string`)
+
+**Returns:** `Promise<void>`
+
+### toggleBodyScroll
+
+**Description:** Toggles the body scroll with specified class names and returns a promise
+
+**Parameters:**
+- `className` (`string = 'fixed'`)
+- `action` (`'add' | 'remove' | 'toggle' = 'toggle'`)
+
+**Returns:** `Promise<void>`
+
+Use your own class names, or ensure fixed is within your Tailwindcss JIT
+
+### toggleElementScroll
+
+**Description:** Toggles the element scroll with specified class names and returns a promise
+
+**Parameters:**
+- `element` (`HTMLElement`)
+
+**Returns:** `Promise<void>`
+
+### toggleFullScreen
+
+**Description:** Copies a convereted string to the clipboard
+
+**Returns:** `Promise<void>`
+
+### resetForm
+
+**Description:** Resets a form to its initial state
+
+**Parameters:**
+- `form` (`HTMLFormElement`)
+
+**Returns:** `Promise<void>`
+
+### focusOnInvalid
+
+**Description:** Focuses on and scrolls to the first invalid input, select, or textarea element within a form.
+
+**Parameters:**
+- `container` (`HTMLElement`)
+
+**Returns:** `Promise<void>`
+
+### focusOnNth
+
+**Description:** Focuses on the nth element within the specified form, where 0 is the first element and -1 is the last element.
+
+**Parameters:**
+- `container` (`HTMLElement`)
+- `index` (`number = 0`)
+
+**Returns:** `Promise<void>`
+
+### focusTrap
+
+**Description:** Sets up a keyboard trap within an HTML element, allowing the focus to cycle between the first and last focusable elements when the Tab key is pressed.
+
+**Parameters:**
+- `container` (`HTMLElement`)
+
+**Returns:** `void`
+
+### debounce
+
+**Description:** Runs a function only if there are no new calls during the delay
+
+**Returns:** `void`
+
+### throttle
+
+**Description:** Throttles a function to ensure it only runs once per threshold
+
+**Returns:** `void`
+
+
+---
+
+# Numbers
+
+This file contains functions that are related to numbers.
+
+## Functions
+
+### sum
+
+**Description:** Calculates the sum of an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number`
+
+### mean
+
+**Description:** Calculates the mean of an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number`
+
+### average
+
+**Description:** Calculates the mean of an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number`
+
+### margin
+
+**Description:** Calculates the margin based on a percentage.
+
+**Parameters:**
+- `value` (`number`)
+- `percentage` (`number`)
+
+**Returns:** `number`
+
+### addMargin
+
+**Description:** Adds the margin to the value.
+
+**Parameters:**
+- `value` (`number`)
+- `percentage` (`number`)
+
+**Returns:** `number`
+
+### subtractMargin
+
+**Description:** Subtracts the margin from the value.
+
+**Parameters:**
+- `value` (`number`)
+- `percentage` (`number`)
+
+**Returns:** `number`
+
+### addMarkup
+
+**Description:** Adds the markup to the value.
+
+**Parameters:**
+- `value` (`number`)
+- `percentage` (`number`)
+
+**Returns:** `number`
+
+### subtractMarkup
+
+**Description:** Calculates the markup based on a percentage.
+
+**Parameters:**
+- `value` (`number`)
+- `percentage` (`number`)
+
+**Returns:** `number`
+
+### median
+
+**Description:** Calculates the median of an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number`
+
+### mode
+
+**Description:** Calculates the mode of an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number[]`
+
+### min
+
+**Description:** Finds the minimum value in an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number`
+
+### max
+
+**Description:** Finds the maximum value in an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number`
+
+### minMax
+
+**Description:** Returns the minimum and maximum values in an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `[number, number]`
+
+### range
+
+**Description:** Returns the difference between two values, expressed as a positive number.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number`
+
+### standardDeviation
+
+**Description:** Returns the standard deviation of an array of numbers.
+
+**Parameters:**
+- `numbers` (`number[]`)
+- `options?` (`{ method: 'sample' | 'population' }`)
+
+**Returns:** `number`
+
+### skewness
+
+**Description:** Returns the measure of asymmetry of the probability distribution of an array of numbers. The skewness value can be positive, zero, negative, or undefined.
+
+**Parameters:**
+- `numbers` (`number[]`)
+
+**Returns:** `number`
+
+
+---
+
+# Data
+
+A collection of functions for formatting, filtering and taming wild arrays and objects.
+
+## Functions
+
+### dataSortBy
+
+**Description:** Sort an array or object by a property.
+
+**Parameters:**
+- `items` (`object | string[] | number[]`)
+- `options?` (`{ property?: string, order?: 'asc' | 'desc' }`)
+
+**Returns:** `object`
+
+### dataReverse
+
+**Description:** Reverse an array or object.
+
+**Returns:** `void`
+
+### dataRemoveDuplicates
+
+**Description:** Returns single unique values within an array or object
+
+**Returns:** `void`
+
+### dataFlatten
+
+**Description:** Flatten an array of arrays or an object of objects into a single array or object. That was hard to say.
+
+**Returns:** `void`
+
+### dataWithout
+
+**Description:** Returns an array without a property or properties.
+
+**Returns:** `void`
+
+
+---
+
+# Validators
+
+A collection of validators for common data types
+
+## Functions
+
+### isEmail
+
+**Description:** Check if any given value is a valid email address.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `boolean`
+
+### isNumber
+
+**Description:** Check if any given value is a valid number.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isUrl
+
+**Description:** Check if any given value is a valid URL.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `boolean`
+
+### isEmpty
+
+**Description:** Check if any given string, array or object is empty.
+
+**Parameters:**
+- `value` (`string | string[] | number[] | object | null | undefined`)
+
+**Returns:** `boolean`
+
+### isUuid
+
+**Description:** Check if any given value is a valid UUID.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isJson
+
+**Description:** Check if any given value is a valid JSON string.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isObject
+
+**Description:** Check if any given value is an object.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isArray
+
+**Description:** Check if any given value is an array.
+
+**Parameters:**
+- `value` (`string[] | number[]`)
+
+**Returns:** `boolean`
+
+### isHex
+
+**Description:** Check if any given value is a valid hexadecimal color code.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `boolean`
+
+### isAlphabetic
+
+**Description:** Check if any given value contains only alphabetic characters.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isAlphanumeric
+
+**Description:** Check if any given value contains only alphanumeric characters.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isBoolean
+
+**Description:** Check if any given value is a boolean value.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isUndefined
+
+**Description:** Check if any given value is undefined.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isNull
+
+**Description:** Check if any given value is null.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isDate
+
+**Description:** Check if any given value is a valid Date object.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isTime
+
+**Description:** Check if any given value is a valid time in HH:mm format.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isLeapYear
+
+**Description:** Check if any given value year is a leap year.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isEven
+
+**Description:** Check if the number is even.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isOdd
+
+**Description:** Check if the number is odd.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isPositive
+
+**Description:** Check if the number is positive.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isNegative
+
+**Description:** Check if the number is negative.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isZero
+
+**Description:** Check if the number is zero.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isOver9000
+
+**Description:** Check if the number is over 9000.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isPrime
+
+**Description:** Check if the number is a prime number.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isInteger
+
+**Description:** Check if the number is an integer.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isFloat
+
+**Description:** Check if the number is a float.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isBetween
+
+**Description:** Check if the number is between the specified range.
+
+**Parameters:**
+- `value` (`number`)
+- `min` (`number`)
+- `max` (`number`)
+
+**Returns:** `boolean`
+
+### isDivisibleBy
+
+**Description:** Check if the number is divisible by the specified number.
+
+**Parameters:**
+- `value` (`number`)
+- `divisor` (`number`)
+
+**Returns:** `boolean`
+
+### isCreditCard
+
+**Description:** Check if any given value is a valid credit card number.
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `boolean`
+
+### isLatLng
+
+**Description:** Check if any given value is a valid latitude-longitude coordinate in the format lat,lng or lat,lng.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `boolean`
+
+### isLatitude
+
+**Description:** Check if any given value is a valid latitude coordinate.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `boolean`
+
+### isLongitude
+
+**Description:** Check if any given value is a valid longitude coordinate.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `boolean`
+
+### isIpAddress
+
+**Description:** Check if any given value is a valid IP address.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `boolean`
+
+### isPort
+
+**Description:** Check if any given value is a valid port number.
+
+**Parameters:**
+- `value` (`number`)
+
+**Returns:** `boolean`
+
+### isMacAddress
+
+**Description:** Check if any given value is a valid MAC address.
+
+**Parameters:**
+- `value` (`string`)
+
+**Returns:** `boolean`
+
+
+---
+
+# Detections
+
+Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add a listeners for reactivity.
+
+## Functions
+
+### detectScrollPosition
+
+**Description:** Detect the current scroll position of the window
+
+**Returns:** `void`
+
+### detectMousePosition
+
+**Description:** Detect the absolute mouse position with the page
+
+**Parameters:**
+- `event` (`MouseEvent`)
+
+**Returns:** `void`
+
+Don't forget to add a mousemove event listener to the window
+
+### detectRelativeMousePosition
+
+**Description:** Detect the relative mouse position with the window size and returns a percentage value
+
+**Parameters:**
+- `event` (`MouseEvent`)
+
+**Returns:** `void`
+
+Don't forget to add a mousemove event listener to the window
+
+### detectWindowSize
+
+**Description:** Detect the browser's window size
+
+**Returns:** `void`
+
+### detectScreenSize
+
+**Description:** Detect the screen or monitor size
+
+**Returns:** `void`
+
+### detectActiveBrowser
+
+**Description:** Detect if the browser window is currently active or hidden.
+
+**Returns:** `boolean`
+
+### detectColorScheme
+
+**Description:** Detect the current color scheme (Light or Dark)
+
+**Returns:** `string`
+
+### detectUserTimezone
+
+**Description:** Detect the current user's Timezone
+
+**Returns:** `string`
+
+### detectBreakpoint
+
+**Description:** Detect the current breakpoint based on Tailwind CSS breakpoints
+
+**Returns:** `string`
+
+Add a listener to the window resize event to detect changes
+
+### detectContainerBreakpoint
+
+**Description:** Detect any container breakpoint based on Tailwind CSS breakpoints
+
+**Parameters:**
+- `element` (`HTMLElement`)
+
+**Returns:** `string`
+
+Add a listener to the window resize event to detect changes
+
+### detectNetworkStatus
+
+**Description:** Detect the current network status of the user (Online or Offline)
+
+**Returns:** `string`
+
+### detectUrl
+
+**Description:** Returns the current URL
+
+**Returns:** `string`
+
+### detectUrlPath
+
+**Description:** Returns the path of the current URL as an array or string
+
+**Parameters:**
+- `format` (`'array' | 'string' = 'array'`)
+
+**Returns:** `string[]`
+
+### detectUrlParams
+
+**Description:** Returns a value from the URL by name
+
+**Parameters:**
+- `format` (`'string' | 'object' = 'string'`)
+
+**Returns:** `void`
+
+### detectUrlHash
+
+**Description:** Returns a value from the URL hash by name
+
+**Returns:** `string`
+
+### detectHost
+
+**Description:** Returns the current host or domain name from the URL
+
+**Returns:** `string`
+
+### detectHostName
+
+**Description:** Returns the current hostname from the URL
+
+**Returns:** `string`
+
+### detectPort
+
+**Description:** Returns the current port
+
+**Returns:** `string`
+
+
+---
+
+# Devices
+
+Client-side detections user's machines.
+
+## Functions
+
+### isServerSide
+
+**Description:** Check if you're a server-side user.
+
+**Returns:** `boolean`
+
+### detectUserDevice
+
+**Description:** Detects the user's device based on the user agent string and returns the information as an object.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `object`
+
+### addDeviceClasses
+
+**Description:** Adds detected devices as classes to your project's body class
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `void`
+
+### detectDevice
+
+**Description:** Detect the current device type (Mobile or Desktop)
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `string`
+
+### detectBrowser
+
+**Description:** Detect the current browser
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `string`
+
+### detectOS
+
+**Description:** Detect the current operating system
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `string`
+
+### isIos
+
+**Description:** Check if you're a passionate iPhone fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isAndroid
+
+**Description:** Check if you're a zealous Android fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isMac
+
+**Description:** Check if you're a staunch Mac fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isWindows
+
+**Description:** Check if you're a fervent Windows fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isLinux
+
+**Description:** Check if you're a devoted Linux fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+Fun fact, most Linux users will tell you they have Linux before the function does.
+
+### isChrome
+
+**Description:** Check if you're a die-hard Chrome fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isFirefox
+
+**Description:** Check if you're a dedicated Firefox fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isSafari
+
+**Description:** Check if you're a lonely Safari fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isEdge
+
+**Description:** Check if you're an ardent Edge fan.
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isMobile
+
+**Description:** Check if you're rocking a mobile
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isTablet
+
+**Description:** Check if you're tablet user
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isDesktop
+
+**Description:** Check if you're pro desktop user
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isPortrait
+
+**Description:** Check if you're portrait
+
+**Parameters:**
+- `win?` (`{ innerWidth: number, innerHeight: number }`)
+
+**Returns:** `boolean`
+
+### isLandscape
+
+**Description:** Check if you're landscape
+
+**Parameters:**
+- `win?` (`{ innerWidth: number, innerHeight: number }`)
+
+**Returns:** `boolean`
+
+### isBot
+
+**Description:** Check if you're a cyborg or a bot
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isHuman
+
+**Description:** Check if you're a human
+
+**Parameters:**
+- `userAgent?` (`string`)
+
+**Returns:** `boolean`
+
+### isDeveloper
+
+**Description:** Check if you're a developer by checking the environment variable
+
+**Returns:** `boolean`
+
+
+---
+
+# Goodies
+
+A collection neat little functions that don't belong anywhere else.
+
+## Functions
+
+### splitByWords
+
+**Description:** Wraps each word, sentence or paragraph in a string with a tag.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+Don't forget to render the HTML safely.
+
+### checkPasswordStrength
+
+**Description:** Check the strength of a password against a given policy.
+
+**Parameters:**
+- `text` (`string`)
+- `options` (`{ length?: number, uppercase?: number, number?: number, special?: number } = {}`)
+
+**Returns:** `object`
+
+Don't forget to use our Password Generator in the Generators section
+
+### mergeFields
+
+**Description:** Replaces placeholders in a string with values from an object.
+
+**Parameters:**
+- `text` (`string`)
+- `fields` (`Record<string | number`)
+
+**Returns:** `string`
+
+### readingTime
+
+**Description:** Returns the reading time of a string in Hours, Minutes, and Seconds.
+
+**Parameters:**
+- `text` (`string`)
+
+**Returns:** `string`
+
+### countBy
+
+**Description:** Count by character, word, sentence, paragraph or unique string.
+
+**Parameters:**
+- `text` (`string`)
+- `options` (`{
+    by?: 'character' | 'word' | 'sentence' | 'paragraph' | 'unique'
+    searchFor?: string
+  } = {}`)
+
+**Returns:** `number`
+
+### animateText
+
+**Description:** Animate text by wrapping each character in a span with a delay.
+
+**Parameters:**
+- `text` (`string`)
+- `options` (`{
+    splitBy?: 'word' | 'character'
+    time?: number
+    unit?: 'ms' | 's'
+    class?: string
+  } = {}`)
+
+**Returns:** `string`
+
+
+---
+

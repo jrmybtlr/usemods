@@ -598,6 +598,118 @@ ${docLinksString}
   await writeFile(navigationPath, navigationContent)
 }
 
+async function generateLLMsTxt() {
+  const baseUrl = 'https://usemods.com'
+  
+  // Hardcoded introLinks (same as in generateNavigation)
+  const introLinks = [
+    {
+      id: "introduction",
+      path: "/intro/introduction",
+      title: "Introduction",
+      lead: "UseMods is a mighty set of missing functions for your frontend, framework and SSR applications. All the bells, whistles, and scooter mirrors you'll ever need.",
+    },
+    {
+      id: "installation",
+      path: "/intro/installation",
+      title: "Installation",
+      lead: "Running and loving mods",
+    },
+  ]
+  
+  // Read docLinks from source files (same approach as generateNavigation)
+  const docLinks = []
+  for (const file of files) {
+    // Skip tailwind as it's not a doc page
+    if (file === 'tailwind') continue
+
+    const filePath = join(srcPath, `${file}.ts`)
+    const content = await readFile(filePath, 'utf8')
+    const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
+
+    docLinks.push({
+      path: `/docs/${file}`,
+      title: metadata.title || file,
+      lead: metadata.description || '',
+    })
+  }
+  
+  // Build LLMs.txt content
+  let llmsContent = `# UseMods\n\n`
+  llmsContent += `UseMods is a mighty set of missing functions for your frontend, framework and SSR applications. All the bells, whistles, and scooter mirrors you'll ever need.\n\n`
+  
+  // Getting Started section
+  if (introLinks.length > 0) {
+    llmsContent += `## Getting Started\n\n`
+    for (const link of introLinks) {
+      llmsContent += `[${link.title}](${baseUrl}${link.path}) - ${link.lead}\n`
+    }
+    llmsContent += `\n`
+  }
+  
+  // Documentation section
+  if (docLinks.length > 0) {
+    llmsContent += `## Documentation\n\n`
+    for (const link of docLinks) {
+      llmsContent += `[${link.title}](${baseUrl}${link.path}) - ${link.lead}\n`
+    }
+    llmsContent += `\n`
+  }
+  
+  // API section
+  llmsContent += `## API\n\n`
+  llmsContent += `[All Documentation](${baseUrl}/api/docs/all.md) - Complete documentation in markdown format\n`
+  llmsContent += `[Documentation Index](${baseUrl}/api/docs/) - List of all available documentation files\n`
+  
+  // Write to public directory
+  const publicDir = join(nuxtWebPath, 'public')
+  try {
+    await fsPromises.mkdir(publicDir, { recursive: true })
+  }
+  catch {
+    // Directory might already exist
+  }
+  
+  await writeFile(join(publicDir, 'llms.txt'), llmsContent)
+  console.log('Generated llms.txt')
+}
+
+async function generateLLMsFullTxt() {
+  const baseUrl = 'https://usemods.com'
+  const contentDir = join(nuxtWebPath, 'content', '2.docs')
+  const allMdPath = join(contentDir, 'all.md')
+  
+  // Read the all.md file
+  let allMarkdownContent = ''
+  try {
+    allMarkdownContent = await readFile(allMdPath, 'utf8')
+  }
+  catch {
+    // If all.md doesn't exist yet, generate it first
+    await generateAllMarkdown()
+    allMarkdownContent = await readFile(allMdPath, 'utf8')
+  }
+  
+  // Build LLMs-full.txt content with header
+  let llmsFullContent = `# UseMods - Full Documentation\n\n`
+  llmsFullContent += `Complete documentation for all UseMods functions, optimized for AI and LLM consumption.\n\n`
+  llmsFullContent += `Base URL: ${baseUrl}\n\n`
+  llmsFullContent += `---\n\n`
+  llmsFullContent += allMarkdownContent
+  
+  // Write to public directory
+  const publicDir = join(nuxtWebPath, 'public')
+  try {
+    await fsPromises.mkdir(publicDir, { recursive: true })
+  }
+  catch {
+    // Directory might already exist
+  }
+  
+  await writeFile(join(publicDir, 'llms-full.txt'), llmsFullContent)
+  console.log('Generated llms-full.txt')
+}
+
 async function generateAll() {
   await Promise.all(files.map((file, index) => generateVue(join(srcPath, `${file}.ts`), `${String(index + 1).padStart(2, '0')}.${file}`)))
   await Promise.all(files.map((file, index) => generateMarkdown(join(srcPath, `${file}.ts`), `${String(index + 1).padStart(2, '0')}.${file}`)))
@@ -605,6 +717,8 @@ async function generateAll() {
   await generateNavigation()
   await generateAllMarkdown()
   await generateSitemap()
+  await generateLLMsTxt()
+  await generateLLMsFullTxt()
 }
 
 async function clearAll() {
