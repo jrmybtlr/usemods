@@ -22,9 +22,21 @@ export function isNumber(value: unknown): boolean {
  * Check if any given value is a valid URL.
  */
 export function isUrl(value: string): boolean {
-  const regex
-    = /^(?:\w+:)?\/\/([^\s.]+\.\S{2,}|localhost[:?\d]*(?:[^:?\d]\S*)?)$/
-  return regex.test(value)
+  if (typeof value !== 'string') return false
+
+  // Use modern URL.canParse() when available
+  if (typeof URL !== 'undefined' && 'canParse' in URL && typeof URL.canParse === 'function') {
+    return URL.canParse(value)
+  }
+
+  // Fallback
+  try {
+    new URL(value)
+    return true
+  }
+  catch {
+    return false
+  }
 }
 
 /**
@@ -58,17 +70,18 @@ export function isJson(value: unknown): boolean {
     JSON.parse(value)
     return true
   }
-  catch (error) {
-    console.warn('[MODS] isJson Error:', error)
+  catch {
     return false
   }
 }
 
 /**
- * Check if any given value is an object.
+ * Check if any given value is a plain object
  */
 export function isObject(value: unknown): boolean {
-  return value !== null && typeof value === 'object' && value.constructor === Object
+  return value !== null
+    && typeof value === 'object'
+    && Object.prototype.toString.call(value) === '[object Object]'
 }
 
 /**
@@ -90,16 +103,21 @@ export function isHex(value: string): boolean {
  * Check if any given value contains only alphabetic characters.
  */
 export function isAlphabetic(value: unknown): boolean {
+  if (typeof value !== 'string') return false
   const regex = /^[a-zA-Z]+$/
-  return regex.test(value as string)
+  return regex.test(value)
 }
 
 /**
  * Check if any given value contains only alphanumeric characters.
  */
 export function isAlphanumeric(value: unknown): boolean {
+  if (typeof value === 'number') {
+    value = String(value)
+  }
+  if (typeof value !== 'string') return false
   const regex = /^[a-zA-Z0-9]+$/
-  return regex.test(value as string)
+  return regex.test(value)
 }
 
 /**
@@ -127,10 +145,10 @@ export function isNull(value: unknown): boolean {
  * Check if any given value is a valid Date object.
  */
 export function isDate(value: unknown): boolean {
-  if (value instanceof Date) return !isNaN(value.getTime())
+  if (value instanceof Date) return !Number.isNaN(value.getTime())
   else if (typeof value === 'string' || typeof value === 'number') {
     const date = new Date(value)
-    return !isNaN(date.getTime())
+    return !Number.isNaN(date.getTime())
   }
   return false
 }
@@ -139,8 +157,9 @@ export function isDate(value: unknown): boolean {
  * Check if any given value is a valid time in HH:mm format.
  */
 export function isTime(value: unknown): boolean {
+  if (typeof value !== 'string') return false
   const regex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9](?:\.\d{1,3})?)?$/
-  return regex.test(value as string)
+  return regex.test(value)
 }
 
 /**
