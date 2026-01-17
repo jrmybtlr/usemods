@@ -57,6 +57,18 @@ export default defineNuxtConfig({
         "Cache-Control": "public, max-age=3600",
       },
     },
+    "/llms.txt": {
+      cors: true,
+      headers: {
+        "Cache-Control": "public, max-age=3600",
+      },
+    },
+    "/llms-full.txt": {
+      cors: true,
+      headers: {
+        "Cache-Control": "public, max-age=3600",
+      },
+    },
   },
 
   image: {

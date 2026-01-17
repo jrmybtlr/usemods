@@ -1,0 +1,26 @@
+# UseMods
+
+UseMods is a mighty set of missing functions for your frontend, framework and SSR applications. All the bells, whistles, and scooter mirrors you'll ever need.
+
+## Getting Started
+
+[Introduction](https://usemods.com/intro/introduction) - UseMods is a mighty set of missing functions for your frontend, framework and SSR applications. All the bells, whistles, and scooter mirrors you'll ever need.
+[Installation](https://usemods.com/intro/installation) - Running and loving mods
+
+## Documentation
+
+[Formatters](https://usemods.com/docs/formatters) - Wrangle wild data types into submission. Spruce up numbers, give strings smarts, and make complex content dazzle.
+[Modifiers](https://usemods.com/docs/modifiers) - Modify and transform your content with our collection of efficient and easy-to-use functions designed to dicipher, manipulate, and transform strings.
+[Generators](https://usemods.com/docs/generators) - A collection of magical functions that conjure data out of thin air.
+[Actions](https://usemods.com/docs/actions) - A stack of handy functions you could write yourself, but don't want to.
+[Numbers](https://usemods.com/docs/numbers) - This file contains functions that are related to numbers.
+[Data](https://usemods.com/docs/data) - A collection of functions for formatting, filtering and taming wild arrays and objects.
+[Validators](https://usemods.com/docs/validators) - A collection of validators for common data types
+[Detections](https://usemods.com/docs/detections) - Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add a listeners for reactivity.
+[Devices](https://usemods.com/docs/devices) - Client-side detections user's machines.
+[Goodies](https://usemods.com/docs/goodies) - A collection neat little functions that don't belong anywhere else.
+
+## API
+
+[All Documentation](https://usemods.com/api/docs/all.md) - Complete documentation in markdown format
+[Documentation Index](https://usemods.com/api/docs/) - List of all available documentation files

@@ -2,79 +2,79 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://usemods.com/</loc>
-    <lastmod>2026-01-16T23:42:20.511Z</lastmod>
+    <lastmod>2026-01-17T01:58:16.227Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://usemods.com/intro/introduction</loc>
-    <lastmod>2026-01-16T23:37:29.560Z</lastmod>
+    <lastmod>2025-11-29T09:09:03.455Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://usemods.com/intro/installation</loc>
-    <lastmod>2026-01-16T23:37:29.560Z</lastmod>
+    <lastmod>2025-11-29T09:09:03.456Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/formatters</loc>
-    <lastmod>2026-01-16T23:37:29.575Z</lastmod>
+    <lastmod>2026-01-16T22:46:31.890Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/modifiers</loc>
-    <lastmod>2026-01-16T23:37:29.576Z</lastmod>
+    <lastmod>2026-01-16T22:46:31.891Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/generators</loc>
-    <lastmod>2026-01-16T23:37:29.575Z</lastmod>
+    <lastmod>2026-01-16T22:46:31.891Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/actions</loc>
-    <lastmod>2026-01-16T23:37:29.575Z</lastmod>
+    <lastmod>2025-08-08T06:20:14.433Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/numbers</loc>
-    <lastmod>2026-01-16T23:37:29.576Z</lastmod>
+    <lastmod>2026-01-16T22:46:31.891Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/data</loc>
-    <lastmod>2026-01-16T23:37:29.575Z</lastmod>
+    <lastmod>2026-01-16T23:13:28.314Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/validators</loc>
-    <lastmod>2026-01-16T23:37:29.576Z</lastmod>
+    <lastmod>2026-01-16T22:46:31.891Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/detections</loc>
-    <lastmod>2026-01-16T23:37:29.575Z</lastmod>
+    <lastmod>2026-01-16T22:46:31.890Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/devices</loc>
-    <lastmod>2026-01-16T23:37:29.575Z</lastmod>
+    <lastmod>2025-08-19T00:54:02.440Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/goodies</loc>
-    <lastmod>2026-01-16T23:37:29.575Z</lastmod>
+    <lastmod>2025-08-08T06:20:14.436Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
