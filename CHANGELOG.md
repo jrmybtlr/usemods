@@ -2,6 +2,18 @@
 
 ## v1.16.0
 
+[compare changes](https://github.com/jrmymbtlr/usemods/compare/v1.15.0...v1.16.0)
+
+### 🏡 Chore
+
+- **release:** V1.16.0 ([bb76456](https://github.com/jrmymbtlr/usemods/commit/bb76456))
+
+### ❤️ Contributors
+
+- Jeremy Butler <jeremy@jeremymbutler.com>
+
+## v1.16.0
+
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.15.0...v1.16.0)
 
 ## v1.15.0

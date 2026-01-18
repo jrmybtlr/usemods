@@ -27,19 +27,14 @@
     "next"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/LittleFoxCompany/usemods#readme",
-  "bugs": "https://github.com/LittleFoxCompany/usemods/issues",
-  "author": "Jeremy Butler <jeremy@littlefox.studio>",
+  "homepage": "https://github.com/jrmymbtlr/usemods#readme",
+  "bugs": "https://github.com/jrmymbtlr/usemods/issues",
+  "author": "Jeremy Butler <jeremy@jeremymbutler.com>",
   "contributors": [
     {
       "name": "Jeremy Butler",
-      "email": "jeremy@littlefox.studio",
+      "email": "jeremy@jeremymbutler.com",
       "url": "https://github.com/jrmymbtlr"
-    },
-    {
-      "name": "Phillip Hartin",
-      "email": "phillip@littlefox.studio",
-      "url": "https://github.com/philliphartin"
     }
   ],
   "files": [
@@ -50,7 +45,7 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LittleFoxCompany/usemods.git"
+    "url": "git+https://github.com/jrmymbtlr/usemods.git"
   },
   "devDependencies": {
     "@nuxt/kit": "^3.20.1",
