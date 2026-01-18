@@ -41,3 +41,4 @@ nuxt-web/utils/**/*.ts
 .data
 CLAUDE.md
 .pnpm-store/*
+WARP.md

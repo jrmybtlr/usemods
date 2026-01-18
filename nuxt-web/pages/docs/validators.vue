@@ -55,7 +55,7 @@
 
     <PageFunction
       name="isObject"
-      description="Check if any given value is an object."
+      description="Check if any given value is a plain object"
       params='[{"name":"value","type":"unknown"}]'
     >
       <IsObject />
