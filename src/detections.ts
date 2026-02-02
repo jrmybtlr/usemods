@@ -88,6 +88,17 @@ export function detectUserTimezone(): string | null {
 }
 
 /**
+ * Detect the current user's locale from the browser
+ * @returns The user's locale (e.g., 'en-US') or 'en-US' as fallback for SSR
+ */
+export function detectUserLocale(): string {
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    return navigator.language
+  }
+  return 'en-US'
+}
+
+/**
  * Detect the current breakpoint based on Tailwind CSS breakpoints
  * @info Add a listener to the window resize event to detect changes
  */

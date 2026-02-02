@@ -218,6 +218,38 @@ describe('detectUserTimezone', () => {
   })
 })
 
+describe('detectUserLocale', () => {
+  beforeEach(() => {
+    ;(global as any).navigator = { language: 'fr-FR' }
+  })
+  afterEach(() => {
+    delete (global as any).navigator
+  })
+
+  test('returns user locale from navigator.language', () => {
+    expect(mod.detectUserLocale()).toBe('fr-FR')
+  })
+
+  test('returns en-US when navigator is undefined', () => {
+    delete (global as any).navigator
+    expect(mod.detectUserLocale()).toBe('en-US')
+  })
+
+  test('returns en-US when navigator.language is undefined', () => {
+    ;(global as any).navigator = {}
+    expect(mod.detectUserLocale()).toBe('en-US')
+  })
+
+  test('handles different locales correctly', () => {
+    ;(global as any).navigator = { language: 'ja-JP' }
+    expect(mod.detectUserLocale()).toBe('ja-JP')
+    
+    ;(global as any).navigator = { language: 'de-DE' }
+    expect(mod.detectUserLocale()).toBe('de-DE')
+  })
+})
+
+
 describe('detectBreakpoint', () => {
   beforeEach(() => {
     ;(global as any).window = mockWindow

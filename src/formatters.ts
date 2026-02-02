@@ -3,6 +3,7 @@
 // lead: Format misbehaving content
 
 import * as map from './maps'
+import { detectUserLocale } from './detections'
 
 /**
  * Format numbers into neat and formatted strings for people
@@ -23,7 +24,7 @@ export function formatNumber(
     maximumFractionDigits: safeDecimals,
   }
 
-  return new Intl.NumberFormat(options?.locale ?? 'en-US', config).format(number)
+  return new Intl.NumberFormat(options?.locale ?? detectUserLocale(), config).format(number)
 }
 
 /**
@@ -39,15 +40,16 @@ export function formatCurrency(
   const decimalPlaces = (number.toString().split('.')[1] || '0').padEnd(2, '0').length
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
+  const locale = options?.locale ?? detectUserLocale()
   const config: Intl.NumberFormatOptions = {
     style: 'currency',
     currencyDisplay: 'narrowSymbol',
     minimumFractionDigits: safeDecimals,
     maximumFractionDigits: safeDecimals,
-    currency: map.currencySymbols.get(options?.locale ?? 'en-US') ?? 'USD',
+    currency: map.currencySymbols.get(locale) ?? 'USD',
   }
 
-  return new Intl.NumberFormat(options?.locale ?? 'en-US', config).format(number)
+  return new Intl.NumberFormat(locale, config).format(number)
 }
 
 /**
@@ -62,7 +64,7 @@ export function formatValuation(
   },
 ): string {
   const safeDecimals = Math.max(0, Math.min(options?.decimals ?? 0, 20))
-  const locale = options?.locale ?? 'en-US'
+  const locale = options?.locale ?? detectUserLocale()
 
   const config: Intl.NumberFormatOptions = {
     style: 'currency',
@@ -100,7 +102,7 @@ export function formatUnit(
     maximumFractionDigits: safeDecimals,
   }
 
-  return new Intl.NumberFormat(options.locale ?? 'en-US', config).format(number)
+  return new Intl.NumberFormat(options.locale ?? detectUserLocale(), config).format(number)
 }
 
 /**
@@ -122,7 +124,7 @@ export function formatPercentage(
     maximumFractionDigits: safeDecimals,
   }
 
-  let formattedNumber = new Intl.NumberFormat(options?.locale ?? 'en-US', config).format(number)
+  let formattedNumber = new Intl.NumberFormat(options?.locale ?? detectUserLocale(), config).format(number)
   formattedNumber = formattedNumber.replace(/(\.\d*?[1-9])0+%$/, '$1%').replace(/\.0+%$/, '%')
 
   return formattedNumber
@@ -135,7 +137,7 @@ export function formatPercentage(
 export function formatCombinedDates(
   from: Date | string | number,
   to: Date | string | number,
-  options: { locale?: string, format?: 'short' | 'long', timeZone?: string } = { locale: 'en-US', format: 'long' },
+  options: { locale?: string, format?: 'short' | 'long', timeZone?: string } = { locale: detectUserLocale(), format: 'long' },
 ): string {
   // Parse dates only once
   const fromDate = new Date(from ?? Date.now())
@@ -166,7 +168,7 @@ export function formatCombinedDates(
 
   // Simplified format options
   const monthFormat = options.format || 'long'
-  const locale = options.locale || 'en-US'
+  const locale = options.locale || detectUserLocale()
 
   // Formatting helper
   const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
@@ -277,7 +279,7 @@ export function formatFileSize(
     locale?: string
   },
 ): string {
-  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options || {}
+  const { decimals = undefined, unitDisplay = 'short', locale = detectUserLocale(), inputUnit = 'byte', outputUnit = 'auto' } = options || {}
   const valueInBytes = number * (map.bytesInUnit.get(inputUnit) ?? 1)
 
   const targetUnit = outputUnit === 'auto'
@@ -302,7 +304,7 @@ export function formatLength(
     locale?: string
   },
 ): string {
-  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'millimeter', outputUnit = 'auto' } = options || {}
+  const { decimals = undefined, unitDisplay = 'short', locale = detectUserLocale(), inputUnit = 'millimeter', outputUnit = 'auto' } = options || {}
   const inputUnitValue = map.lengthUnitConversions.get(inputUnit)
 
   if (!inputUnitValue) {
@@ -335,7 +337,7 @@ export function formatTemperature(
     locale?: string
   },
 ): string {
-  const { decimals, unitDisplay = 'short', locale = 'en-US', inputUnit = 'celsius', outputUnit = 'celsius' } = options || {}
+  const { decimals, unitDisplay = 'short', locale = detectUserLocale(), inputUnit = 'celsius', outputUnit = 'celsius' } = options || {}
 
   const validUnits = new Set(['auto', 'celsius', 'fahrenheit'])
 

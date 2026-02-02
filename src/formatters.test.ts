@@ -238,3 +238,30 @@ test('formatTemperature', () => {
   // Invalid input unit
   expect(mod.formatTemperature(0, { inputUnit: 'kbdd' })).toBe('0')
 })
+
+test('formatNumber with detectUserLocale', () => {
+  // Mock navigator.language to test auto-detection
+  const originalNavigator = global.navigator
+  ;(global as any).navigator = { language: 'de-DE' }
+  
+  // Should use detected locale (de-DE) which uses . for thousands separator
+  expect(mod.formatNumber(1000.95, { decimals: 2 })).toBe('1.000,95')
+  
+  // Explicit locale should still override
+  expect(mod.formatNumber(1000.95, { decimals: 2, locale: 'en-US' })).toBe('1,000.95')
+  
+  // Restore original navigator
+  ;(global as any).navigator = originalNavigator
+})
+
+test('formatCurrency with detectUserLocale', () => {
+  // Mock navigator.language to test auto-detection
+  const originalNavigator = global.navigator
+  ;(global as any).navigator = { language: 'en-GB' }
+  
+  // Should use detected locale (en-GB) which uses GBP
+  expect(mod.formatCurrency(1000.95, { decimals: 2 })).toBe('£1,000.95')
+  
+  // Restore original navigator
+  ;(global as any).navigator = originalNavigator
+})
