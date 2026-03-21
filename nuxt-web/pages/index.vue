@@ -5,13 +5,14 @@
       <section class="flex grow flex-col">
         <header class="flex grow flex-col items-center justify-center p-8 md:py-24">
           <h1 id="title"
-            class="max-w-[1200px] text-balance text-center font-bold leading-[1em] text-gray-900 [font-size:_clamp(2.3em,8vw,4.5rem)] dark:text-white md:leading-[1.25em]">
+            class="max-w-[1200px] text-balance text-center font-bold leading-[1em] text-gray-900 \ dark:text-white md:leading-[1.25em]"
+            style="font-size: clamp(2.3em,8vw,4.5rem);">
             Zippy little utils for your JavaScript projects.
           </h1>
 
           <div class="mt-10 flex items-center gap-3 max-md:flex-col md:mt-16">
             <NuxtLink to="intro/introduction" prefetch>
-              <Button size="lg" class="group !rounded-full max-md:w-full">
+              <Button size="lg" class="group rounded-full! max-md:w-full">
                 Get Started
                 <Icon name="heroicons:arrow-right"
                   class="size-5 text-white/50 transition-all duration-200 group-hover:translate-x-1" />
@@ -21,7 +22,7 @@
             <!-- Packages -->
             <div id="packages" class="relative h-11 overflow-visible">
               <button type="button"
-                class="flex h-11 cursor-pointer items-center gap-3 whitespace-nowrap rounded-full border border-white/5 bg-black/[5%] px-6 font-mono text-gray-900 backdrop-blur dark:bg-white/[3%] dark:text-white/90 dark:shadow max-md:w-full"
+                class="flex h-11 cursor-pointer items-center gap-3 whitespace-nowrap rounded-full border border-white/5 bg-black/5 px-6 font-mono text-gray-900 backdrop-blur dark:bg-white/3 dark:text-white/90 dark:shadow max-md:w-full"
                 @click="copyToClipboard('npm i usemods')">
                 <Icon name="lucide:terminal" class="size-5 dark:text-white/50" />
                 npm i usemods

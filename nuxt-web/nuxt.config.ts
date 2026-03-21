@@ -1,17 +1,25 @@
-// import useClassy from "../../useclassy/src/index";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
+  experimental: {
+    viteEnvironmentApi: false,
+  },
+
+  css: ["~/assets/css/main.css"],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
+
   modules: [
-    "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
     "@nuxt/image",
     "@nuxtjs/color-mode",
     "@nuxt/eslint",
     "@nuxt/icon",
     "nuxt-shiki",
+    "usemods-nuxt",
   ],
-
-  css: ["~/assets/css/main.css"],
 
   imports: {
     dirs: ["utils/mods"],
@@ -74,10 +82,6 @@ export default defineNuxtConfig({
   image: {
     cloudflare: {
       baseURL: "https://public.usemods.com/",
-      modifiers: {
-        format: "auto",
-        quality: 85,
-      },
     },
   },
 
@@ -91,27 +95,11 @@ export default defineNuxtConfig({
     },
   },
 
-  tailwindcss: {
-    cssPath: "~/assets/css/main.css",
-    // configPath: 'tailwind.config.js',
-    exposeConfig: false,
-    viewer: true,
-    config: {
-      content: [
-        "./components/**/*.{vue,js,ts,jsx,tsx}",
-        "./layouts/**/*.{vue,js,ts,jsx,tsx}",
-        "./pages/**/*.{vue,js,ts,jsx,tsx}",
-        "./.classy/output.classy.html",
-      ],
-    },
-  },
-
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  },
+  // postcss: {
+  //   plugins: {
+  //     autoprefixer: {},
+  //   },
+  // },
 
   shiki: {
     bundledThemes: ["nord", "one-light"],
@@ -120,9 +108,7 @@ export default defineNuxtConfig({
   },
 
   icon: {
-    // Bundle icons at build time for Cloudflare compatibility
     clientBundle: {
-      // Explicitly list critical icons to ensure they're bundled
       icons: [
         "fa6-brands:github",
         "heroicons:moon-solid",
@@ -142,17 +128,12 @@ export default defineNuxtConfig({
         "logos:solidjs-icon",
         "logos:nodejs-icon",
       ],
-      // Automatically scan components to detect additional used icons
       scan: true,
-      // Size limit to prevent bundle bloat (increased from 200)
       sizeLimitKb: 512,
     },
-    // Configure server bundle for Cloudflare edge runtime
     serverBundle: {
-      // Use 'auto' mode which will use remote for serverless/edge environments
-      mode: "auto",
+      remote: true,
     },
-    // Provider setting to ensure proper behavior
     provider: "iconify",
   },
 

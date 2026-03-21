@@ -1,5 +1,6 @@
 <template>
   <svg
+    class="floaters"
     width="910"
     height="668"
     viewBox="0 0 910 668"
@@ -490,17 +491,6 @@
   </svg>
 </template>
 
-<!-- <script>
-  export default {
-    mounted() {
-      for (let i = 1; i <= 15; i++) {
-        const element = this.$el.querySelector(`:nth-child(${i})`)
-        element.style.animationDelay = `${i * 2}s`
-      }
-    }
-  }
-</script> -->
-
 <style scoped>
   svg g {
     animation: float 10s infinite ease-in-out;
@@ -522,17 +512,36 @@
     0% {
       transform: translateY(0);
       opacity: 0.5;
-      @apply dark:opacity-20;
     }
     50% {
       transform: translateY(-20px);
       opacity: 0.8;
-      @apply dark:opacity-50;
     }
     100% {
       transform: translateY(0);
-      opacity: 0.5; 
-      @apply dark:opacity-20;
+      opacity: 0.5;
     }
+  }
+</style>
+
+<!-- Tailwind v4 forbids @apply inside @keyframes; dark opacities match former dark:opacity-20 / dark:opacity-50 -->
+<style>
+  @keyframes float-dark {
+    0% {
+      transform: translateY(0);
+      opacity: 0.2;
+    }
+    50% {
+      transform: translateY(-20px);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 0.2;
+    }
+  }
+
+  html.dark .floaters g {
+    animation-name: float-dark;
   }
 </style>

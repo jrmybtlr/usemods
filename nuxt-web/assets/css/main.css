@@ -1,15 +1,13 @@
+/* Tailwind v4: load theme/utilities before partials that use @apply */
+@import './tailwind.css';
+
 /* Components */
-@import '_content.css';
-@import '_animations.css';
+@import './_content.css';
+@import './_animations.css';
 
 :root {
   color-scheme: dark;
 }
-
-/* Utilities */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .input {
   @apply flex h-11 w-full items-center justify-between rounded-lg border border-black/15 bg-white pl-4 focus:border-indigo-400 focus:outline-0 focus:ring-white dark:border-white/5 dark:bg-white/[3%] dark:focus:border-white/50;

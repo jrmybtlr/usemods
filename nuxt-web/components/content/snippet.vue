@@ -63,6 +63,8 @@ watch(() => colorMode.value, (newValue) => {
 const shikiTheme = computed(() => isDark.value ? 'nord' : 'one-light')
 </script>
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
 .shiki-fallback {
   @apply rounded-lg bg-gray-100 dark:bg-gray-800 p-4 overflow-x-auto;
 }

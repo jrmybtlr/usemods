@@ -32,20 +32,20 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.15.4 || ^4.0.0",
-    "usemods": "1.15.0"
+    "usemods": "1.16.0"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^3.1.1",
-    "@nuxt/eslint-config": "^0.7.5",
-    "@nuxt/module-builder": "^1.0.1",
-    "@nuxt/schema": "^3.15.4 || ^4.0.0",
-    "@nuxt/test-utils": "^3.15.4 || ^4.0.0",
-    "@types/node": "^22.13.1",
+    "@nuxt/devtools": "^4.0.0-alpha.1",
+    "@nuxt/eslint-config": "^1.15.2",
+    "@nuxt/module-builder": "^1.0.2",
+    "@nuxt/schema": "^4.4.2",
+    "@nuxt/test-utils": "^4.0.0",
+    "@types/node": "^25.5.0",
     "changelogen": "^0.6.2",
-    "eslint": "^9.19.0",
-    "nuxt": "^3.15.4 || ^4.0.0",
-    "typescript": "^5.7.3",
-    "vitest": "^3.0.5",
-    "vue-tsc": "^2.2.0"
+    "eslint": "^10.1.0",
+    "nuxt": "^4.4.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0",
+    "vue-tsc": "^3.2.6"
   }
 }

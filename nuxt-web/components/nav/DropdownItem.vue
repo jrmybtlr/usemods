@@ -17,6 +17,8 @@ defineProps({
 </script>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
   :deep(svg) {
     @apply text-gray-500;
   }

@@ -68,6 +68,8 @@ const docLinks = inject<NavLink[]>("doc-links", []);
 </script>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
 .active {
   @apply text-indigo-600 dark:text-amber-400;
 }

@@ -627,6 +627,18 @@ A stack of handy functions you could write yourself, but don't want to.
 
 ## Functions
 
+### debounce
+
+**Description:** Runs a function only if there are no new calls during the delay
+
+**Returns:** `void`
+
+### throttle
+
+**Description:** Throttles a function to ensure it only runs once per threshold
+
+**Returns:** `void`
+
 ### scrollToAnchor
 
 **Description:** Smoothly scrolls to the element with the specified ID without scuffing up your URLs.
@@ -657,9 +669,18 @@ Use your own class names, or ensure fixed is within your Tailwindcss JIT
 
 **Returns:** `Promise<void>`
 
-### toggleFullScreen
+### copyToClipboard
 
 **Description:** Copies a convereted string to the clipboard
+
+**Parameters:**
+- `value` (`string | number`)
+
+**Returns:** `Promise<void>`
+
+### toggleFullScreen
+
+**Description:** Toggles the fullscreen mode
 
 **Returns:** `Promise<void>`
 
@@ -697,18 +718,6 @@ Use your own class names, or ensure fixed is within your Tailwindcss JIT
 
 **Parameters:**
 - `container` (`HTMLElement`)
-
-**Returns:** `void`
-
-### debounce
-
-**Description:** Runs a function only if there are no new calls during the delay
-
-**Returns:** `void`
-
-### throttle
-
-**Description:** Throttles a function to ensure it only runs once per threshold
 
 **Returns:** `void`
 

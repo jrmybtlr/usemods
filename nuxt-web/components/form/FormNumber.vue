@@ -83,6 +83,8 @@ function decrementValue() {
 </script>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
 .disabled {
   @apply pointer-events-none cursor-not-allowed opacity-30;
 }

@@ -3,7 +3,7 @@
     <p class="pb-4 font-semibold">On this page</p>
 
     <ul>
-      <li v-for="item in toc ?? []" :key="item" class="mt-0">
+      <li v-for="item in toc ?? []" :key="item" class="mt-0!">
         <NuxtLink v-if="item"
           class="flex cursor-pointer gap-3 text-sm font-medium leading-none text-gray-500 hover:text-indigo-600 dark:hover:text-white/75"
           @click="scrollToAnchor(item)">

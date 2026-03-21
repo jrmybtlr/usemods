@@ -44,6 +44,8 @@ function copied() {
 </script>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
 :deep(.option) {
   @apply text-base underline decoration-indigo-200 dark:decoration-white/10 underline-offset-[6px] decoration-dashed text-indigo-500 dark:text-white inline-flex;
 }

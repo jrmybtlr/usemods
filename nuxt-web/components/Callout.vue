@@ -6,6 +6,8 @@
 </template>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
   :deep(code) {
     @apply mx-1 inline rounded-md bg-indigo-700/75 px-1 py-0 font-mono text-sm text-white dark:bg-indigo-600/15 dark:text-indigo-300;
   }

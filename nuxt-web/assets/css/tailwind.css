@@ -1,0 +1,5 @@
+/** Entry for `@reference` from Vue SFCs and other CSS that uses `@apply`. */
+@import 'tailwindcss';
+
+/* Generated HTML from vite-plugin-useclassy (not part of the module graph). */
+@source "../../.classy/output.classy.html";

@@ -47,16 +47,48 @@
     </PageFunction>
 
     <PageFunction
-      name="toggleFullScreen"
+      name="copyToClipboard"
       description="Copies a convereted string to the clipboard"
+      params='[{"name":"value","type":"string | number"}]'
+    >
+      <CopyToClipboard />
+    </PageFunction>
+
+    <PageFunction
+      name="toggleFullScreen"
+      description="Toggles the fullscreen mode"
       params='[]'
     >
       <ToggleFullScreen />
     </PageFunction>
 
     <PageFunction
-      name="focusTrap"
+      name="resetForm"
       description="Resets a form to its initial state"
+      params='[{"name":"form","type":"HTMLFormElement"}]'
+    >
+      <ResetForm />
+    </PageFunction>
+
+    <PageFunction
+      name="focusOnInvalid"
+      description="Focuses on and scrolls to the first invalid input, select, or textarea element within a form."
+      params='[{"name":"container","type":"HTMLElement"}]'
+    >
+      <FocusOnInvalid />
+    </PageFunction>
+
+    <PageFunction
+      name="focusOnNth"
+      description="Focuses on the nth element within the specified form, where 0 is the first element and -1 is the last element."
+      params='[{"name":"container","type":"HTMLElement"},{"name":"index","type":"number = 0"}]'
+    >
+      <FocusOnNth />
+    </PageFunction>
+
+    <PageFunction
+      name="focusTrap"
+      description="Sets up a keyboard trap within an HTML element, allowing the focus to cycle between the first and last focusable elements when the Tab key is pressed."
       params='[{"name":"container","type":"HTMLElement"}]'
     >
       <FocusTrap />
@@ -69,15 +101,19 @@
 import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
+import CopyToClipboard from '~/components/content/actions/CopyToClipboard.vue'
 import Debounce from '~/components/content/actions/Debounce.vue'
+import FocusOnInvalid from '~/components/content/actions/FocusOnInvalid.vue'
+import FocusOnNth from '~/components/content/actions/FocusOnNth.vue'
 import FocusTrap from '~/components/content/actions/FocusTrap.vue'
+import ResetForm from '~/components/content/actions/ResetForm.vue'
 import ScrollToAnchor from '~/components/content/actions/ScrollToAnchor.vue'
 import Throttle from '~/components/content/actions/Throttle.vue'
 import ToggleBodyScroll from '~/components/content/actions/ToggleBodyScroll.vue'
 import ToggleElementScroll from '~/components/content/actions/ToggleElementScroll.vue'
 import ToggleFullScreen from '~/components/content/actions/ToggleFullScreen.vue'
 
-const toc = ["debounce","throttle","scrollToAnchor","toggleBodyScroll","toggleElementScroll","toggleFullScreen","focusTrap"]
+const toc = ["debounce","throttle","scrollToAnchor","toggleBodyScroll","toggleElementScroll","copyToClipboard","toggleFullScreen","resetForm","focusOnInvalid","focusOnNth","focusTrap"]
 const pageId = 'actions'
 
 provide('toc', toc)

@@ -1,9 +1,7 @@
 <template>
-  <div class="md:pb-8">
+  <div>
     <!-- Breadcrumb -->
-    <div
-      class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-white/50"
-    >
+    <div class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-white/50">
       <div>Docs</div>
       <div>/</div>
       <div v-if="pageName" class="capitalize">
