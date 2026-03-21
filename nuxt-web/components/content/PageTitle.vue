@@ -35,6 +35,8 @@ const pageName = computed(() => {
 </script>
 
 <style scoped>
+@reference "~/assets/css/tailwind.css";
+
 :deep(p) {
   @apply text-pretty font-light md:text-xl/[1.6em] lg:text-2xl/[1.6em];
 }

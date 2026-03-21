@@ -2,8 +2,8 @@
   <nav v-if="toc?.length > 0" class="text-gray-900 dark:text-white">
     <p class="pb-4 font-semibold">On this page</p>
 
-    <ul>
-      <li v-for="item in toc ?? []" :key="item" class="mt-0!">
+    <div>
+      <div v-for="item in toc ?? []" :key="item" class="mt-0!">
         <NuxtLink v-if="item"
           class="flex cursor-pointer gap-3 text-sm font-medium leading-none text-gray-500 hover:text-indigo-600 dark:hover:text-white/75"
           @click="scrollToAnchor(item)">
@@ -18,8 +18,8 @@
             {{ item }}
           </div>
         </NuxtLink>
-      </li>
-    </ul>
+      </div>
+    </div>
 
     <div class="flex flex-col py-8 gap-4">
       <NuxtLink v-if="pageId" :to="`https://github.com/LittleFoxCompany/usemods/blob/main/src/${pageId}.ts`"

@@ -21,10 +21,6 @@ export default defineNuxtConfig({
     "usemods-nuxt",
   ],
 
-  imports: {
-    dirs: ["utils/mods"],
-  },
-
   app: {
     head: {
       htmlAttrs: { lang: "en" },
