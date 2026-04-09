@@ -523,6 +523,12 @@ async function generateSitemap() {
 }
 
 async function generateNavigation() {
+  function escapeForDoubleQuotedString(value) {
+    return value
+      .replace(/\\/g, '\\\\')
+      .replace(/"/g, '\\"')
+  }
+
   const docLinks = []
 
   for (const file of files) {
@@ -558,10 +564,10 @@ async function generateNavigation() {
     const parts = [
       `    path: "${link.path}",`,
       `    title: "${link.title}",`,
-      `    lead: "${link.lead.replace(/"/g, '\\"')}",`,
+      `    lead: "${escapeForDoubleQuotedString(link.lead)}",`,
     ]
     if (link.icon) {
-      parts.push(`    icon: "${link.icon.replace(/"/g, '\\"')}",`)
+      parts.push(`    icon: "${escapeForDoubleQuotedString(link.icon)}",`)
     }
     return `  {\n${parts.join('\n')}\n  }`
   }).join(',\n')
