@@ -8,6 +8,7 @@ overrides:
   debug: 4.3.4
   supports-color: 8.1.1
   tailwindcss: 4.2.2
+  usemods: workspace:*
 
 importers:
 
@@ -133,6 +134,9 @@ importers:
       tailwindcss-motion:
         specifier: ^1.1.1
         version: 1.1.1(tailwindcss@4.2.2)
+      usemods:
+        specifier: workspace:*
+        version: link:..
       usemods-nuxt:
         specifier: ^1.16.0
         version: 1.16.0(magicast@0.5.2)
@@ -4667,9 +4671,6 @@ packages:
 
   usemods-nuxt@1.16.0:
     resolution: {integrity: sha512-9UEa4gpiCsi+zriNn33O+IVqQRxTOZ/3J/hNaG5auy7HULMeZsUHdRiOCpg15SBpv6vKu63uJbjyqm5EY630gA==}
-
-  usemods@1.16.0:
-    resolution: {integrity: sha512-UA+mpJzowftS2Lf9dXEK0S2BAKoUHitPUhEsGUPdHlmULlHv2S3UXjrDre/cPJDbhqFgjG596Uh2nUlHYgxYMQ==}
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -9972,11 +9973,9 @@ snapshots:
   usemods-nuxt@1.16.0(magicast@0.5.2):
     dependencies:
       '@nuxt/kit': 4.4.2(magicast@0.5.2)
-      usemods: 1.16.0
+      usemods: 'link:'
     transitivePeerDependencies:
       - magicast
-
-  usemods@1.16.0: {}
 
   util-deprecate@1.0.2: {}
 

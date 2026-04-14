@@ -1,14 +1,59 @@
 import tailwindcss from "@tailwindcss/vite";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const nuxtWebDir = fileURLToPath(new URL(".", import.meta.url));
+const repoRoot = resolve(nuxtWebDir, "..");
+const ignoredWatchPaths = [
+  resolve(repoRoot, "node_modules"),
+  resolve(repoRoot, "dist"),
+  resolve(repoRoot, "docs"),
+  resolve(repoRoot, ".git"),
+  resolve(repoRoot, "nuxt-module"),
+];
 
 export default defineNuxtConfig({
   experimental: {
     viteEnvironmentApi: false,
   },
 
+  watchers: {
+    chokidar: {
+      // Ensure Nuxt's own file watching also uses polling to avoid EMFILE on macOS.
+      usePolling: true,
+      ignored: ignoredWatchPaths,
+    },
+  },
+
   css: ["~/assets/css/main.css"],
 
   vite: {
     plugins: [tailwindcss()],
+    resolve: {
+      alias:
+        process.env.NODE_ENV === "development"
+          ? {
+              // In this monorepo, `usemods` is linked via pnpm and points at the
+              // prebuilt `dist/` bundle. That bundle can break Vite transforms
+              // during dev (e.g. duplicate symbol errors). Use source instead.
+              usemods: resolve(repoRoot, "src/index.ts"),
+            }
+          : {},
+    },
+    server: {
+      fs: {
+        // pnpm workspaces often resolve deps from the repo root `node_modules/`,
+        // which is outside the Nuxt app root (`nuxt-web/`). Allow Vite to serve
+        // those files so `@fs/.../node_modules/...` imports don't 403.
+        allow: [repoRoot],
+      },
+      watch: {
+        // macOS can hit the per-process file watcher limit (EMFILE) in large
+        // workspaces. Polling avoids consuming one file descriptor per watcher.
+        usePolling: true,
+        ignored: ignoredWatchPaths,
+      },
+    },
   },
 
   modules: [

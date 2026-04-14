@@ -4,6 +4,7 @@
   "description": "Zippy little modifiers and utilities for your frontend.",
   "scripts": {
     "dev": "pnpm -r dev",
+    "bundle": "pnpm run --prefix docs bundle",
     "test": "vitest run src/*",
     "test:watch": "vitest src/*",
     "release:major": "pnpm run test && changelogen --release --major && pnpm publish && pnpm run nuxt-module:release",
@@ -46,6 +47,13 @@
     "dist"
   ],
   "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "type": "module",
   "engines": {
     "node": ">=20"
@@ -83,7 +91,8 @@
       "esbuild"
     ],
     "overrides": {
-      "tailwindcss": "4.2.2"
+      "tailwindcss": "4.2.2",
+      "usemods": "workspace:*"
     }
   }
 }

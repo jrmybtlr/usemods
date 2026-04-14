@@ -13,6 +13,7 @@ Complete documentation for all UseMods functions, optimized for AI and LLM consu
 ## Table of Contents
 
 - [Formatters](#formatters)
+- [Dates](#dates)
 - [Modifiers](#modifiers)
 - [Generators](#generators)
 - [Actions](#actions)
@@ -267,6 +268,76 @@ Use whitespace-pre-wrap to ensure the whitespace is preserved
 **Returns:** `string`
 
 Remember `text-wrap: pretty` and `text-wrap: balance` are available for most browsers.
+
+
+---
+
+# Dates
+
+Locale-aware dates and times via Intl.DateTimeFormat—readable strings without reaching for options objects every time.
+
+## Functions
+
+### formatDate
+
+**Description:** Format the calendar date using a preset date style.
+
+**Parameters:**
+- `date` (`Date | string | number`)
+- `options?` (`LocaleTimeZone & {
+    dateStyle?: 'full' | 'long' | 'medium' | 'short'
+  }`)
+
+**Returns:** `string`
+
+### formatTime
+
+**Description:** Format the time-of-day using a preset time style.
+
+**Parameters:**
+- `date` (`Date | string | number`)
+- `options?` (`LocaleTimeZone & {
+    timeStyle?: 'full' | 'long' | 'medium' | 'short'
+    hour12?: boolean
+  }`)
+
+**Returns:** `string`
+
+### formatDateTime
+
+**Description:** Format date and time together using preset styles.
+
+**Parameters:**
+- `date` (`Date | string | number`)
+- `options?` (`LocaleTimeZone & {
+    dateStyle?: 'full' | 'long' | 'medium' | 'short'
+    timeStyle?: 'full' | 'long' | 'medium' | 'short'
+    hour12?: boolean
+  }`)
+
+**Returns:** `string`
+
+### timeFrom
+
+**Description:** Base time (defaults to now).
+
+**Parameters:**
+- `date` (`Date | string | number`)
+- `options?` (`TimeFromOptions`)
+
+**Returns:** `string`
+
+### timeDifference
+
+**Description:** Output unit. "auto" will emit a multi-part result like
+    "1 year 11 months 12 days 14 hrs" (depending on style/limits).
+
+**Parameters:**
+- `from` (`Date | string | number`)
+- `to` (`Date | string | number`)
+- `options?` (`TimeDifferenceOptions`)
+
+**Returns:** `string`
 
 
 ---

@@ -20,11 +20,12 @@ const metadataPattern = /\/\/\s+(title|description|lead):\s+([^\r\n]*)/g
 const jsdocPattern = /\/\*\*([\s\S]*?)\*\//g
 
 // Files
-const files = ['formatters', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
+const files = ['formatters', 'dates', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
 
 // Map file names to component directory names
 const componentDirMap = {
   formatters: 'formatters',
+  dates: 'dates',
   modifiers: 'modifiers',
   generators: 'generators',
   actions: 'actions',
@@ -777,7 +778,9 @@ async function generateBundle() {
   await bundle.write({
     file: resolve(srcPath, '..', 'dist', 'index.js'),
     format: 'esm',
-    plugins: [terser()],
+    // Name mangling can reuse a letter (e.g. `h`) for a local helper that collides with another
+    // top-level binding after minification, which breaks when Vite re-parses this file (client-inject).
+    plugins: [terser({ compress: true, mangle: false })],
   })
 
   console.log('dist bundle created')

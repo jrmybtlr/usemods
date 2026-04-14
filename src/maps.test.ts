@@ -120,10 +120,18 @@ describe('irregularPlurals', () => {
     expect(mod.irregularPlurals.get('tooth')).toBe('teeth')
     expect(mod.irregularPlurals.get('mouse')).toBe('mice')
     expect(mod.irregularPlurals.get('person')).toBe('people')
+    expect(mod.irregularPlurals.get('matrix')).toBe('matrices')
+    expect(mod.irregularPlurals.get('medium')).toBe('media')
+    expect(mod.irregularPlurals.get('memorandum')).toBe('memoranda')
+    expect(mod.irregularPlurals.get('millennium')).toBe('millennia')
+    expect(mod.irregularPlurals.get('mouse')).toBe('mice')
+    expect(mod.irregularPlurals.get('nucleus')).toBe('nuclei')
+    expect(mod.irregularPlurals.get('oasis')).toBe('oases')
+    expect(mod.irregularPlurals.get('ovum')).toBe('ova')
   })
 
   test('has correct size', () => {
-    expect(mod.irregularPlurals.size).toBe(66)
+    expect(mod.irregularPlurals.size).toBe(62)
   })
 })
 

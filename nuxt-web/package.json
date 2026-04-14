@@ -26,6 +26,7 @@
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.2",
     "tailwindcss-motion": "^1.1.1",
+    "usemods": "workspace:*",
     "usemods-nuxt": "^1.16.0"
   },
   "dependencies": {
