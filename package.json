@@ -56,13 +56,13 @@
     "url": "git+https://github.com/LittleFoxCompany/usemods.git"
   },
   "devDependencies": {
-    "@nuxt/kit": "^4.4.2",
+    "@nuxt/kit": "^4.4.8",
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^25.5.0",
     "@types/web": "^0.0.344",
-    "@vitest/coverage-v8": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.9",
     "changelogen": "^0.6.2",
     "fs-extra": "^11.3.4",
     "globals": "^17.4.0",
@@ -70,20 +70,11 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.1",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.9"
   },
   "packageManager": "pnpm@10.13.1",
   "resolutions": {
     "debug": "4.3.4",
     "supports-color": "8.1.1"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "esbuild"
-    ],
-    "overrides": {
-      "tailwindcss": "4.2.2"
-    }
   }
 }
