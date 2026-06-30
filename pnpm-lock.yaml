@@ -7,7 +7,6 @@ settings:
 overrides:
   debug: 4.3.4
   supports-color: 8.1.1
-  tailwindcss: 4.2.2
 
 importers:
 
@@ -128,7 +127,7 @@ importers:
         specifier: ^8.5.16
         version: 8.5.16
       tailwindcss:
-        specifier: 4.2.2
+        specifier: ^4.2.2
         version: 4.2.2
       tailwindcss-motion:
         specifier: ^1.1.1
@@ -2061,7 +2060,7 @@ packages:
   '@tailwindcss/typography@0.5.19':
     resolution: {integrity: sha512-w31dd8HOx3k9vPtcQh5QHP9GwKcgbMp87j58qi6xgiBnFFtKEAgCWnDw4qUT8aHwkCp8bKvb/KGKWWHedP0AAg==}
     peerDependencies:
-      tailwindcss: 4.2.2
+      tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
 
   '@tailwindcss/vite@4.2.2':
     resolution: {integrity: sha512-mEiF5HO1QqCLXoNEfXVA1Tzo+cYsrqV7w9Juj2wdUFyW07JRenqMG225MvPwr3ZD9N1bFQj46X7r33iHxLUW0w==}
@@ -4874,7 +4873,7 @@ packages:
   tailwindcss-motion@1.1.1:
     resolution: {integrity: sha512-CeeQAc5o31BuEPMyWdq/786X7QWNeifa+8khfu74Fs8lGkgEwjNYv6dGv+lRFS8FWXV5dp7F3AU9JjBXjiaQfw==}
     peerDependencies:
-      tailwindcss: 4.2.2
+      tailwindcss: '>=3.0.0 || insiders'
 
   tailwindcss@4.2.2:
     resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}

@@ -76,14 +76,5 @@
   "resolutions": {
     "debug": "4.3.4",
     "supports-color": "8.1.1"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "esbuild"
-    ],
-    "overrides": {
-      "tailwindcss": "4.2.2"
-    }
   }
 }
