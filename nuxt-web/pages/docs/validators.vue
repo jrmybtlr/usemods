@@ -118,6 +118,14 @@
     </PageFunction>
 
     <PageFunction
+      name="parseDate"
+      description="Coerce a value to a {"
+      params='[{"name":"value","type":"unknown"}]'
+    >
+      <ParseDate />
+    </PageFunction>
+
+    <PageFunction
       name="isDate"
       description="Check if any given value is a valid Date object."
       params='[{"name":"value","type":"unknown"}]'
@@ -327,8 +335,9 @@ import IsUndefined from '~/components/content/validators/IsUndefined.vue'
 import IsUrl from '~/components/content/validators/IsUrl.vue'
 import IsUuid from '~/components/content/validators/IsUuid.vue'
 import IsZero from '~/components/content/validators/IsZero.vue'
+import ParseDate from '~/components/content/validators/ParseDate.vue'
 
-const toc = ["isEmail","isNumber","isUrl","isEmpty","isUuid","isJson","isObject","isArray","isHex","isAlphabetic","isAlphanumeric","isBoolean","isUndefined","isNull","isDate","isTime","isLeapYear","isEven","isOdd","isPositive","isNegative","isZero","isOver9000","isPrime","isInteger","isFloat","isBetween","isDivisibleBy","isCreditCard","isLatLng","isLatitude","isLongitude","isIpAddress","isPort","isMacAddress"]
+const toc = ["isEmail","isNumber","isUrl","isEmpty","isUuid","isJson","isObject","isArray","isHex","isAlphabetic","isAlphanumeric","isBoolean","isUndefined","isNull","parseDate","isDate","isTime","isLeapYear","isEven","isOdd","isPositive","isNegative","isZero","isOver9000","isPrime","isInteger","isFloat","isBetween","isDivisibleBy","isCreditCard","isLatLng","isLatitude","isLongitude","isIpAddress","isPort","isMacAddress"]
 const pageId = 'validators'
 
 provide('toc', toc)

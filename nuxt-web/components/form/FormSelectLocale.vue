@@ -10,7 +10,7 @@
       Select a locale
     </option>
     <option
-      v-for="locale in configLocales"
+      v-for="locale in localeOptions"
       :key="locale"
       :value="locale">
       {{ locale }}
@@ -19,10 +19,20 @@
 </template>
 
 <script setup lang="ts">
-const selectedLocale = ref(undefined)
-const emit = defineEmits(['update:modelValue'])
+import { configLocales } from 'usemods'
 
-watch(selectedLocale, (newValue) => {
-  emit('update:modelValue', newValue)
+const props = defineProps<{
+  modelValue?: string
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string | undefined]
+}>()
+
+const localeOptions = [...configLocales]
+
+const selectedLocale = computed({
+  get: () => props.modelValue ?? '',
+  set: (value: string) => emit('update:modelValue', value || undefined),
 })
 </script>

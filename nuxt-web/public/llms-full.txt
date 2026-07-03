@@ -274,67 +274,86 @@ Remember `text-wrap: pretty` and `text-wrap: balance` are available for most bro
 
 # Dates
 
-Locale-aware dates and times via Intl.DateTimeFormat—readable strings without reaching for options objects every time.
+Compare dates, show relative time, and measure durations. Helpful helpers when Intl alone is not quite enough.
 
 ## Functions
 
-### formatDate
+### isToday
 
-**Description:** Format the calendar date using a preset date style.
-
-**Parameters:**
-- `date` (`Date | string | number`)
-- `options?` (`LocaleTimeZone & {
-    dateStyle?: 'full' | 'long' | 'medium' | 'short'
-  }`)
-
-**Returns:** `string`
-
-### formatTime
-
-**Description:** Format the time-of-day using a preset time style.
+**Description:** Check if a date is today
 
 **Parameters:**
-- `date` (`Date | string | number`)
-- `options?` (`LocaleTimeZone & {
-    timeStyle?: 'full' | 'long' | 'medium' | 'short'
-    hour12?: boolean
-  }`)
+- `date` (`DateInput`)
 
-**Returns:** `string`
+**Returns:** `boolean`
 
-### formatDateTime
+### isPast
 
-**Description:** Format date and time together using preset styles.
+**Description:** Check if a date is in the past.
 
 **Parameters:**
-- `date` (`Date | string | number`)
-- `options?` (`LocaleTimeZone & {
-    dateStyle?: 'full' | 'long' | 'medium' | 'short'
-    timeStyle?: 'full' | 'long' | 'medium' | 'short'
-    hour12?: boolean
-  }`)
+- `date` (`DateInput`)
 
-**Returns:** `string`
+**Returns:** `boolean`
+
+### isFuture
+
+**Description:** Check if a date is in the future
+
+**Parameters:**
+- `date` (`DateInput`)
+
+**Returns:** `boolean`
+
+### isSameDay
+
+**Description:** Check if two dates fall on the same calendar day in local time.
+
+**Parameters:**
+- `a` (`DateInput`)
+- `b` (`DateInput`)
+
+**Returns:** `boolean`
+
+### isSameMonth
+
+**Description:** Check if two dates fall in the same calendar month in local time.
+
+**Parameters:**
+- `a` (`DateInput`)
+- `b` (`DateInput`)
+
+**Returns:** `boolean`
+
+### isDateBetween
+
+**Description:** Check if a date falls between a start and end date by timestamp.
+
+**Parameters:**
+- `date` (`DateInput`)
+- `start` (`DateInput`)
+- `end` (`DateInput`)
+- `options?` (`DateRangeOptions`)
+
+**Returns:** `boolean`
 
 ### timeFrom
 
-**Description:** Base time (defaults to now).
+**Description:** Show how long ago or how far away a date is, like "Now", "1 min ago", or "in 4 months". English locales get compact labels. Other locales use Intl.RelativeTimeFormat.
 
 **Parameters:**
-- `date` (`Date | string | number`)
+- `date` (`DateInput`)
 - `options?` (`TimeFromOptions`)
 
 **Returns:** `string`
 
 ### timeDifference
 
-**Description:** Output unit. "auto" will emit a multi-part result like
-    "1 year 11 months 12 days 14 hrs" (depending on style/limits).
+**Description:** Measure the gap between two dates. With unit set to "auto", you get a breakdown like "2 days 5 hrs". Pick a single unit like "days" to get something like "6212 days".
 
 **Parameters:**
-- `from` (`Date | string | number`)
-- `to` (`Date | string | number`)
+- `from` (`DateInput`)
+- `to` (`DateInput`)
 - `options?` (`TimeDifferenceOptions`)
 
 **Returns:** `string`
@@ -1128,6 +1147,15 @@ A collection of validators for common data types
 - `value` (`unknown`)
 
 **Returns:** `boolean`
+
+### parseDate
+
+**Description:** Coerce a value to a {
+
+**Parameters:**
+- `value` (`unknown`)
+
+**Returns:** `Date`
 
 ### isDate
 

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://usemods.com/</loc>
-    <lastmod>2026-04-14T20:41:48.999Z</lastmod>
+    <lastmod>2026-07-01T02:08:22.274Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -26,13 +26,13 @@
   </url>
   <url>
     <loc>https://usemods.com/docs/dates</loc>
-    <lastmod>2026-04-14T20:41:48.895Z</lastmod>
+    <lastmod>2026-07-01T02:06:36.555Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/modifiers</loc>
-    <lastmod>2026-04-13T09:29:55.452Z</lastmod>
+    <lastmod>2026-06-30T22:07:29.704Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -62,7 +62,7 @@
   </url>
   <url>
     <loc>https://usemods.com/docs/validators</loc>
-    <lastmod>2026-04-10T00:04:25.662Z</lastmod>
+    <lastmod>2026-06-30T22:07:29.704Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

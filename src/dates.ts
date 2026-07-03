@@ -1,18 +1,24 @@
 // title: Dates
-// description: Locale-aware dates and times via Intl.DateTimeFormat—readable strings without reaching for options objects every time.
+// description: Compare dates, show relative time, and measure durations. Helpful helpers when Intl alone is not quite enough.
 // lead: Calendar clarity
 
-type LocaleTimeZone = {
+import { parseDate } from './validators'
+
+export type DateInput = Date | string | number
+
+export interface LocaleTimeZone {
   locale?: string
   timeZone?: string
 }
 
-function parseDateInput(value: Date | string | number): Date | null {
-  const date = value instanceof Date ? value : new Date(value)
-  if (Number.isNaN(date.getTime())) {
-    return null
-  }
-  return date
+export type DateRangeOptions = {
+  inclusive?: boolean
+}
+
+type CalendarParts = {
+  year: number
+  month: number
+  day: number
 }
 
 function baseLocaleTimeZone(options?: LocaleTimeZone): { locale: string, timeZone: string | undefined } {
@@ -22,145 +28,165 @@ function baseLocaleTimeZone(options?: LocaleTimeZone): { locale: string, timeZon
   }
 }
 
-/**
- * Format the calendar date using a preset date style.
- */
-export function formatDate(
-  date: Date | string | number,
-  options?: LocaleTimeZone & {
-    dateStyle?: 'full' | 'long' | 'medium' | 'short'
-  },
-): string {
-  const parsed = parseDateInput(date)
-  if (!parsed) {
-    return ''
+function calendarParts(date: Date): CalendarParts {
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
   }
-  const { locale, timeZone } = baseLocaleTimeZone(options)
-  const config: Intl.DateTimeFormatOptions = {
-    dateStyle: options?.dateStyle ?? 'medium',
-    timeZone,
-  }
-  return new Intl.DateTimeFormat(locale, config).format(parsed)
+}
+
+function resolveTimeFromNow(options?: Pick<TimeFromOptions, 'now'>): Date {
+  const parsed = options?.now ? parseDate(options.now) : new Date()
+  return parsed ?? new Date()
 }
 
 /**
- * Format the time-of-day using a preset time style.
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat Intl.DateTimeFormat} (MDN)
+ * Check if a date is today
  */
-export function formatTime(
-  date: Date | string | number,
-  options?: LocaleTimeZone & {
-    timeStyle?: 'full' | 'long' | 'medium' | 'short'
-    hour12?: boolean
-  },
-): string {
-  const parsed = parseDateInput(date)
+export function isToday(date: DateInput): boolean {
+  const parsed = parseDate(date)
   if (!parsed) {
-    return ''
+    return false
   }
-  const { locale, timeZone } = baseLocaleTimeZone(options)
-  const config: Intl.DateTimeFormatOptions = {
-    timeStyle: options?.timeStyle ?? 'short',
-    timeZone,
-  }
-  if (options?.hour12 !== undefined) {
-    config.hour12 = options.hour12
-  }
-  return new Intl.DateTimeFormat(locale, config).format(parsed)
+  const a = calendarParts(parsed)
+  const b = calendarParts(new Date())
+  return a.year === b.year && a.month === b.month && a.day === b.day
 }
 
 /**
- * Format date and time together using preset styles.
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat Intl.DateTimeFormat} (MDN)
+ * Check if a date is in the past.
  */
-export function formatDateTime(
-  date: Date | string | number,
-  options?: LocaleTimeZone & {
-    dateStyle?: 'full' | 'long' | 'medium' | 'short'
-    timeStyle?: 'full' | 'long' | 'medium' | 'short'
-    hour12?: boolean
-  },
-): string {
-  const parsed = parseDateInput(date)
+export function isPast(date: DateInput): boolean {
+  const parsed = parseDate(date)
   if (!parsed) {
-    return ''
+    return false
   }
-  const { locale, timeZone } = baseLocaleTimeZone(options)
-  const config: Intl.DateTimeFormatOptions = {
-    dateStyle: options?.dateStyle ?? 'medium',
-    timeStyle: options?.timeStyle ?? 'short',
-    timeZone,
+  return parsed.getTime() < Date.now()
+}
+
+/**
+ * Check if a date is in the future
+ */
+export function isFuture(date: DateInput): boolean {
+  const parsed = parseDate(date)
+  if (!parsed) {
+    return false
   }
-  if (options?.hour12 !== undefined) {
-    config.hour12 = options.hour12
+  return parsed.getTime() > Date.now()
+}
+
+/**
+ * Check if two dates fall on the same calendar day in local time.
+ */
+export function isSameDay(a: DateInput, b: DateInput): boolean {
+  const parsedA = parseDate(a)
+  const parsedB = parseDate(b)
+  if (!parsedA || !parsedB) {
+    return false
   }
-  return new Intl.DateTimeFormat(locale, config).format(parsed)
+  const partsA = calendarParts(parsedA)
+  const partsB = calendarParts(parsedB)
+  return partsA.year === partsB.year && partsA.month === partsB.month && partsA.day === partsB.day
+}
+
+/**
+ * Check if two dates fall in the same calendar month in local time.
+ */
+export function isSameMonth(a: DateInput, b: DateInput): boolean {
+  const parsedA = parseDate(a)
+  const parsedB = parseDate(b)
+  if (!parsedA || !parsedB) {
+    return false
+  }
+  const partsA = calendarParts(parsedA)
+  const partsB = calendarParts(parsedB)
+  return partsA.year === partsB.year && partsA.month === partsB.month
+}
+
+/**
+ * Check if a date falls between a start and end date by timestamp.
+ */
+export function isDateBetween(
+  date: DateInput,
+  start: DateInput,
+  end: DateInput,
+  options?: DateRangeOptions,
+): boolean {
+  const parsed = parseDate(date)
+  const parsedStart = parseDate(start)
+  const parsedEnd = parseDate(end)
+  if (!parsed || !parsedStart || !parsedEnd) {
+    return false
+  }
+
+  const inclusive = options?.inclusive ?? true
+
+  const t = parsed.getTime()
+  const low = Math.min(parsedStart.getTime(), parsedEnd.getTime())
+  const high = Math.max(parsedStart.getTime(), parsedEnd.getTime())
+  if (inclusive) {
+    return t >= low && t <= high
+  }
+  return t > low && t < high
 }
 
 export type TimeFromOptions = LocaleTimeZone & {
-  /**
-   * Base time (defaults to now).
-   */
-  now?: Date | string | number
+  // Base time (defaults to now).
+  now?: DateInput
 
-  /**
-   * Intl.RelativeTimeFormat style (non-English locales only; English uses compact phrases).
-   */
+  // Intl.RelativeTimeFormat style (non-English locales only; English uses compact phrases).
   style?: 'long' | 'short' | 'narrow'
 
-  /**
-   * Label when the difference is within {@link TimeFromOptions.nowThresholdSeconds}.
-   */
+  // Label when the difference is within threshold seconds.
   nowLabel?: string
 
-  /**
-   * Whether to treat near-zero differences as "now".
-   */
+  // Whether to treat near-zero differences as "now".
   includeNow?: boolean
 
-  /**
-   * Threshold (in seconds) to consider the event "now".
-   */
-  nowThresholdSeconds?: number
+  // Threshold in seconds to treat the difference as "now".
+  threshold?: number
 }
 
 function isEnglishLocale(locale: string): boolean {
   return /^en([_-]|$)/i.test(locale)
 }
 
-/**
- * Compact English phrases like "1 min ago", "in 4 months" (no "min." punctuation).
- * Other locales use {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat Intl.RelativeTimeFormat} (MDN).
- */
+function englishCompactUnitLabel(
+  unit: Intl.RelativeTimeFormatUnit,
+  pluralRule: Intl.LDMLPluralRule,
+): string {
+  function pick(one: string, other: string): string {
+    return pluralRule === 'one' ? one : other
+  }
+  switch (unit) {
+    case 'year':
+      return pick('year', 'years')
+    case 'month':
+      return pick('month', 'months')
+    case 'week':
+      return pick('week', 'weeks')
+    case 'day':
+      return pick('day', 'days')
+    case 'hour':
+      return pick('hr', 'hrs')
+    case 'minute':
+      return pick('min', 'mins')
+    case 'second':
+      return pick('sec', 'secs')
+    default:
+      return unit
+  }
+}
+
+// Compact English phrases like "1 min ago", "in 4 months" (no "min." punctuation).
 function timeFromEnglishCompact(
   value: number,
   unit: Intl.RelativeTimeFormatUnit,
 ): string {
   const n = Math.abs(value)
   const pr = new Intl.PluralRules('en-US')
-  const rule = pr.select(n)
-  const pick = (one: string, other: string): string => (rule === 'one' ? one : other)
-
-  const label = ((): string => {
-    switch (unit) {
-      case 'year':
-        return pick('year', 'years')
-      case 'month':
-        return pick('month', 'months')
-      case 'week':
-        return pick('week', 'weeks')
-      case 'day':
-        return pick('day', 'days')
-      case 'hour':
-        return pick('hr', 'hrs')
-      case 'minute':
-        return pick('min', 'mins')
-      case 'second':
-        return pick('sec', 'secs')
-      default:
-        return unit
-    }
-  })()
+  const label = englishCompactUnitLabel(unit, pr.select(n))
 
   if (value < 0) {
     return `${n} ${label} ago`
@@ -169,29 +195,27 @@ function timeFromEnglishCompact(
 }
 
 /**
- * Relative time from a reference instant (defaults to now): "Now", "1 min ago", "in 4 months".
- * English locales use compact labels; others use `Intl.RelativeTimeFormat`.
+ * Show how long ago or how far away a date is, like "Now", "1 min ago", or "in 4 months". English locales get compact labels. Other locales use Intl.RelativeTimeFormat.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat Intl.RelativeTimeFormat} (MDN)
  */
 export function timeFrom(
-  date: Date | string | number,
+  date: DateInput,
   options?: TimeFromOptions,
 ): string {
-  const parsed = parseDateInput(date)
+  const parsed = parseDate(date)
   if (!parsed) {
     return ''
   }
 
-  const nowParsed = options?.now ? parseDateInput(options.now) : new Date()
-  const now = nowParsed ?? new Date()
+  const now = resolveTimeFromNow(options)
 
   const diffMs = parsed.getTime() - now.getTime()
   const diffSeconds = diffMs / 1000
 
   const includeNow = options?.includeNow ?? true
-  const nowThresholdSeconds = options?.nowThresholdSeconds ?? 30
+  const threshold = options?.threshold ?? 30
   const nowLabel = options?.nowLabel ?? 'Now'
-  if (includeNow && Math.abs(diffSeconds) < nowThresholdSeconds) {
+  if (includeNow && Math.abs(diffSeconds) < threshold) {
     return nowLabel
   }
 
@@ -226,40 +250,111 @@ export function timeFrom(
 export type TimeDifferenceUnit = 'auto' | 'days' | 'hours' | 'minutes' | 'seconds'
 
 export type TimeDifferenceOptions = LocaleTimeZone & {
-  /**
-   * Output unit. "auto" will emit a multi-part result like
-   * "1 year 11 months 12 days 14 hrs" (depending on style/limits).
-   */
+  // Output unit. "auto" emits a multi-part result; "days" (etc) emits a single unit.
   unit?: TimeDifferenceUnit
 
-  /**
-   * Label style for auto mode.
-   */
+  // Label style for auto mode.
   style?: 'long' | 'short' | 'narrow'
 
-  /**
-   * Maximum number of units to include in auto mode (e.g. 2 => "1 yr 11 mo").
-   */
+  // Maximum unit segments in auto mode (default 6). Example: 10-day gap with maxUnits 2 → "10 days".
   maxUnits?: number
 
-  /**
-   * Rounding behavior when `unit` is not "auto".
-   */
+  // Rounding behavior when unit is not "auto".
   rounding?: 'floor' | 'ceil' | 'round'
 }
 
+type DurationKind = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second'
+
+type NonAutoTimeDifferenceUnit = Exclude<TimeDifferenceUnit, 'auto'>
+
+type TimeDifferenceStyle = NonNullable<TimeDifferenceOptions['style']>
+
+const DURATION_LABELS_LONG = {
+  year: ['year', 'years'],
+  month: ['month', 'months'],
+  day: ['day', 'days'],
+  hour: ['hour', 'hours'],
+  minute: ['minute', 'minutes'],
+  second: ['second', 'seconds'],
+} as const satisfies Record<DurationKind, readonly [string, string]>
+
+const DURATION_LABELS_SHORT = {
+  year: ['yr', 'yrs'],
+  month: ['mo', 'mos'],
+  day: ['day', 'days'],
+  hour: ['hr', 'hrs'],
+  minute: ['min', 'mins'],
+  second: ['sec', 'secs'],
+} as const satisfies Record<DurationKind, readonly [string, string]>
+
+const DURATION_LABELS_NARROW = {
+  year: 'y',
+  month: 'mo',
+  day: 'd',
+  hour: 'h',
+  minute: 'm',
+  second: 's',
+} as const satisfies Record<DurationKind, string>
+
+function secondsPerDifferenceUnit(unit: NonAutoTimeDifferenceUnit): number {
+  switch (unit) {
+    case 'seconds':
+      return 1
+    case 'minutes':
+      return 60
+    case 'hours':
+      return 60 * 60
+    case 'days':
+      return 60 * 60 * 24
+  }
+}
+
+function durationKindForDifferenceUnit(unit: NonAutoTimeDifferenceUnit): DurationKind {
+  switch (unit) {
+    case 'seconds':
+      return 'second'
+    case 'minutes':
+      return 'minute'
+    case 'hours':
+      return 'hour'
+    case 'days':
+      return 'day'
+  }
+}
+
+function durationLabel(
+  locale: string,
+  value: number,
+  style: TimeDifferenceStyle,
+  kind: DurationKind,
+): string {
+  const pr = new Intl.PluralRules(locale)
+  const rule = pr.select(value)
+  const isOne = rule === 'one'
+
+  if (style === 'long') {
+    const [singular, plural] = DURATION_LABELS_LONG[kind]
+    return isOne ? singular : plural
+  }
+
+  if (style === 'short') {
+    const [singular, plural] = DURATION_LABELS_SHORT[kind]
+    return isOne ? singular : plural
+  }
+
+  return DURATION_LABELS_NARROW[kind]
+}
+
 /**
- * Difference between two datetimes.
- * - `unit: "auto"` → multi-part output (years/months/days/hours/minutes/seconds)
- * - `unit: "days"` (etc) → single-unit output like "6212 days"
+ * Measure the gap between two dates. With unit set to "auto", you get a breakdown like "2 days 5 hrs". Pick a single unit like "days" to get something like "6212 days".
  */
 export function timeDifference(
-  from: Date | string | number,
-  to: Date | string | number,
+  from: DateInput,
+  to: DateInput,
   options?: TimeDifferenceOptions,
 ): string {
-  const fromDate = parseDateInput(from)
-  const toDate = parseDateInput(to)
+  const fromDate = parseDate(from)
+  const toDate = parseDate(to)
   if (!fromDate || !toDate) {
     return ''
   }
@@ -270,59 +365,14 @@ export function timeDifference(
   const unit = options?.unit ?? 'auto'
   const rounding: NonNullable<TimeDifferenceOptions['rounding']> = options?.rounding ?? 'round'
 
-  const roundValue = (value: number): number => {
-    if (rounding === 'floor') return Math.floor(value)
-    if (rounding === 'ceil') return Math.ceil(value)
+  function roundValue(value: number): number {
+    if (rounding === 'floor') {
+      return Math.floor(value)
+    }
+    if (rounding === 'ceil') {
+      return Math.ceil(value)
+    }
     return Math.round(value)
-  }
-
-  type DurationKind = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second'
-
-  const durationLabel = (
-    locale: string,
-    value: number,
-    style: NonNullable<TimeDifferenceOptions['style']>,
-    kind: DurationKind,
-  ): string => {
-    const pr = new Intl.PluralRules(locale)
-    const rule = pr.select(value)
-    const isOne = rule === 'one'
-
-    if (style === 'long') {
-      const long: Record<DurationKind, readonly [string, string]> = {
-        year: ['year', 'years'],
-        month: ['month', 'months'],
-        day: ['day', 'days'],
-        hour: ['hour', 'hours'],
-        minute: ['minute', 'minutes'],
-        second: ['second', 'seconds'],
-      }
-      const [singular, plural] = long[kind]
-      return isOne ? singular : plural
-    }
-
-    if (style === 'short') {
-      const short: Record<DurationKind, readonly [string, string]> = {
-        year: ['yr', 'yrs'],
-        month: ['mo', 'mos'],
-        day: ['day', 'days'],
-        hour: ['hr', 'hrs'],
-        minute: ['min', 'mins'],
-        second: ['sec', 'secs'],
-      }
-      const [singular, plural] = short[kind]
-      return isOne ? singular : plural
-    }
-
-    const narrow: Record<DurationKind, string> = {
-      year: 'y',
-      month: 'mo',
-      day: 'd',
-      hour: 'h',
-      minute: 'm',
-      second: 's',
-    }
-    return narrow[kind]
   }
 
   const formatAutoSegment = (
@@ -330,7 +380,7 @@ export function timeDifference(
     nf: Intl.NumberFormat,
     value: number,
     kind: DurationKind,
-    style: NonNullable<TimeDifferenceOptions['style']>,
+    style: TimeDifferenceStyle,
   ): string => {
     const label = durationLabel(locale, value, style, kind)
     if (style === 'narrow') {
@@ -344,24 +394,9 @@ export function timeDifference(
 
   if (unit !== 'auto') {
     const seconds = absMs / 1000
-    const value
-      = unit === 'seconds'
-        ? roundValue(seconds)
-        : unit === 'minutes'
-          ? roundValue(seconds / 60)
-          : unit === 'hours'
-            ? roundValue(seconds / (60 * 60))
-            : roundValue(seconds / (60 * 60 * 24))
-
-    const kind: DurationKind
-      = unit === 'seconds'
-        ? 'second'
-        : unit === 'minutes'
-          ? 'minute'
-          : unit === 'hours'
-            ? 'hour'
-            : 'day'
-
+    const divisor = secondsPerDifferenceUnit(unit)
+    const value = roundValue(seconds / divisor)
+    const kind = durationKindForDifferenceUnit(unit)
     const labelWord = durationLabel(locale, value, 'long', kind)
     return `${nf.format(value)} ${labelWord}`
   }

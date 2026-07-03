@@ -1,32 +1,27 @@
-<template>
+  <template>
   <Example>
     <ExampleInputs class="flex flex-col gap-2">
-      <div class="flex gap-2 w-full flex-wrap">
+      <div class="flex max-md:flex-col gap-2 w-full items-end">
         <FormInput v-model="from" label="From" type="datetime-local" />
         <FormInput v-model="to" label="To" type="datetime-local" />
       </div>
-      <div class="flex gap-2 w-full flex-wrap">
-        <FormSelect v-model="unit" label="Unit">
+      <div class="flex max-md:flex-col gap-2 w-full items-end">
+        <FormSelect v-model="unit" label="Unit" class="w-full">
           <option value="auto">auto</option>
           <option value="days">days</option>
           <option value="hours">hours</option>
           <option value="minutes">minutes</option>
           <option value="seconds">seconds</option>
         </FormSelect>
-        <FormSelect v-model="style" label="Style (auto only)">
+        <FormSelect v-model="style" label="Style (auto only)" class="w-full">
           <option value="short">short</option>
           <option value="long">long</option>
           <option value="narrow">narrow</option>
         </FormSelect>
-        <FormInput
-          v-model.number="maxUnits"
-          class="max-w-[10rem]"
-          label="Max units (auto)"
-          type="number"
-          min="1"
-          max="6"
-        />
-        <FormSelectLocale v-model="locale" />
+      </div>
+      <div class="flex max-md:flex-col gap-2 w-full items-end">
+        <FormInput v-model.number="maxUnits" class="w-full" label="Max parts (auto)" info="Limits unit segments in auto mode (e.g. 2 → '1 yr 11 mo')" type="number" min="1" max="6" />
+        <FormSelectLocale v-model="locale" class="w-full" />
       </div>
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />
@@ -54,7 +49,9 @@ function buildOpts() {
     opts.unit = unit.value
   } else {
     opts.style = style.value
-    opts.maxUnits = maxUnits.value
+    if (maxUnits.value !== 6) {
+      opts.maxUnits = maxUnits.value
+    }
   }
   return opts
 }

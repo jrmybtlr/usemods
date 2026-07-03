@@ -1,6 +1,7 @@
 export * from './actions'
 export * from './formatters'
 export * from './dates'
+export { configLocales } from './maps'
 export * from './modifiers'
 export * from './generators'
 export * from './numbers'

@@ -2,45 +2,69 @@
   <DocsLayout>
     <PageTitle>
       <h1>Dates</h1>
-      <p>Locale-aware dates and times via Intl.DateTimeFormat—readable strings without reaching for options objects every time.</p>
+      <p>Compare dates, show relative time, and measure durations. Helpful helpers when Intl alone is not quite enough.</p>
     </PageTitle>
 
     <PageFunction
-      name="formatDate"
-      description="Format the calendar date using a preset date style."
-      params='[{"name":"date","type":"Date | string | number"},{"name":"options?","type":"LocaleTimeZone & {\n    dateStyle?: &#39;full&#39; | &#39;long&#39; | &#39;medium&#39; | &#39;short&#39;\n  }"}]'
+      name="isToday"
+      description="Check if a date is today"
+      params='[{"name":"date","type":"DateInput"}]'
     >
-      <FormatDate />
+      <IsToday />
     </PageFunction>
 
     <PageFunction
-      name="formatTime"
-      description="Format the time-of-day using a preset time style."
-      params='[{"name":"date","type":"Date | string | number"},{"name":"options?","type":"LocaleTimeZone & {\n    timeStyle?: &#39;full&#39; | &#39;long&#39; | &#39;medium&#39; | &#39;short&#39;\n    hour12?: boolean\n  }"}]'
+      name="isPast"
+      description="Check if a date is in the past."
+      params='[{"name":"date","type":"DateInput"}]'
     >
-      <FormatTime />
+      <IsPast />
     </PageFunction>
 
     <PageFunction
-      name="formatDateTime"
-      description="Format date and time together using preset styles."
-      params='[{"name":"date","type":"Date | string | number"},{"name":"options?","type":"LocaleTimeZone & {\n    dateStyle?: &#39;full&#39; | &#39;long&#39; | &#39;medium&#39; | &#39;short&#39;\n    timeStyle?: &#39;full&#39; | &#39;long&#39; | &#39;medium&#39; | &#39;short&#39;\n    hour12?: boolean\n  }"}]'
+      name="isFuture"
+      description="Check if a date is in the future"
+      params='[{"name":"date","type":"DateInput"}]'
     >
-      <FormatDateTime />
+      <IsFuture />
+    </PageFunction>
+
+    <PageFunction
+      name="isSameDay"
+      description="Check if two dates fall on the same calendar day in local time."
+      params='[{"name":"a","type":"DateInput"},{"name":"b","type":"DateInput"}]'
+    >
+      <IsSameDay />
+    </PageFunction>
+
+    <PageFunction
+      name="isSameMonth"
+      description="Check if two dates fall in the same calendar month in local time."
+      params='[{"name":"a","type":"DateInput"},{"name":"b","type":"DateInput"}]'
+    >
+      <IsSameMonth />
+    </PageFunction>
+
+    <PageFunction
+      name="isDateBetween"
+      description="Check if a date falls between a start and end date by timestamp."
+      params='[{"name":"date","type":"DateInput"},{"name":"start","type":"DateInput"},{"name":"end","type":"DateInput"},{"name":"options?","type":"DateRangeOptions"}]'
+    >
+      <IsDateBetween />
     </PageFunction>
 
     <PageFunction
       name="timeFrom"
-      description="Base time (defaults to now)."
-      params='[{"name":"date","type":"Date | string | number"},{"name":"options?","type":"TimeFromOptions"}]'
+      description="Show how long ago or how far away a date is, like &quot;Now&quot;, &quot;1 min ago&quot;, or &quot;in 4 months&quot;. English locales get compact labels. Other locales use Intl.RelativeTimeFormat."
+      params='[{"name":"date","type":"DateInput"},{"name":"options?","type":"TimeFromOptions"}]'
     >
       <TimeFrom />
     </PageFunction>
 
     <PageFunction
       name="timeDifference"
-      description="Output unit. &quot;auto&quot; will emit a multi-part result like &quot;1 year 11 months 12 days 14 hrs&quot; (depending on style/limits)."
-      params='[{"name":"from","type":"Date | string | number"},{"name":"to","type":"Date | string | number"},{"name":"options?","type":"TimeDifferenceOptions"}]'
+      description="Measure the gap between two dates. With unit set to &quot;auto&quot;, you get a breakdown like &quot;2 days 5 hrs&quot;. Pick a single unit like &quot;days&quot; to get something like &quot;6212 days&quot;."
+      params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options?","type":"TimeDifferenceOptions"}]'
     >
       <TimeDifference />
     </PageFunction>
@@ -52,13 +76,16 @@
 import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
-import FormatDate from '~/components/content/dates/FormatDate.vue'
-import FormatDateTime from '~/components/content/dates/FormatDateTime.vue'
-import FormatTime from '~/components/content/dates/FormatTime.vue'
+import IsDateBetween from '~/components/content/dates/IsDateBetween.vue'
+import IsFuture from '~/components/content/dates/IsFuture.vue'
+import IsPast from '~/components/content/dates/IsPast.vue'
+import IsSameDay from '~/components/content/dates/IsSameDay.vue'
+import IsSameMonth from '~/components/content/dates/IsSameMonth.vue'
+import IsToday from '~/components/content/dates/IsToday.vue'
 import TimeDifference from '~/components/content/dates/TimeDifference.vue'
 import TimeFrom from '~/components/content/dates/TimeFrom.vue'
 
-const toc = ["formatDate","formatTime","formatDateTime","timeFrom","timeDifference"]
+const toc = ["isToday","isPast","isFuture","isSameDay","isSameMonth","isDateBetween","timeFrom","timeDifference"]
 const pageId = 'dates'
 
 provide('toc', toc)

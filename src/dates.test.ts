@@ -1,44 +1,68 @@
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import * as mod from './dates'
 
-const utc = { locale: 'en-US', timeZone: 'UTC' } as const
-const sample = new Date('2025-06-15T12:00:00.000Z')
+const localeOpts = { locale: 'en-US' } as const
 
-test('formatDate', () => {
-  expect(mod.formatDate(sample, { ...utc, dateStyle: 'medium' })).toBe('Jun 15, 2025')
-  expect(mod.formatDate('invalid')).toBe('')
+test('isToday', () => {
+  vi.useFakeTimers()
+  vi.setSystemTime(new Date(2025, 5, 15, 12, 0, 0))
+  expect(mod.isToday(new Date(2025, 5, 15, 23, 59, 0))).toBe(true)
+  expect(mod.isToday(new Date(2025, 5, 16, 0, 0, 0))).toBe(false)
+  expect(mod.isToday('invalid')).toBe(false)
+  vi.useRealTimers()
 })
 
-test('formatTime', () => {
-  expect(mod.formatTime(sample, { ...utc, timeStyle: 'short' })).toBe('12:00 PM')
-  expect(mod.formatTime(sample, { ...utc, timeStyle: 'short', hour12: false })).toBe('12:00')
+test('isPast and isFuture', () => {
+  vi.useFakeTimers()
+  vi.setSystemTime(new Date('2025-06-15T12:00:00.000Z'))
+  expect(mod.isPast(new Date('2025-06-15T11:00:00.000Z'))).toBe(true)
+  expect(mod.isPast(new Date('2025-06-15T13:00:00.000Z'))).toBe(false)
+  expect(mod.isFuture(new Date('2025-06-15T13:00:00.000Z'))).toBe(true)
+  expect(mod.isFuture(new Date('2025-06-15T11:00:00.000Z'))).toBe(false)
+  vi.useRealTimers()
 })
 
-test('formatDateTime', () => {
-  expect(mod.formatDateTime(sample, { ...utc, dateStyle: 'medium', timeStyle: 'short' })).toBe(
-    'Jun 15, 2025, 12:00 PM',
-  )
+test('isSameDay and isSameMonth', () => {
+  const a = new Date(2025, 5, 15, 8, 0, 0)
+  const b = new Date(2025, 5, 15, 20, 0, 0)
+  const c = new Date(2025, 6, 15, 8, 0, 0)
+  expect(mod.isSameDay(a, b)).toBe(true)
+  expect(mod.isSameDay(a, c)).toBe(false)
+  expect(mod.isSameMonth(a, c)).toBe(false)
+  expect(mod.isSameMonth(a, b)).toBe(true)
+})
+
+test('isDateBetween', () => {
+  const start = new Date('2025-01-01T00:00:00.000Z')
+  const end = new Date('2025-01-10T00:00:00.000Z')
+  const inside = new Date('2025-01-05T12:00:00.000Z')
+  const outside = new Date('2025-01-11T00:00:00.000Z')
+  expect(mod.isDateBetween(inside, start, end)).toBe(true)
+  expect(mod.isDateBetween(outside, start, end)).toBe(false)
+  expect(mod.isDateBetween(start, start, end)).toBe(true)
+  expect(mod.isDateBetween(end, start, end, { inclusive: false })).toBe(false)
+  expect(mod.isDateBetween(inside, end, start)).toBe(true)
 })
 
 test('timeFrom', () => {
   const now = new Date('2025-06-15T12:00:00.000Z')
-  expect(mod.timeFrom(new Date('2025-06-15T12:00:10.000Z'), { ...utc, now })).toBe('Now')
-  expect(mod.timeFrom(new Date('2025-06-15T11:59:00.000Z'), { ...utc, now })).toBe('1 min ago')
-  expect(mod.timeFrom(new Date('2025-06-15T13:00:00.000Z'), { ...utc, now })).toBe('in 1 hr')
-  expect(mod.timeFrom(new Date('2025-10-15T12:00:00.000Z'), { ...utc, now })).toBe('in 4 months')
-  expect(mod.timeFrom('invalid', { ...utc, now })).toBe('')
+  expect(mod.timeFrom(new Date('2025-06-15T12:00:10.000Z'), { ...localeOpts, now })).toBe('Now')
+  expect(mod.timeFrom(new Date('2025-06-15T11:59:00.000Z'), { ...localeOpts, now })).toBe('1 min ago')
+  expect(mod.timeFrom(new Date('2025-06-15T13:00:00.000Z'), { ...localeOpts, now })).toBe('in 1 hr')
+  expect(mod.timeFrom(new Date('2025-10-15T12:00:00.000Z'), { ...localeOpts, now })).toBe('in 4 months')
+  expect(mod.timeFrom('invalid', { ...localeOpts, now })).toBe('')
 })
 
 test('timeDifference', () => {
   const a = new Date('2025-01-01T00:00:00.000Z')
   const b = new Date('2025-01-11T00:00:00.000Z')
-  expect(mod.timeDifference(a, b, { ...utc, unit: 'days' })).toBe('10 days')
-  expect(mod.timeDifference(a, b, { ...utc, unit: 'hours' })).toBe('240 hours')
-  expect(mod.timeDifference(a, b, { ...utc, unit: 'auto', style: 'short', maxUnits: 2 })).toBe('10 days')
-  expect(mod.timeDifference('invalid', b, utc)).toBe('')
+  expect(mod.timeDifference(a, b, { ...localeOpts, unit: 'days' })).toBe('10 days')
+  expect(mod.timeDifference(a, b, { ...localeOpts, unit: 'hours' })).toBe('240 hours')
+  expect(mod.timeDifference(a, b, { ...localeOpts, unit: 'auto', style: 'short', maxUnits: 2 })).toBe('10 days')
+  expect(mod.timeDifference('invalid', b, localeOpts)).toBe('')
   const y1 = new Date('2020-01-01T00:00:00.000Z')
   const y2 = new Date('2021-11-13T14:00:00.000Z')
-  expect(mod.timeDifference(y1, y2, { ...utc, unit: 'auto', style: 'long', maxUnits: 4 })).toBe(
+  expect(mod.timeDifference(y1, y2, { ...localeOpts, unit: 'auto', style: 'long', maxUnits: 4 })).toBe(
     '1 year 10 months 17 days 14 hours',
   )
 })

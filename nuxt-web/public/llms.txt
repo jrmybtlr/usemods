@@ -10,7 +10,7 @@ UseMods is a mighty set of missing functions for your frontend, framework and SS
 ## Documentation
 
 [Formatters](https://usemods.com/docs/formatters) - Wrangle wild data types into submission. Spruce up numbers, give strings smarts, and make complex content dazzle.
-[Dates](https://usemods.com/docs/dates) - Locale-aware dates and times via Intl.DateTimeFormat—readable strings without reaching for options objects every time.
+[Dates](https://usemods.com/docs/dates) - Compare dates, show relative time, and measure durations. Helpful helpers when Intl alone is not quite enough.
 [Modifiers](https://usemods.com/docs/modifiers) - Modify and transform your content with our collection of efficient and easy-to-use functions designed to dicipher, manipulate, and transform strings.
 [Generators](https://usemods.com/docs/generators) - A collection of magical functions that conjure data out of thin air.
 [Actions](https://usemods.com/docs/actions) - A stack of handy functions you could write yourself, but don't want to.
