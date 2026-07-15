@@ -50,9 +50,9 @@ export function checkPasswordStrength(text: string, options: { length?: number, 
   let strength = 0
 
   const counts = {
-    uppercase: (text.match(/[A-Z]/g) || []).length,
-    numbers: (text.match(/[0-9]/g) || []).length,
-    special: (text.match(/[^a-zA-Z0-9]/g) || []).length,
+    uppercase: text.match(/[A-Z]/g)?.length ?? 0,
+    numbers: text.match(/[0-9]/g)?.length ?? 0,
+    special: text.match(/[^a-zA-Z0-9]/g)?.length ?? 0,
   }
 
   if (text.length < length) return { score: 1, label: `Password must be at least ${length} characters long` }

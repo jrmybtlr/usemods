@@ -142,7 +142,7 @@ export function formatCombinedDates(
   const toDate = new Date(to ?? Date.now())
 
   // Early return for invalid dates
-  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) return ''
+  if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return ''
 
   // Cache commonly used date components (timezone-aware)
   const getDateComponents = (date: Date) => {
@@ -165,8 +165,8 @@ export function formatCombinedDates(
   const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
 
   // Simplified format options
-  const monthFormat = options.format || 'long'
-  const locale = options.locale || 'en-US'
+  const monthFormat = options.format ?? 'long'
+  const locale = options.locale ?? 'en-US'
 
   // Formatting helper
   const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
@@ -230,13 +230,13 @@ export function formatDurationLabels(
   const labels = options?.labels ?? 'long'
   const results = []
 
-  units.forEach(({ unit, value }) => {
+  for (const { unit, value } of units) {
     const unitValue = Math.floor(seconds / value)
     if (unitValue > 0) {
       results.push(formatUnit(unitValue, { unit, decimals: 0, unitDisplay: labels }))
       seconds %= value
     }
-  })
+  }
 
   const milliseconds = Math.floor((seconds % 1) * 1000)
   if (milliseconds > 0) results.push(formatUnit(milliseconds, { unit: 'millisecond', decimals: 0, unitDisplay: labels }))
@@ -277,13 +277,13 @@ export function formatFileSize(
     locale?: string
   },
 ): string {
-  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options || {}
+  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options ?? {}
   const valueInBytes = number * (map.bytesInUnit.get(inputUnit) ?? 1)
 
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast
   const targetUnit = outputUnit === 'auto'
     ? Array.from(map.bytesInUnit.keys())
-      .reverse()
-      .find(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
+      .findLast(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
     : outputUnit
 
   return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) ?? 1), { unit: targetUnit, decimals, unitDisplay, locale })
@@ -302,7 +302,7 @@ export function formatLength(
     locale?: string
   },
 ): string {
-  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'millimeter', outputUnit = 'auto' } = options || {}
+  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'millimeter', outputUnit = 'auto' } = options ?? {}
   const inputUnitValue = map.lengthUnitConversions.get(inputUnit)
 
   if (!inputUnitValue) {
@@ -312,11 +312,11 @@ export function formatLength(
 
   const valueInMillimeters = number * inputUnitValue.value
 
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast
   const targetUnit = outputUnit === 'auto'
     ? Array.from(map.lengthUnitConversions.keys())
       .filter(unit => map.lengthUnitConversions.get(unit)?.system === inputUnitValue.system)
-      .reverse()
-      .find(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value ?? 0)) ?? inputUnit
+      .findLast(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value ?? 0)) ?? inputUnit
     : outputUnit
 
   return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value ?? 1), { unit: targetUnit, decimals, unitDisplay, locale })
@@ -335,7 +335,7 @@ export function formatTemperature(
     locale?: string
   },
 ): string {
-  const { decimals, unitDisplay = 'short', locale = 'en-US', inputUnit = 'celsius', outputUnit = 'celsius' } = options || {}
+  const { decimals, unitDisplay = 'short', locale = 'en-US', inputUnit = 'celsius', outputUnit = 'celsius' } = options ?? {}
 
   const validUnits = new Set(['auto', 'celsius', 'fahrenheit'])
 
@@ -399,7 +399,7 @@ export function formatParagraphs(
     minCharacterCount?: number
   },
 ): string {
-  const { minSentenceCount = 3, minCharacterCount = 100 } = options || {}
+  const { minSentenceCount = 3, minCharacterCount = 100 } = options ?? {}
   const isValidSentenceEnd = (text: string, index: number): boolean => {
     return text[index] === '.' && (index === text.length - 1 || text[index + 1] === ' ') && !/\d\.\d/.test(text.slice(index - 1, index + 2))
   }
@@ -444,9 +444,9 @@ export function formatInitials(
   return text
     .split(' ')
     .filter(word => !['the', 'third'].includes(word.toLowerCase()))
-    .map(word => word.charAt(0).toUpperCase())
+    .map(word => word.at(0)?.toUpperCase() ?? '')
     .join('')
-    .substring(0, options?.length ?? 2)
+    .slice(0, options?.length ?? 2)
 }
 
 /**
@@ -456,11 +456,12 @@ export function formatUnixTime(timestamp?: number): string {
   if (timestamp == null) {
     return ''
   }
-  if (isNaN(timestamp) || timestamp < 0) {
+  if (Number.isNaN(timestamp) || timestamp < 0) {
     console.warn('[MODS] Invalid Unix timestamp:', timestamp)
     return String(timestamp)
   }
-  return new Date(timestamp).toISOString().replace('T', ' ').replace('Z', '')
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
+  return new Date(timestamp).toISOString().replaceAll('T', ' ').replaceAll('Z', '')
 }
 
 /**
@@ -476,14 +477,16 @@ export function formatList(
   if (typeof items === 'string') items = items.split(',').map(item => item.trim())
   if (typeof items === 'object' && !Array.isArray(items)) items = Object.values(items)
   if (!Array.isArray(items) || items.length === 0) return ''
-  if (items.length <= 2) return items.join(items.length === 2 ? ` ${options?.conjunction || 'and'} ` : '')
+  const conj = options?.conjunction ?? 'and'
+  if (items.length <= 2) return items.join(items.length === 2 ? ` ${conj} ` : '')
 
   const effectiveLimit = options?.limit ?? items.length
-  if (items.length <= effectiveLimit) return items.slice(0, -1).join(', ') + ` ${options?.conjunction || 'and'} ` + items.slice(-1)
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  if (items.length <= effectiveLimit) return `${items.slice(0, -1).join(', ')} ${conj} ${items.at(-1)}`
 
   const listedItems = items.slice(0, effectiveLimit).join(', ')
   const remaining = items.length - effectiveLimit
-  return `${listedItems} ${options?.conjunction || 'and'} ${remaining} more`
+  return `${listedItems} ${conj} ${remaining} more`
 }
 
 /**
@@ -499,7 +502,7 @@ export function formatTitle(
     .map((word, index, wordsArray) => {
       const lowerWord = word.toLowerCase()
       if (index === 0 || index === wordsArray.length - 1 || !map.formatTitleExceptions.has(lowerWord)) {
-        return word.charAt(0).toUpperCase() + word.slice(1)
+        return `${word.at(0)?.toUpperCase() ?? ''}${word.slice(1)}`
       }
       return lowerWord
     })
@@ -521,7 +524,7 @@ export function formatSentenceCase(
     .map(paragraph =>
       paragraph
         .split('. ')
-        .map(sentence => sentence.charAt(0).toUpperCase() + sentence.slice(1))
+        .map(sentence => `${sentence.at(0)?.toUpperCase() ?? ''}${sentence.slice(1)}`)
         .join('. '))
     .join('\n\n')
 }
@@ -538,6 +541,6 @@ export function formatTextWrap(
     return ''
   }
   const space: number = text.lastIndexOf(' ')
-  if (space !== -1) return `${text.substring(0, space)}&nbsp;${text.substring(space + 1)}`
+  if (space !== -1) return `${text.slice(0, space)}&nbsp;${text.slice(space + 1)}`
   return text
 }

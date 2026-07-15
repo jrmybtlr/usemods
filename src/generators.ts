@@ -33,8 +33,15 @@ export function generateNumberBetween(from: number, to: number): number {
 
 /**
  * Generate a Version 4 UUID (cryptographically random)
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
  */
 export function generateUuid4(): string {
+  // Prefer the native crypto.randomUUID() when available
+  if (typeof globalThis.crypto?.randomUUID === 'function') {
+    return globalThis.crypto.randomUUID()
+  }
+
+  // Fallback for environments without crypto.randomUUID
   const bytes = new Uint8Array(16)
   getSecureRandomValues(bytes)
 
@@ -100,7 +107,8 @@ export function generateUuid7(): string {
  * Decode a UUIDv7 string into a timestamp
  */
 export function decodeUuid7(uuid: string): string {
-  const hex = uuid.replace(/-/g, '')
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
+  const hex = uuid.replaceAll('-', '')
 
   // Check if the UUID7 is valid
   if (!/^[0-9a-f]{32}$/i.test(hex)) {
@@ -118,7 +126,7 @@ export function decodeUuid7(uuid: string): string {
   const date = new Date(timestamp)
 
   // Check if the date is valid
-  if (isNaN(date.getTime())) {
+  if (Number.isNaN(date.getTime())) {
     throw new RangeError('[MODS] Invalid time value decoded from UUIDv7.')
   }
 
@@ -131,7 +139,8 @@ export function decodeUuid7(uuid: string): string {
  */
 export function generateShortUuid(uuid: string): string {
   // Remove dashes and validate length
-  const hex = uuid.replace(/-/g, '')
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
+  const hex = uuid.replaceAll('-', '')
   if (hex.length !== 32) {
     throw new Error(`Invalid UUID: expected 32 hex chars, got length=${hex.length}.`)
   }
@@ -140,11 +149,11 @@ export function generateShortUuid(uuid: string): string {
   const pairs = hex.match(/.{2}/g)!
   const bytes = pairs.map(pair => parseInt(pair, 16))
 
-  // Convert bytes to binary string, then to Base64
+  // Convert bytes to binary string, then to Base64URL
   const binary = String.fromCharCode(...bytes)
   const base64 = btoa(binary)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
+    .replaceAll('+', '-')
+    .replaceAll('/', '_')
     .replace(/=+$/, '')
   return base64
 }
@@ -154,10 +163,10 @@ export function generateShortUuid(uuid: string): string {
  */
 export function decodeShortUuid(shortUuid: string): string {
   // Convert URL-safe chars back to normal Base64 and pad with '='
-  let base64 = shortUuid.replace(/-/g, '+').replace(/_/g, '/')
-  while (base64.length % 4 !== 0) {
-    base64 += '='
-  }
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd
+  const unpadded = shortUuid.replaceAll('-', '+').replaceAll('_', '/')
+  const base64 = unpadded.padEnd(unpadded.length + (4 - unpadded.length % 4) % 4, '=')
 
   // Decode Base64 → binary string
   const binary = atob(base64)
@@ -257,7 +266,7 @@ export function generateRandomIndex(max: number): number {
  * Generate Lorem Ipsum text in various formats.
  */
 export function generateLoremIpsum(count: number = 5, options?: { format: 'words' | 'sentences' | 'paragraphs' }): string {
-  const { format = 'words' } = options || {}
+  const { format = 'words' } = options ?? {}
   const lorem = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ')
 
   function generateSentence() {
@@ -266,7 +275,8 @@ export function generateLoremIpsum(count: number = 5, options?: { format: 'words
   }
 
   function formatSentence(sentence: string) {
-    return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.'
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
+    return `${sentence.at(0)?.toUpperCase() ?? ''}${sentence.slice(1)}.`
   }
 
   if (format === 'sentences') {

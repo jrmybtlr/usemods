@@ -16,7 +16,7 @@ export function startWith(value: string, start: string): string {
  * Removes a prefix from a string if it starts with the prefix.
  */
 export function startWithout(value: string, start: string): string {
-  if (value.startsWith(start)) return value.substring(start.length)
+  if (value.startsWith(start)) return value.slice(start.length)
   return value
 }
 
@@ -244,7 +244,8 @@ export function slugify(text: string): string {
  * Converts a slug to a string.
  */
 export function deslugify(text: string): string {
-  return text.toLowerCase().replace(/-/g, ' ')
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
+  return text.toLowerCase().replaceAll('-', ' ')
 }
 
 /**
@@ -258,7 +259,8 @@ export function camelCase(text: string): string {
     .split(/[-\s]/)
     .map((word, index) => {
       if (index === 0) return word.toLowerCase()
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
+      return `${word.at(0)?.toUpperCase() ?? ''}${word.slice(1).toLowerCase()}`
     })
     .join('')
 }
@@ -272,7 +274,7 @@ export function pascalCase(text: string): string {
     .trim()
     .replace(/[^\w\s-]/g, '')
     .split(/[-\s]/)
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map(word => `${word.at(0)?.toUpperCase() ?? ''}${word.slice(1).toLowerCase()}`)
     .join('')
 }
 
@@ -315,12 +317,14 @@ export function titleCase(text: string): string {
  * Escape HTML entities in a string.
  */
 export function escapeHtml(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
+  return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 }
 
 /**
  * Unescape HTML entities in a string.
  */
 export function unescapeHtml(text: string): string {
-  return text.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
+  return text.replaceAll('&lt;', '<').replaceAll('&gt;', '>')
 }

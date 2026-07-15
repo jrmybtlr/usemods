@@ -127,10 +127,10 @@ export function isNull(value: unknown): boolean {
  * Check if any given value is a valid Date object.
  */
 export function isDate(value: unknown): boolean {
-  if (value instanceof Date) return !isNaN(value.getTime())
+  if (value instanceof Date) return !Number.isNaN(value.getTime())
   else if (typeof value === 'string' || typeof value === 'number') {
     const date = new Date(value)
-    return !isNaN(date.getTime())
+    return !Number.isNaN(date.getTime())
   }
   return false
 }

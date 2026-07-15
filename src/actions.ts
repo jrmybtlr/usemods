@@ -89,24 +89,20 @@ export function throttle<T extends (
 /**
  * Smoothly scrolls to the element with the specified ID without scuffing up your URLs.
  */
-export function scrollToAnchor(
+export async function scrollToAnchor(
   id: string,
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const selector = `#${id}`
-      const element = document.querySelector(selector)
-      if (!element) {
-        console.warn(`[MODS] Element with id '${id}' not found.`)
-        reject(`Element with id '${id}' not found.`)
-        return
-      }
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-      resolve()
-    }, 180)
+  await new Promise<void>(resolve => setTimeout(resolve, 180))
+
+  const element = document.querySelector(`#${id}`)
+  if (!element) {
+    console.warn(`[MODS] Element with id '${id}' not found.`)
+    throw `Element with id '${id}' not found.`
+  }
+
+  element.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start',
   })
 }
 
@@ -114,61 +110,54 @@ export function scrollToAnchor(
  * Toggles the body scroll with specified class names and returns a promise
  * @info Use your own class names, or ensure fixed is within your Tailwindcss JIT
  */
-export function toggleBodyScroll(
+export async function toggleBodyScroll(
   className: string = 'fixed',
   action: 'add' | 'remove' | 'toggle' = 'toggle',
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    try {
-      const body = document.body
-      const isFixed = body.classList.contains(className)
-      const scrollY = isFixed ? parseInt(body.style.top, 10) : window.scrollY
+  try {
+    const body = document.body
+    const isFixed = body.classList.contains(className)
+    const scrollY = isFixed ? parseInt(body.style.top, 10) : window.scrollY
 
-      body.style.top = isFixed ? '' : `-${scrollY}px`
+    body.style.top = isFixed ? '' : `-${scrollY}px`
 
-      if (action === 'add') {
-        body.classList.add(className)
-      }
-      else if (action === 'remove') {
-        body.classList.remove(className)
-      }
-      else {
-        body.classList.toggle(className)
-      }
-
-      if (isFixed) window.scrollTo(0, -scrollY)
-
-      resolve()
+    if (action === 'add') {
+      body.classList.add(className)
     }
-    catch (error) {
-      console.warn('[MODS] Failed to toggle body scroll.')
-      reject(error)
+    else if (action === 'remove') {
+      body.classList.remove(className)
     }
-  })
+    else {
+      body.classList.toggle(className)
+    }
+
+    if (isFixed) window.scrollTo(0, -scrollY)
+  }
+  catch (error) {
+    console.warn('[MODS] Failed to toggle body scroll.')
+    throw error
+  }
 }
 
 /**
  * Toggles the element scroll with specified class names and returns a promise
  */
-export function toggleElementScroll(
+export async function toggleElementScroll(
   element: HTMLElement,
 ): Promise<void> {
-  return new Promise((resolve) => {
-    if (!element) {
-      console.warn('[MODS] Element is required to toggle scroll.')
-      return resolve()
-    }
+  if (!element) {
+    console.warn('[MODS] Element is required to toggle scroll.')
+    return
+  }
 
-    if (element.dataset.isScrollLocked === 'true') {
-      element.style.overflow = ''
-      delete element.dataset.isScrollLocked
-    }
-    else {
-      element.style.overflow = 'hidden'
-      element.dataset.isScrollLocked = 'true'
-    }
-    resolve()
-  })
+  if (element.dataset.isScrollLocked === 'true') {
+    element.style.overflow = ''
+    delete element.dataset.isScrollLocked
+  }
+  else {
+    element.style.overflow = 'hidden'
+    element.dataset.isScrollLocked = 'true'
+  }
 }
 
 /**
@@ -262,9 +251,14 @@ export async function focusOnNth(
 export function focusTrap(
   container: HTMLElement,
 ): void {
-  const focusableElements = container.querySelectorAll('a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select')
-  const firstFocusableElement = focusableElements[0] as HTMLElement
-  const lastFocusableElement = focusableElements[focusableElements.length - 1] as HTMLElement
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  const focusableElements = Array.from(
+    container.querySelectorAll('a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'),
+  ) as HTMLElement[]
+  const firstFocusableElement = focusableElements.at(0)
+  const lastFocusableElement = focusableElements.at(-1)
+
+  if (!firstFocusableElement || !lastFocusableElement) return
 
   container.addEventListener('keydown', (event) => {
     const isTabPressed = event.key === 'Tab'
