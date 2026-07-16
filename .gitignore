@@ -26,6 +26,13 @@ nuxt-module/docs/content/2.docs
 nuxt-web/content/2.docs/*.md
 nuxt-web/pages/playground/*
 
+# Generated AI discovery / docs mirrors (created by docs/generate-ai-docs.mjs on build)
+nuxt-web/public/docs/
+nuxt-web/public/intro/
+nuxt-web/public/llms.txt
+nuxt-web/public/llms-full.txt
+nuxt-web/public/sitemap.xml
+
 # Source files
 nuxt-module/src/runtime/utils/*.ts
 nuxt-web/utils/**/*.ts
