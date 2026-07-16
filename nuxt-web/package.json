@@ -3,8 +3,12 @@
   "name": "usemods-website",
   "type": "module",
   "scripts": {
+    "ai-docs": "node ../docs/generate-ai-docs.mjs",
+    "predev": "pnpm run ai-docs",
     "dev": "nuxi dev",
+    "prebuild": "pnpm run ai-docs",
     "build": "nuxi build",
+    "pregenerate": "pnpm run ai-docs",
     "generate": "nuxi generate",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
