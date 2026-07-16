@@ -86,7 +86,8 @@ export function median(numbers: number[]): number {
  */
 export function mode(numbers: number[]): number[] | null {
   if (numbers.length === 0) return null
-  if (numbers.length === 1) return [numbers[0]]
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  if (numbers.length === 1) return [numbers.at(0)!]
 
   const frequencyMap = new Map<number, number>()
   let maxFrequency = 0
@@ -166,7 +167,8 @@ export function standardDeviation(numbers: number[], options?: { method: 'sample
     console.log('[MODS] standardDeviation array is empty.')
     return NaN
   }
-  options = options ?? { method: 'population' }
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
+  options ??= { method: 'population' }
   const meanValue = mean(numbers)
   const n = options.method === 'sample' ? numbers.length - 1 : numbers.length
   const sum = numbers.reduce((acc, num) => acc + (num - meanValue) ** 2, 0)

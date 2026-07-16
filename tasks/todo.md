@@ -29,3 +29,10 @@ Update function bodies in `/src` to prefer modern native JS APIs (ES2023+) while
 - `tsc --noEmit` clean
 - Public APIs unchanged; updates are inside function bodies only
 - MDN references added for non-obvious native methods (`findLast`, `toSorted`, `replaceAll`, `randomUUID`, etc.)
+
+## Follow-up: safe leftovers
+- [x] `Object.hasOwn` in `mergeFields` / `isServerSide`
+- [x] `??=` in `standardDeviation`
+- [x] Leftover `.at()` usage across formatters/numbers/modifiers/generators/actions
+- [x] `Error.cause` in `focusOnNth` (+ test update)
+- [x] `formatToParts` for timezone date components in `formatCombinedDates`

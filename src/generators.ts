@@ -256,7 +256,8 @@ export function generateRandomIndex(max: number): number {
   let randomValue: number
 
   do {
-    randomValue = getSecureRandomValues(buffer)[0]
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/at
+    randomValue = getSecureRandomValues(buffer).at(0) ?? 0
   } while (randomValue >= range)
 
   return randomValue % max

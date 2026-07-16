@@ -6,7 +6,12 @@
  * Check if you're a server-side user.
  */
 export function isServerSide(): boolean {
-  return typeof window === 'undefined' || (typeof process !== 'undefined' && typeof process.versions === 'object' && 'node' in process.versions)
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn
+  return typeof window === 'undefined'
+    || (typeof process !== 'undefined'
+      && typeof process.versions === 'object'
+      && process.versions !== null
+      && Object.hasOwn(process.versions, 'node'))
 }
 
 /**

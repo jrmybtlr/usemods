@@ -135,7 +135,8 @@ export function singularize(value: string): string {
 export function ordinalize(value: number): string {
   const suffixes = ['th', 'st', 'nd', 'rd']
   const remainder = value % 100
-  return value + (suffixes[(remainder - 20) % 10] || suffixes[remainder] || suffixes[0])
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  return value + (suffixes[(remainder - 20) % 10] || suffixes[remainder] || suffixes.at(0) || 'th')
 }
 
 /**

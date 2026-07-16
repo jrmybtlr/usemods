@@ -14,7 +14,8 @@ export function formatNumber(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.')[1] || '').length
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
   const config: Intl.NumberFormatOptions = {
@@ -36,7 +37,8 @@ export function formatCurrency(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.')[1] || '0').padEnd(2, '0').length
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  const decimalPlaces = (number.toString().split('.').at(1) || '0').padEnd(2, '0').length
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
   const config: Intl.NumberFormatOptions = {
@@ -89,7 +91,8 @@ export function formatUnit(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.')[1] || '').length
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.min(options?.decimals ?? 21, decimalPlaces)
 
   const config: Intl.NumberFormatOptions = {
@@ -113,7 +116,8 @@ export function formatPercentage(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.')[1] || '').length
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.max(0, Math.min(options?.decimals ?? decimalPlaces, decimalPlaces))
 
   const config: Intl.NumberFormatOptions = {
@@ -145,13 +149,16 @@ export function formatCombinedDates(
   if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return ''
 
   // Cache commonly used date components (timezone-aware)
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
   const getDateComponents = (date: Date) => {
     if (options.timeZone) {
-      const formatter = new Intl.DateTimeFormat('en-CA', {
-        year: 'numeric', month: '2-digit', day: '2-digit', timeZone: options.timeZone,
-      })
-      const parts = formatter.format(date).split('-')
-      return { year: parseInt(parts[0]), month: parseInt(parts[1]) - 1, day: parseInt(parts[2]) }
+      const parts = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric', month: 'numeric', day: 'numeric', timeZone: options.timeZone,
+      }).formatToParts(date)
+      const year = Number(parts.find(part => part.type === 'year')?.value)
+      const month = Number(parts.find(part => part.type === 'month')?.value) - 1
+      const day = Number(parts.find(part => part.type === 'day')?.value)
+      return { year, month, day }
     }
     return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() }
   }
@@ -365,7 +372,8 @@ export function formatTemperature(
 export function formatNumberToWords(
   number: number,
 ): string {
-  if (number === 0) return map.numberUnderTwenty[0]
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  if (number === 0) return map.numberUnderTwenty.at(0)!
 
   const formatGroup = (num: number): string => {
     if (num < 20) return map.numberUnderTwenty[num]
@@ -401,7 +409,8 @@ export function formatParagraphs(
 ): string {
   const { minSentenceCount = 3, minCharacterCount = 100 } = options ?? {}
   const isValidSentenceEnd = (text: string, index: number): boolean => {
-    return text[index] === '.' && (index === text.length - 1 || text[index + 1] === ' ') && !/\d\.\d/.test(text.slice(index - 1, index + 2))
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
+    return text.at(index) === '.' && (index === text.length - 1 || text.at(index + 1) === ' ') && !/\d\.\d/.test(text.slice(index - 1, index + 2))
   }
 
   const sentences = text.split(/(?<=\.)\s+/).filter(Boolean)

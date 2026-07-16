@@ -226,13 +226,13 @@ export async function focusOnNth(
     throw new Error(`Invalid index: ${index}. Index must be a number.`)
   }
 
-  const elementIndex = numericIndex === -1 ? elements.length - 1 : numericIndex
-  if (elementIndex < 0 || elementIndex >= elements.length) {
+  // Only treat -1 as "last"; do not pass other negatives to .at() (would change API semantics)
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+  const element = numericIndex === -1 ? elements.at(-1) : elements[numericIndex]
+  if (!element) {
     throw new Error(`Element at index ${index} is out of bounds.`)
   }
-
-  const element = elements[elementIndex]
-  if (!element?.focus) {
+  if (!element.focus) {
     throw new Error('[MODS] Failed to focus on the element.')
   }
 
@@ -241,7 +241,8 @@ export async function focusOnNth(
     element.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
   catch (error) {
-    throw new Error(`[MODS] Failed to focus on the element.${error}`)
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause
+    throw new Error('[MODS] Failed to focus on the element.', { cause: error })
   }
 }
 
