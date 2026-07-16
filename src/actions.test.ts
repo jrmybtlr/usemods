@@ -409,14 +409,18 @@ describe('focusOnNth', () => {
 
   test('should handle focus errors', async () => {
     const container = { ...mockElement } as unknown as HTMLElement
+    const focusError = new Error('Focus error')
     mockElement.focus.mockImplementation(() => {
-      throw new Error('Focus error')
+      throw focusError
     })
     container.querySelectorAll.mockReturnValue([mockElement])
 
     const result = mod.focusOnNth(container)
 
-    await expect(result).rejects.toThrow('[MODS] Failed to focus on the element.Error: Focus error')
+    await expect(result).rejects.toMatchObject({
+      message: '[MODS] Failed to focus on the element.',
+      cause: focusError,
+    })
   })
 })
 

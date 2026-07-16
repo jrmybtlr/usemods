@@ -75,7 +75,7 @@ export function subtractMarkup(value: number, percentage: number): number {
  */
 export function median(numbers: number[]): number {
   if (numbers.length === 0) return 0
-  const sorted = numbers.slice().sort((a, b) => a - b)
+  const sorted = numbers.toSorted((a, b) => a - b)
   const middle = Math.floor(sorted.length / 2)
   return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle]
 }
@@ -85,18 +85,18 @@ export function median(numbers: number[]): number {
  */
 export function mode(numbers: number[]): number[] | null {
   if (numbers.length === 0) return null
-  if (numbers.length === 1) return [numbers[0]]
+  if (numbers.length === 1) return [numbers.at(0)!]
 
   const frequencyMap = new Map<number, number>()
   let maxFrequency = 0
 
-  numbers.forEach((num) => {
+  for (const num of numbers) {
     const frequency = (frequencyMap.get(num) ?? 0) + 1
     frequencyMap.set(num, frequency)
     if (frequency > maxFrequency) {
       maxFrequency = frequency
     }
-  })
+  }
 
   if (maxFrequency === 1) return null
 
@@ -165,7 +165,7 @@ export function standardDeviation(numbers: number[], options?: { method: 'sample
     console.log('[MODS] standardDeviation array is empty.')
     return NaN
   }
-  options = options || { method: 'population' }
+  options ??= { method: 'population' }
   const meanValue = mean(numbers)
   const n = options.method === 'sample' ? numbers.length - 1 : numbers.length
   const sum = numbers.reduce((acc, num) => acc + (num - meanValue) ** 2, 0)

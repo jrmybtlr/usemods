@@ -8,7 +8,7 @@ import { isObject } from './validators'
  * Sort an array or object by a property.
  */
 export function dataSortBy(items: object | string[] | number[], options?: { property?: string, order?: 'asc' | 'desc' }): object | string[] | number[] {
-  const { property, order = 'asc' } = options || {}
+  const { property, order = 'asc' } = options ?? {}
 
   const compare = (a: any, b: any) => {
     const valueA = property ? a[property] : a
@@ -18,10 +18,7 @@ export function dataSortBy(items: object | string[] | number[], options?: { prop
     if (valueA > valueB) return order === 'asc' ? 1 : -1
     return 0
   }
-  // Use toSorted (ES2023) for immutability, with spread fallback for older environments
-  return Array.isArray(items)
-    ? ('toSorted' in items ? (items as any).toSorted(compare) : [...items].sort(compare))
-    : items
+  return Array.isArray(items) ? items.toSorted(compare) : items
 }
 
 /**
@@ -35,12 +32,10 @@ export function dataReverse<T extends object | string[] | number[]>(
     return items
   }
   if (isObject(items)) {
-    return Object.fromEntries(Object.entries(items).reverse()) as T
+    return Object.fromEntries(Object.entries(items).toReversed()) as T
   }
   else {
-    // Use toReversed (ES2023) for immutability, with spread fallback for older environments
-    const arr = items as string[] | number[]
-    return ('toReversed' in arr ? (arr as any).toReversed() : [...arr].reverse()) as T
+    return (items as string[] | number[]).toReversed() as T
   }
 }
 

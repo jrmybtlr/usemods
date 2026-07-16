@@ -14,7 +14,7 @@ export function formatNumber(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.')[1] || '').length
+  const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
   const config: Intl.NumberFormatOptions = {
@@ -36,7 +36,7 @@ export function formatCurrency(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.')[1] || '0').padEnd(2, '0').length
+  const decimalPlaces = (number.toString().split('.').at(1) || '0').padEnd(2, '0').length
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
   const config: Intl.NumberFormatOptions = {
@@ -89,7 +89,7 @@ export function formatUnit(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.')[1] || '').length
+  const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.min(options?.decimals ?? 21, decimalPlaces)
 
   const config: Intl.NumberFormatOptions = {
@@ -113,7 +113,7 @@ export function formatPercentage(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.')[1] || '').length
+  const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.max(0, Math.min(options?.decimals ?? decimalPlaces, decimalPlaces))
 
   const config: Intl.NumberFormatOptions = {
@@ -142,16 +142,18 @@ export function formatCombinedDates(
   const toDate = new Date(to ?? Date.now())
 
   // Early return for invalid dates
-  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) return ''
+  if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return ''
 
   // Cache commonly used date components (timezone-aware)
   const getDateComponents = (date: Date) => {
     if (options.timeZone) {
-      const formatter = new Intl.DateTimeFormat('en-CA', {
-        year: 'numeric', month: '2-digit', day: '2-digit', timeZone: options.timeZone,
-      })
-      const parts = formatter.format(date).split('-')
-      return { year: parseInt(parts[0]), month: parseInt(parts[1]) - 1, day: parseInt(parts[2]) }
+      const parts = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric', month: 'numeric', day: 'numeric', timeZone: options.timeZone,
+      }).formatToParts(date)
+      const year = Number(parts.find(part => part.type === 'year')?.value)
+      const month = Number(parts.find(part => part.type === 'month')?.value) - 1
+      const day = Number(parts.find(part => part.type === 'day')?.value)
+      return { year, month, day }
     }
     return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() }
   }
@@ -165,8 +167,8 @@ export function formatCombinedDates(
   const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
 
   // Simplified format options
-  const monthFormat = options.format || 'long'
-  const locale = options.locale || 'en-US'
+  const monthFormat = options.format ?? 'long'
+  const locale = options.locale ?? 'en-US'
 
   // Formatting helper
   const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
@@ -230,13 +232,13 @@ export function formatDurationLabels(
   const labels = options?.labels ?? 'long'
   const results = []
 
-  units.forEach(({ unit, value }) => {
+  for (const { unit, value } of units) {
     const unitValue = Math.floor(seconds / value)
     if (unitValue > 0) {
       results.push(formatUnit(unitValue, { unit, decimals: 0, unitDisplay: labels }))
       seconds %= value
     }
-  })
+  }
 
   const milliseconds = Math.floor((seconds % 1) * 1000)
   if (milliseconds > 0) results.push(formatUnit(milliseconds, { unit: 'millisecond', decimals: 0, unitDisplay: labels }))
@@ -277,13 +279,12 @@ export function formatFileSize(
     locale?: string
   },
 ): string {
-  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options || {}
+  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options ?? {}
   const valueInBytes = number * (map.bytesInUnit.get(inputUnit) ?? 1)
 
   const targetUnit = outputUnit === 'auto'
     ? Array.from(map.bytesInUnit.keys())
-      .reverse()
-      .find(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
+      .findLast(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
     : outputUnit
 
   return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) ?? 1), { unit: targetUnit, decimals, unitDisplay, locale })
@@ -302,7 +303,7 @@ export function formatLength(
     locale?: string
   },
 ): string {
-  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'millimeter', outputUnit = 'auto' } = options || {}
+  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'millimeter', outputUnit = 'auto' } = options ?? {}
   const inputUnitValue = map.lengthUnitConversions.get(inputUnit)
 
   if (!inputUnitValue) {
@@ -315,8 +316,7 @@ export function formatLength(
   const targetUnit = outputUnit === 'auto'
     ? Array.from(map.lengthUnitConversions.keys())
       .filter(unit => map.lengthUnitConversions.get(unit)?.system === inputUnitValue.system)
-      .reverse()
-      .find(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value ?? 0)) ?? inputUnit
+      .findLast(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value ?? 0)) ?? inputUnit
     : outputUnit
 
   return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value ?? 1), { unit: targetUnit, decimals, unitDisplay, locale })
@@ -335,7 +335,7 @@ export function formatTemperature(
     locale?: string
   },
 ): string {
-  const { decimals, unitDisplay = 'short', locale = 'en-US', inputUnit = 'celsius', outputUnit = 'celsius' } = options || {}
+  const { decimals, unitDisplay = 'short', locale = 'en-US', inputUnit = 'celsius', outputUnit = 'celsius' } = options ?? {}
 
   const validUnits = new Set(['auto', 'celsius', 'fahrenheit'])
 
@@ -365,7 +365,7 @@ export function formatTemperature(
 export function formatNumberToWords(
   number: number,
 ): string {
-  if (number === 0) return map.numberUnderTwenty[0]
+  if (number === 0) return map.numberUnderTwenty.at(0)!
 
   const formatGroup = (num: number): string => {
     if (num < 20) return map.numberUnderTwenty[num]
@@ -399,9 +399,9 @@ export function formatParagraphs(
     minCharacterCount?: number
   },
 ): string {
-  const { minSentenceCount = 3, minCharacterCount = 100 } = options || {}
+  const { minSentenceCount = 3, minCharacterCount = 100 } = options ?? {}
   const isValidSentenceEnd = (text: string, index: number): boolean => {
-    return text[index] === '.' && (index === text.length - 1 || text[index + 1] === ' ') && !/\d\.\d/.test(text.slice(index - 1, index + 2))
+    return text.at(index) === '.' && (index === text.length - 1 || text.at(index + 1) === ' ') && !/\d\.\d/.test(text.slice(index - 1, index + 2))
   }
 
   const sentences = text.split(/(?<=\.)\s+/).filter(Boolean)
@@ -444,9 +444,9 @@ export function formatInitials(
   return text
     .split(' ')
     .filter(word => !['the', 'third'].includes(word.toLowerCase()))
-    .map(word => word.charAt(0).toUpperCase())
+    .map(word => word.at(0)?.toUpperCase() ?? '')
     .join('')
-    .substring(0, options?.length ?? 2)
+    .slice(0, options?.length ?? 2)
 }
 
 /**
@@ -456,11 +456,11 @@ export function formatUnixTime(timestamp?: number): string {
   if (timestamp == null) {
     return ''
   }
-  if (isNaN(timestamp) || timestamp < 0) {
+  if (Number.isNaN(timestamp) || timestamp < 0) {
     console.warn('[MODS] Invalid Unix timestamp:', timestamp)
     return String(timestamp)
   }
-  return new Date(timestamp).toISOString().replace('T', ' ').replace('Z', '')
+  return new Date(timestamp).toISOString().replaceAll('T', ' ').replaceAll('Z', '')
 }
 
 /**
@@ -476,14 +476,15 @@ export function formatList(
   if (typeof items === 'string') items = items.split(',').map(item => item.trim())
   if (typeof items === 'object' && !Array.isArray(items)) items = Object.values(items)
   if (!Array.isArray(items) || items.length === 0) return ''
-  if (items.length <= 2) return items.join(items.length === 2 ? ` ${options?.conjunction || 'and'} ` : '')
+  const conj = options?.conjunction ?? 'and'
+  if (items.length <= 2) return items.join(items.length === 2 ? ` ${conj} ` : '')
 
   const effectiveLimit = options?.limit ?? items.length
-  if (items.length <= effectiveLimit) return items.slice(0, -1).join(', ') + ` ${options?.conjunction || 'and'} ` + items.slice(-1)
+  if (items.length <= effectiveLimit) return `${items.slice(0, -1).join(', ')} ${conj} ${items.at(-1)}`
 
   const listedItems = items.slice(0, effectiveLimit).join(', ')
   const remaining = items.length - effectiveLimit
-  return `${listedItems} ${options?.conjunction || 'and'} ${remaining} more`
+  return `${listedItems} ${conj} ${remaining} more`
 }
 
 /**
@@ -499,7 +500,7 @@ export function formatTitle(
     .map((word, index, wordsArray) => {
       const lowerWord = word.toLowerCase()
       if (index === 0 || index === wordsArray.length - 1 || !map.formatTitleExceptions.has(lowerWord)) {
-        return word.charAt(0).toUpperCase() + word.slice(1)
+        return `${word.at(0)?.toUpperCase() ?? ''}${word.slice(1)}`
       }
       return lowerWord
     })
@@ -521,7 +522,7 @@ export function formatSentenceCase(
     .map(paragraph =>
       paragraph
         .split('. ')
-        .map(sentence => sentence.charAt(0).toUpperCase() + sentence.slice(1))
+        .map(sentence => `${sentence.at(0)?.toUpperCase() ?? ''}${sentence.slice(1)}`)
         .join('. '))
     .join('\n\n')
 }
@@ -538,6 +539,6 @@ export function formatTextWrap(
     return ''
   }
   const space: number = text.lastIndexOf(' ')
-  if (space !== -1) return `${text.substring(0, space)}&nbsp;${text.substring(space + 1)}`
+  if (space !== -1) return `${text.slice(0, space)}&nbsp;${text.slice(space + 1)}`
   return text
 }

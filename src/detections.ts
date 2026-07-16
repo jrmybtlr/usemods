@@ -174,7 +174,7 @@ export function detectUrlParams(format: 'string' | 'object' = 'string'): ({ [key
  */
 export function detectUrlHash(): string | null {
   if (typeof window === 'undefined') return null
-  return window.location.hash.replace('#', '')
+  return window.location.hash.slice(1)
 }
 
 /**
