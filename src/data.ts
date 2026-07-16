@@ -18,7 +18,6 @@ export function dataSortBy(items: object | string[] | number[], options?: { prop
     if (valueA > valueB) return order === 'asc' ? 1 : -1
     return 0
   }
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
   return Array.isArray(items) ? items.toSorted(compare) : items
 }
 
@@ -33,11 +32,9 @@ export function dataReverse<T extends object | string[] | number[]>(
     return items
   }
   if (isObject(items)) {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toReversed
     return Object.fromEntries(Object.entries(items).toReversed()) as T
   }
   else {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toReversed
     return (items as string[] | number[]).toReversed() as T
   }
 }

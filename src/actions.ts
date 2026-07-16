@@ -227,7 +227,6 @@ export async function focusOnNth(
   }
 
   // Only treat -1 as "last"; do not pass other negatives to .at() (would change API semantics)
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   const element = numericIndex === -1 ? elements.at(-1) : elements[numericIndex]
   if (!element) {
     throw new Error(`Element at index ${index} is out of bounds.`)
@@ -241,7 +240,6 @@ export async function focusOnNth(
     element.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
   catch (error) {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause
     throw new Error('[MODS] Failed to focus on the element.', { cause: error })
   }
 }
@@ -252,7 +250,6 @@ export async function focusOnNth(
 export function focusTrap(
   container: HTMLElement,
 ): void {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   const focusableElements = Array.from(
     container.querySelectorAll('a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'),
   ) as HTMLElement[]

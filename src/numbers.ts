@@ -75,7 +75,6 @@ export function subtractMarkup(value: number, percentage: number): number {
  */
 export function median(numbers: number[]): number {
   if (numbers.length === 0) return 0
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
   const sorted = numbers.toSorted((a, b) => a - b)
   const middle = Math.floor(sorted.length / 2)
   return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle]
@@ -86,7 +85,6 @@ export function median(numbers: number[]): number {
  */
 export function mode(numbers: number[]): number[] | null {
   if (numbers.length === 0) return null
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   if (numbers.length === 1) return [numbers.at(0)!]
 
   const frequencyMap = new Map<number, number>()
@@ -167,7 +165,6 @@ export function standardDeviation(numbers: number[], options?: { method: 'sample
     console.log('[MODS] standardDeviation array is empty.')
     return NaN
   }
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
   options ??= { method: 'population' }
   const meanValue = mean(numbers)
   const n = options.method === 'sample' ? numbers.length - 1 : numbers.length

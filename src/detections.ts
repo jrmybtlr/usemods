@@ -174,7 +174,6 @@ export function detectUrlParams(format: 'string' | 'object' = 'string'): ({ [key
  */
 export function detectUrlHash(): string | null {
   if (typeof window === 'undefined') return null
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice
   return window.location.hash.slice(1)
 }
 

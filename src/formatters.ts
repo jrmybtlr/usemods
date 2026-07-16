@@ -14,7 +14,6 @@ export function formatNumber(
     locale?: string
   },
 ): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
@@ -37,7 +36,6 @@ export function formatCurrency(
     locale?: string
   },
 ): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   const decimalPlaces = (number.toString().split('.').at(1) || '0').padEnd(2, '0').length
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
@@ -91,7 +89,6 @@ export function formatUnit(
     locale?: string
   },
 ): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.min(options?.decimals ?? 21, decimalPlaces)
 
@@ -116,7 +113,6 @@ export function formatPercentage(
     locale?: string
   },
 ): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.max(0, Math.min(options?.decimals ?? decimalPlaces, decimalPlaces))
 
@@ -149,7 +145,6 @@ export function formatCombinedDates(
   if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return ''
 
   // Cache commonly used date components (timezone-aware)
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
   const getDateComponents = (date: Date) => {
     if (options.timeZone) {
       const parts = new Intl.DateTimeFormat('en-US', {
@@ -287,7 +282,6 @@ export function formatFileSize(
   const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options ?? {}
   const valueInBytes = number * (map.bytesInUnit.get(inputUnit) ?? 1)
 
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast
   const targetUnit = outputUnit === 'auto'
     ? Array.from(map.bytesInUnit.keys())
       .findLast(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
@@ -319,7 +313,6 @@ export function formatLength(
 
   const valueInMillimeters = number * inputUnitValue.value
 
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast
   const targetUnit = outputUnit === 'auto'
     ? Array.from(map.lengthUnitConversions.keys())
       .filter(unit => map.lengthUnitConversions.get(unit)?.system === inputUnitValue.system)
@@ -372,7 +365,6 @@ export function formatTemperature(
 export function formatNumberToWords(
   number: number,
 ): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   if (number === 0) return map.numberUnderTwenty.at(0)!
 
   const formatGroup = (num: number): string => {
@@ -409,7 +401,6 @@ export function formatParagraphs(
 ): string {
   const { minSentenceCount = 3, minCharacterCount = 100 } = options ?? {}
   const isValidSentenceEnd = (text: string, index: number): boolean => {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
     return text.at(index) === '.' && (index === text.length - 1 || text.at(index + 1) === ' ') && !/\d\.\d/.test(text.slice(index - 1, index + 2))
   }
 
@@ -469,7 +460,6 @@ export function formatUnixTime(timestamp?: number): string {
     console.warn('[MODS] Invalid Unix timestamp:', timestamp)
     return String(timestamp)
   }
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
   return new Date(timestamp).toISOString().replaceAll('T', ' ').replaceAll('Z', '')
 }
 
@@ -490,7 +480,6 @@ export function formatList(
   if (items.length <= 2) return items.join(items.length === 2 ? ` ${conj} ` : '')
 
   const effectiveLimit = options?.limit ?? items.length
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   if (items.length <= effectiveLimit) return `${items.slice(0, -1).join(', ')} ${conj} ${items.at(-1)}`
 
   const listedItems = items.slice(0, effectiveLimit).join(', ')

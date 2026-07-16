@@ -33,7 +33,6 @@ export function generateNumberBetween(from: number, to: number): number {
 
 /**
  * Generate a Version 4 UUID (cryptographically random)
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
  */
 export function generateUuid4(): string {
   // Prefer the native crypto.randomUUID() when available
@@ -107,7 +106,6 @@ export function generateUuid7(): string {
  * Decode a UUIDv7 string into a timestamp
  */
 export function decodeUuid7(uuid: string): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
   const hex = uuid.replaceAll('-', '')
 
   // Check if the UUID7 is valid
@@ -139,7 +137,6 @@ export function decodeUuid7(uuid: string): string {
  */
 export function generateShortUuid(uuid: string): string {
   // Remove dashes and validate length
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
   const hex = uuid.replaceAll('-', '')
   if (hex.length !== 32) {
     throw new Error(`Invalid UUID: expected 32 hex chars, got length=${hex.length}.`)
@@ -163,8 +160,6 @@ export function generateShortUuid(uuid: string): string {
  */
 export function decodeShortUuid(shortUuid: string): string {
   // Convert URL-safe chars back to normal Base64 and pad with '='
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd
   const unpadded = shortUuid.replaceAll('-', '+').replaceAll('_', '/')
   const base64 = unpadded.padEnd(unpadded.length + (4 - unpadded.length % 4) % 4, '=')
 
@@ -256,7 +251,6 @@ export function generateRandomIndex(max: number): number {
   let randomValue: number
 
   do {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/at
     randomValue = getSecureRandomValues(buffer).at(0) ?? 0
   } while (randomValue >= range)
 
@@ -276,7 +270,6 @@ export function generateLoremIpsum(count: number = 5, options?: { format: 'words
   }
 
   function formatSentence(sentence: string) {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
     return `${sentence.at(0)?.toUpperCase() ?? ''}${sentence.slice(1)}.`
   }
 

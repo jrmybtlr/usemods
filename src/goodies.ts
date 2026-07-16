@@ -93,7 +93,6 @@ export function mergeFields(
   const pattern = /\{\{\s*(\w+)\s*\}\}/g
 
   return text.replace(pattern, (match, key) => {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn
     if (Object.hasOwn(fields, key)) {
       return fields[key].toString()
     }

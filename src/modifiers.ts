@@ -135,7 +135,6 @@ export function singularize(value: string): string {
 export function ordinalize(value: number): string {
   const suffixes = ['th', 'st', 'nd', 'rd']
   const remainder = value % 100
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
   return value + (suffixes[(remainder - 20) % 10] || suffixes[remainder] || suffixes.at(0) || 'th')
 }
 
@@ -245,7 +244,6 @@ export function slugify(text: string): string {
  * Converts a slug to a string.
  */
 export function deslugify(text: string): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
   return text.toLowerCase().replaceAll('-', ' ')
 }
 
@@ -260,7 +258,6 @@ export function camelCase(text: string): string {
     .split(/[-\s]/)
     .map((word, index) => {
       if (index === 0) return word.toLowerCase()
-      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/at
       return `${word.at(0)?.toUpperCase() ?? ''}${word.slice(1).toLowerCase()}`
     })
     .join('')
@@ -318,7 +315,6 @@ export function titleCase(text: string): string {
  * Escape HTML entities in a string.
  */
 export function escapeHtml(text: string): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
   return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 }
 
@@ -326,6 +322,5 @@ export function escapeHtml(text: string): string {
  * Unescape HTML entities in a string.
  */
 export function unescapeHtml(text: string): string {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
   return text.replaceAll('&lt;', '<').replaceAll('&gt;', '>')
 }
