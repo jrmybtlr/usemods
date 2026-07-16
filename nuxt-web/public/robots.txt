@@ -1,0 +1,65 @@
+# https://usemods.com/robots.txt
+# Allow search engines and AI crawlers to index documentation.
+
+User-agent: *
+Allow: /
+
+# OpenAI
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Google Gemini / AI training
+User-agent: Google-Extended
+Allow: /
+
+# Apple
+User-agent: Applebot-Extended
+Allow: /
+
+# Common Crawl (used by many AI datasets)
+User-agent: CCBot
+Allow: /
+
+# Meta
+User-agent: meta-externalagent
+Allow: /
+
+# Bytespider
+User-agent: Bytespider
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Diffbot
+User-agent: Diffbot
+Allow: /
+
+# Sitemap and AI discovery files
+Sitemap: https://usemods.com/sitemap.xml
+
+# AI / LLM ingest (llmstxt.org)
+# https://usemods.com/llms.txt
+# https://usemods.com/llms-full.txt
+# https://usemods.com/docs/all.md

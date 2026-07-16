@@ -8,6 +8,7 @@
     "dev": "node docs.mjs --watch",
     "build": "node docs.mjs --build",
     "generate": "node docs.mjs --build",
-    "bundle": "node docs.mjs --bundle"
+    "bundle": "node docs.mjs --bundle",
+    "ai-docs": "node generate-ai-docs.mjs"
   }
 }

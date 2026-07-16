@@ -1,12 +1,3 @@
-# UseMods - Full Documentation
-
-Complete documentation for all UseMods functions, optimized for AI and LLM consumption.
-
-Base URL: https://usemods.com
-Index: https://usemods.com/llms.txt
-
----
-
 # UseMods Documentation
 
 Complete documentation for all UseMods functions, optimized for AI and LLM consumption.

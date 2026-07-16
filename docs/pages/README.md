@@ -86,6 +86,18 @@ These documentation files are optimized for:
 - **Documentation Tools** - Standard markdown format that works with documentation generators
 - **Search** - Well-organized headings and keywords for easy discovery
 
+### Public AI discovery endpoints
+
+Published on the website for crawlers and coding agents:
+
+- https://usemods.com/llms.txt — curated index ([llmstxt.org](https://llmstxt.org))
+- https://usemods.com/llms-full.txt — full documentation corpus
+- https://usemods.com/docs/all.md — all modules in one markdown file
+- https://usemods.com/docs/{module}.md — per-module markdown (e.g. `/docs/formatters.md`)
+- https://usemods.com/robots.txt — allows major AI crawlers and advertises the files above
+
+Regenerate with `pnpm --prefix docs ai-docs`.
+
 ## Contributing
 
 When adding new functions to UseMods:
