@@ -1,4 +1,14 @@
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
+
+async function generateAiDiscoveryAssets(): Promise<void> {
+  const generatorPath = resolve(import.meta.dirname, "../docs/generate-ai-docs.mjs");
+  const generator = await import(pathToFileURL(generatorPath).href) as {
+    generateAiDiscoveryAssets: () => Promise<void>;
+  };
+  await generator.generateAiDiscoveryAssets();
+}
 
 export default defineNuxtConfig({
   experimental: {
@@ -21,10 +31,33 @@ export default defineNuxtConfig({
     "usemods-nuxt",
   ],
 
+  // Keep llms.txt / markdown corpus / sitemap fresh on every website build
+  hooks: {
+    "build:before": async () => {
+      await generateAiDiscoveryAssets();
+    },
+  },
+
   app: {
     head: {
       htmlAttrs: { lang: "en" },
-      meta: [{ property: "og:image", content: "/og-image.jpg" }],
+      title: "UseMods",
+      meta: [
+        {
+          name: "description",
+          content:
+            "Zero-dependency JavaScript utilities for frontend and SSR — formatters, validators, generators, modifiers, and browser helpers.",
+        },
+        { property: "og:image", content: "/og-image.jpg" },
+        { name: "robots", content: "index, follow, max-snippet:-1" },
+        { name: "ai-content", content: "index" },
+      ],
+      link: [
+        { rel: "alternate", type: "text/plain", href: "/llms.txt", title: "LLMs.txt" },
+        { rel: "alternate", type: "text/plain", href: "/llms-full.txt", title: "LLMs full documentation" },
+        { rel: "alternate", type: "text/markdown", href: "/docs/all.md", title: "Documentation (Markdown)" },
+        { rel: "sitemap", href: "/sitemap.xml", type: "application/xml" },
+      ],
     },
   },
 
@@ -65,12 +98,20 @@ export default defineNuxtConfig({
       cors: true,
       headers: {
         "Cache-Control": "public, max-age=3600",
+        "Content-Type": "text/plain; charset=utf-8",
       },
     },
     "/llms-full.txt": {
       cors: true,
       headers: {
         "Cache-Control": "public, max-age=3600",
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    },
+    "/robots.txt": {
+      headers: {
+        "Cache-Control": "public, max-age=3600",
+        "Content-Type": "text/plain; charset=utf-8",
       },
     },
   },

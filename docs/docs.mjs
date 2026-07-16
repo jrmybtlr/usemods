@@ -488,17 +488,42 @@ async function generateSitemap() {
     sitemapContent += '  </url>\n'
   }
 
-  // Add doc pages (excluding tailwind)
+  // Add doc pages (excluding tailwind) + markdown mirrors for AI agents
   const docFiles = files.filter(file => file !== 'tailwind')
   for (const file of docFiles) {
-    const srcPath = join(nuxtWebPath, '../src', `${file}.ts`)
-    const lastmod = await getFileModTime(srcPath)
+    const srcFilePath = join(nuxtWebPath, '../src', `${file}.ts`)
+    const lastmod = await getFileModTime(srcFilePath)
 
     sitemapContent += '  <url>\n'
     sitemapContent += `    <loc>${baseUrl}/docs/${file}</loc>\n`
     sitemapContent += `    <lastmod>${lastmod}</lastmod>\n`
     sitemapContent += '    <changefreq>weekly</changefreq>\n'
     sitemapContent += '    <priority>0.8</priority>\n'
+    sitemapContent += '  </url>\n'
+
+    sitemapContent += '  <url>\n'
+    sitemapContent += `    <loc>${baseUrl}/docs/${file}.md</loc>\n`
+    sitemapContent += `    <lastmod>${lastmod}</lastmod>\n`
+    sitemapContent += '    <changefreq>weekly</changefreq>\n'
+    sitemapContent += '    <priority>0.7</priority>\n'
+    sitemapContent += '  </url>\n'
+  }
+
+  // AI discovery entry points
+  const aiFiles = [
+    { path: '/llms.txt', priority: '0.9' },
+    { path: '/llms-full.txt', priority: '0.8' },
+    { path: '/docs/all.md', priority: '0.8' },
+    { path: '/intro/introduction.md', priority: '0.7' },
+    { path: '/intro/installation.md', priority: '0.7' },
+  ]
+
+  for (const page of aiFiles) {
+    sitemapContent += '  <url>\n'
+    sitemapContent += `    <loc>${baseUrl}${page.path}</loc>\n`
+    sitemapContent += `    <lastmod>${currentDate}</lastmod>\n`
+    sitemapContent += '    <changefreq>weekly</changefreq>\n'
+    sitemapContent += `    <priority>${page.priority}</priority>\n`
     sitemapContent += '  </url>\n'
   }
 
@@ -604,25 +629,100 @@ ${docLinksString}
   await writeFile(navigationPath, navigationContent)
 }
 
+/**
+ * Strip YAML frontmatter from markdown content.
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
+ */
+function stripFrontmatter(content) {
+  return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
+}
+
+/**
+ * Publish AI-friendly markdown into nuxt-web/public so Cloudflare/static
+ * hosting can serve it without filesystem access in Workers.
+ */
+async function generatePublicAiDocs() {
+  const docsPagesDir = resolve(import.meta.dirname, 'pages')
+  const publicDocsDir = join(nuxtWebPath, 'public', 'docs')
+  const publicIntroDir = join(nuxtWebPath, 'public', 'intro')
+
+  await fsPromises.mkdir(publicDocsDir, { recursive: true })
+  await fsPromises.mkdir(publicIntroDir, { recursive: true })
+
+  const docModules = files.filter(file => file !== 'tailwind')
+  const tocEntries = []
+
+  for (const file of docModules) {
+    const sourcePath = join(docsPagesDir, `${file}.md`)
+    try {
+      const content = await readFile(sourcePath, 'utf8')
+      await writeFile(join(publicDocsDir, `${file}.md`), content)
+
+      const titleMatch = content.match(/^#\s+(.+)$/m)
+      tocEntries.push({
+        name: file,
+        title: titleMatch?.[1]?.trim() || file,
+        content,
+      })
+    }
+    catch {
+      console.warn(`Warning: AI docs source missing: ${sourcePath}`)
+    }
+  }
+
+  // Intro pages (strip Nuxt Content frontmatter for cleaner LLM consumption)
+  const introSources = [
+    { source: join(nuxtWebPath, 'content', '1.intro', '1.introduction.md'), dest: 'introduction.md' },
+    { source: join(nuxtWebPath, 'content', '1.intro', '2.installation.md'), dest: 'installation.md' },
+  ]
+
+  for (const intro of introSources) {
+    try {
+      const content = await readFile(intro.source, 'utf8')
+      await writeFile(join(publicIntroDir, intro.dest), stripFrontmatter(content))
+    }
+    catch {
+      console.warn(`Warning: intro markdown missing: ${intro.source}`)
+    }
+  }
+
+  // Combined corpus for /docs/all.md
+  let allMarkdownContent = `# UseMods Documentation\n\n`
+  allMarkdownContent += `Complete documentation for all UseMods functions, optimized for AI and LLM consumption.\n\n`
+  allMarkdownContent += `## Table of Contents\n\n`
+  for (const entry of tocEntries) {
+    allMarkdownContent += `- [${entry.title}](#${entry.name})\n`
+  }
+  allMarkdownContent += `\n---\n\n`
+
+  for (const entry of tocEntries) {
+    allMarkdownContent += entry.content
+    allMarkdownContent += `\n---\n\n`
+  }
+
+  await writeFile(join(publicDocsDir, 'all.md'), allMarkdownContent)
+  console.log('Generated public AI markdown docs')
+}
+
 async function generateLLMsTxt() {
   const baseUrl = 'https://usemods.com'
-  
+
   // Hardcoded introLinks (same as in generateNavigation)
   const introLinks = [
     {
-      id: "introduction",
-      path: "/intro/introduction",
-      title: "Introduction",
-      lead: "UseMods is a mighty set of missing functions for your frontend, framework and SSR applications. All the bells, whistles, and scooter mirrors you'll ever need.",
+      id: 'introduction',
+      path: '/intro/introduction.md',
+      title: 'Introduction',
+      lead: 'What UseMods is and why it exists.',
     },
     {
-      id: "installation",
-      path: "/intro/installation",
-      title: "Installation",
-      lead: "Running and loving mods",
+      id: 'installation',
+      path: '/intro/installation.md',
+      title: 'Installation',
+      lead: 'Install with npm, pnpm, yarn, bun, or the Nuxt module.',
     },
   ]
-  
+
   // Read docLinks from source files (same approach as generateNavigation)
   const docLinks = []
   for (const file of files) {
@@ -634,84 +734,79 @@ async function generateLLMsTxt() {
     const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
 
     docLinks.push({
-      path: `/docs/${file}`,
+      path: `/docs/${file}.md`,
       title: metadata.title || file,
       lead: metadata.description || '',
     })
   }
-  
-  // Build LLMs.txt content
+
+  // llmstxt.org format: H1, blockquote summary, then H2 file lists
   let llmsContent = `# UseMods\n\n`
-  llmsContent += `UseMods is a mighty set of missing functions for your frontend, framework and SSR applications. All the bells, whistles, and scooter mirrors you'll ever need.\n\n`
-  
-  // Getting Started section
-  if (introLinks.length > 0) {
-    llmsContent += `## Getting Started\n\n`
-    for (const link of introLinks) {
-      llmsContent += `[${link.title}](${baseUrl}${link.path}) - ${link.lead}\n`
-    }
-    llmsContent += `\n`
+  llmsContent += `> Zero-dependency JavaScript utility library with formatters, validators, generators, modifiers, and browser helpers for frontend and SSR apps.\n\n`
+  llmsContent += `UseMods works with Nuxt, Next.js, Vue, React, Svelte, Solid, and Node. Prefer the markdown links below for LLM context; HTML docs are at the same paths without \`.md\`.\n\n`
+  llmsContent += `- Package: \`usemods\` on npm\n`
+  llmsContent += `- Nuxt module: \`usemods-nuxt\`\n`
+  llmsContent += `- License: MIT\n`
+  llmsContent += `- Repository: https://github.com/LittleFoxCompany/usemods\n\n`
+
+  llmsContent += `## Getting Started\n\n`
+  for (const link of introLinks) {
+    llmsContent += `- [${link.title}](${baseUrl}${link.path}): ${link.lead}\n`
   }
-  
-  // Documentation section
-  if (docLinks.length > 0) {
-    llmsContent += `## Documentation\n\n`
-    for (const link of docLinks) {
-      llmsContent += `[${link.title}](${baseUrl}${link.path}) - ${link.lead}\n`
-    }
-    llmsContent += `\n`
+  llmsContent += `\n`
+
+  llmsContent += `## Documentation\n\n`
+  for (const link of docLinks) {
+    const note = link.lead ? `: ${link.lead}` : ''
+    llmsContent += `- [${link.title}](${baseUrl}${link.path})${note}\n`
   }
-  
-  // API section
-  llmsContent += `## API\n\n`
-  llmsContent += `[All Documentation](${baseUrl}/api/docs/all.md) - Complete documentation in markdown format\n`
-  llmsContent += `[Documentation Index](${baseUrl}/api/docs/) - List of all available documentation files\n`
-  
-  // Write to public directory
+  llmsContent += `\n`
+
+  llmsContent += `## Full corpus\n\n`
+  llmsContent += `- [Complete documentation](${baseUrl}/docs/all.md): All modules in one markdown file\n`
+  llmsContent += `- [llms-full.txt](${baseUrl}/llms-full.txt): Full documentation corpus for RAG / agent ingest\n`
+  llmsContent += `- [Documentation index API](${baseUrl}/api/docs/): JSON index of available markdown files\n\n`
+
+  llmsContent += `## Optional\n\n`
+  llmsContent += `- [HTML documentation home](${baseUrl}/intro/introduction): Human-oriented docs UI\n`
+  llmsContent += `- [Sitemap](${baseUrl}/sitemap.xml): All indexable HTML pages\n`
+  llmsContent += `- [GitHub repository](https://github.com/LittleFoxCompany/usemods): Source code and issues\n`
+
   const publicDir = join(nuxtWebPath, 'public')
-  try {
-    await fsPromises.mkdir(publicDir, { recursive: true })
-  }
-  catch {
-    // Directory might already exist
-  }
-  
+  await fsPromises.mkdir(publicDir, { recursive: true })
   await writeFile(join(publicDir, 'llms.txt'), llmsContent)
   console.log('Generated llms.txt')
 }
 
 async function generateLLMsFullTxt() {
   const baseUrl = 'https://usemods.com'
-  const contentDir = join(nuxtWebPath, 'content', '2.docs')
-  const allMdPath = join(contentDir, 'all.md')
-  
-  // Read the all.md file
+  const allMdPath = join(nuxtWebPath, 'public', 'docs', 'all.md')
+
+  // Prefer the rich public corpus; fall back to generated content docs
   let allMarkdownContent = ''
   try {
     allMarkdownContent = await readFile(allMdPath, 'utf8')
   }
   catch {
-    // If all.md doesn't exist yet, generate it first
-    await generateAllMarkdown()
-    allMarkdownContent = await readFile(allMdPath, 'utf8')
+    await generatePublicAiDocs()
+    try {
+      allMarkdownContent = await readFile(allMdPath, 'utf8')
+    }
+    catch {
+      await generateAllMarkdown()
+      allMarkdownContent = await readFile(join(nuxtWebPath, 'content', '2.docs', 'all.md'), 'utf8')
+    }
   }
-  
-  // Build LLMs-full.txt content with header
+
   let llmsFullContent = `# UseMods - Full Documentation\n\n`
   llmsFullContent += `Complete documentation for all UseMods functions, optimized for AI and LLM consumption.\n\n`
-  llmsFullContent += `Base URL: ${baseUrl}\n\n`
+  llmsFullContent += `Base URL: ${baseUrl}\n`
+  llmsFullContent += `Index: ${baseUrl}/llms.txt\n\n`
   llmsFullContent += `---\n\n`
   llmsFullContent += allMarkdownContent
-  
-  // Write to public directory
+
   const publicDir = join(nuxtWebPath, 'public')
-  try {
-    await fsPromises.mkdir(publicDir, { recursive: true })
-  }
-  catch {
-    // Directory might already exist
-  }
-  
+  await fsPromises.mkdir(publicDir, { recursive: true })
   await writeFile(join(publicDir, 'llms-full.txt'), llmsFullContent)
   console.log('Generated llms-full.txt')
 }
@@ -722,22 +817,29 @@ async function generateAll() {
   await copyFile(join(srcPath, 'maps.ts'), join(nuxtWebPath, 'utils/mods/maps.ts'))
   await generateNavigation()
   await generateAllMarkdown()
+  await generatePublicAiDocs()
   await generateSitemap()
   await generateLLMsTxt()
   await generateLLMsFullTxt()
 }
 
 async function clearAll() {
-  const [webFiles, docFiles, contentFiles] = await Promise.all([
+  const [webFiles, docFiles, contentFiles, publicDocFiles, publicIntroFiles] = await Promise.all([
     readdir(join(nuxtWebPath, 'utils/mods')).catch(() => []),
     readdir(join(nuxtWebPath, 'pages/docs')).catch(() => []),
     readdir(join(nuxtWebPath, 'content/2.docs')).catch(() => []),
+    readdir(join(nuxtWebPath, 'public/docs')).catch(() => []),
+    readdir(join(nuxtWebPath, 'public/intro')).catch(() => []),
   ])
+
+  const publicDocNames = new Set([...files.map(file => `${file}.md`), 'all.md'])
 
   await Promise.all([
     ...webFiles.filter(file => file.endsWith('.ts')).map(file => unlink(join(nuxtWebPath, 'utils/mods', file))),
     ...docFiles.filter(file => file.endsWith('.vue') && files.includes(basename(file, '.vue'))).map(file => unlink(join(nuxtWebPath, 'pages/docs', file))),
     ...contentFiles.filter(file => (file.endsWith('.md') && files.includes(basename(file, '.md'))) || file === 'all.md').map(file => unlink(join(nuxtWebPath, 'content/2.docs', file))),
+    ...publicDocFiles.filter(file => publicDocNames.has(file)).map(file => unlink(join(nuxtWebPath, 'public/docs', file))),
+    ...publicIntroFiles.filter(file => file === 'introduction.md' || file === 'installation.md').map(file => unlink(join(nuxtWebPath, 'public/intro', file))),
   ])
 }
 
