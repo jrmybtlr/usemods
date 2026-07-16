@@ -92,7 +92,12 @@
     ],
     "overrides": {
       "tailwindcss": "4.2.2",
-      "usemods": "workspace:*"
+      "usemods": "workspace:*",
+      "defu": "6.1.5",
+      "node-forge": "1.4.0",
+      "unhead": "2.1.13",
+      "serialize-javascript": "7.0.5",
+      "picomatch@^4.0.0": "4.0.4"
     }
   }
 }
