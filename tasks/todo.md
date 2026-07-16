@@ -27,3 +27,4 @@ Make usemods.com easy for AI crawlers/agents to find, understand, and cite.
 - PR: https://github.com/jrmybtlr/usemods/pull/206
 - Validated llms.txt shape, robots.txt AI allows, public docs presence; eslint clean on new server routes + app.vue
 - AI assets regenerate on build: Nuxt `build:before` hook, `nuxt-web` prebuild/pregenerate/predev, root `deploy`, and `docs` prebuild
+- Fixed Workers Builds failure: prebuild now emits gitignored `utils/navigation.ts`; removed `.md.ts` server routes that hijacked HTML doc prerender

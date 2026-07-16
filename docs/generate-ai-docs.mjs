@@ -1,6 +1,6 @@
 /**
- * Regenerate only AI discovery assets (llms.txt, public markdown)
- * without rebuilding the full Vue docs surface.
+ * Regenerate website build prerequisites for AI discovery and navigation.
+ * Safe for Workers/CI: no rollup dependency (unlike docs.mjs --bundle).
  */
 import { resolve, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -16,6 +16,88 @@ const files = ['formatters', 'modifiers', 'generators', 'actions', 'numbers', 'd
 
 function stripFrontmatter(content) {
   return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
+}
+
+function escapeForDoubleQuotedString(value) {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+}
+
+/**
+ * navigation.ts is gitignored and required by the Nuxt app at build time.
+ */
+async function generateNavigation() {
+  const docLinks = []
+
+  for (const file of files) {
+    if (file === 'tailwind') continue
+
+    const filePath = join(srcPath, `${file}.ts`)
+    const content = await fsPromises.readFile(filePath, 'utf8')
+    const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
+
+    const link = {
+      path: `/docs/${file}`,
+      title: metadata.title || file,
+      lead: metadata.description || '',
+    }
+
+    if (metadata.lead) {
+      link.icon = metadata.lead
+    }
+
+    docLinks.push(link)
+  }
+
+  const sortedDocLinks = files
+    .filter(file => file !== 'tailwind')
+    .map(file => docLinks.find(link => link.path === `/docs/${file}`))
+    .filter(Boolean)
+
+  const docLinksString = sortedDocLinks.map((link) => {
+    const parts = [
+      `    path: "${link.path}",`,
+      `    title: "${link.title}",`,
+      `    lead: "${escapeForDoubleQuotedString(link.lead)}",`,
+    ]
+    if (link.icon) {
+      parts.push(`    icon: "${escapeForDoubleQuotedString(link.icon)}",`)
+    }
+    return `  {\n${parts.join('\n')}\n  }`
+  }).join(',\n')
+
+  const navigationContent = `interface NavLink {
+  id?: string;
+  path: string;
+  title: string;
+  lead: string;
+  icon?: string;
+}
+
+export const introLinks: NavLink[] = [
+  {
+    id: "introduction",
+    path: "/intro/introduction",
+    title: "Introduction",
+    lead: "UseMods is a mighty set of missing functions for your frontend, framework and SSR applications. All the bells, whistles, and scooter mirrors you'll ever need.",
+  },
+  {
+    id: "installation",
+    path: "/intro/installation",
+    title: "Installation",
+    lead: "Running and loving mods",
+  },
+];
+
+export const docLinks: NavLink[] = [
+${docLinksString}
+];
+`
+
+  await fsPromises.mkdir(join(nuxtWebPath, 'utils'), { recursive: true })
+  await fsPromises.writeFile(join(nuxtWebPath, 'utils', 'navigation.ts'), navigationContent)
+  console.log('Generated utils/navigation.ts')
 }
 
 async function generatePublicAiDocs() {
@@ -164,6 +246,8 @@ async function generateSitemap() {
 }
 
 export async function generateAiDiscoveryAssets() {
+  // Website build requires navigation.ts (gitignored generated file)
+  await generateNavigation()
   await generatePublicAiDocs()
   await generateLLMsTxt()
   await generateLLMsFullTxt()
