@@ -16,7 +16,7 @@ Make usemods.com easy for AI crawlers/agents to find, understand, and cite.
 - [x] Add HTML head discovery links + SoftwareApplication JSON-LD in `nuxt.config.ts` / `app.vue`
 - [x] Point `/api/docs` at the static public docs (or keep generating into content and public)
 - [x] Regenerate `llms.txt` / ensure public assets are current
-- [ ] Commit, push, open PR
+- [x] Commit, push, open PR
 
 ## Review
 - Spec-compliant `/llms.txt` with markdown mirrors at `/docs/*.md` and `/intro/*.md`
@@ -24,3 +24,5 @@ Make usemods.com easy for AI crawlers/agents to find, understand, and cite.
 - JSON-LD WebSite + SoftwareApplication added site-wide
 - Rich docs from `docs/pages` published to `public/docs` and inlined into `llms-full.txt`
 - Regenerator: `pnpm --prefix docs ai-docs`
+- PR: https://github.com/jrmybtlr/usemods/pull/206
+- Validated llms.txt shape, robots.txt AI allows, public docs presence; eslint clean on new server routes + app.vue
