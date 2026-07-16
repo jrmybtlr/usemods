@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "node docs.mjs --watch",
+    "ai-docs": "node generate-ai-docs.mjs",
+    "prebuild": "node generate-ai-docs.mjs",
     "build": "node docs.mjs --build",
     "generate": "node docs.mjs --build",
-    "bundle": "node docs.mjs --bundle",
-    "ai-docs": "node generate-ai-docs.mjs"
+    "bundle": "node docs.mjs --bundle"
   }
 }

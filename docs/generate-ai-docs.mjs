@@ -3,6 +3,7 @@
  * without rebuilding the full Vue docs surface.
  */
 import { resolve, join } from 'path'
+import { fileURLToPath } from 'url'
 import { promises as fsPromises } from 'fs'
 
 const root = resolve(import.meta.dirname, '..')
@@ -125,7 +126,54 @@ async function generateLLMsFullTxt() {
   console.log('Generated llms-full.txt')
 }
 
-await generatePublicAiDocs()
-await generateLLMsTxt()
-await generateLLMsFullTxt()
-console.log('AI discovery assets ready')
+async function generateSitemap() {
+  const baseUrl = 'https://usemods.com'
+  const currentDate = new Date().toISOString()
+  const docModules = files.filter(file => file !== 'tailwind')
+
+  let sitemapContent = '<?xml version="1.0" encoding="UTF-8"?>\n'
+  sitemapContent += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+
+  const urls = [
+    { path: '/', priority: '1.0', changefreq: 'weekly' },
+    { path: '/intro/introduction', priority: '0.9', changefreq: 'monthly' },
+    { path: '/intro/installation', priority: '0.9', changefreq: 'monthly' },
+    ...docModules.flatMap(file => [
+      { path: `/docs/${file}`, priority: '0.8', changefreq: 'weekly' },
+      { path: `/docs/${file}.md`, priority: '0.7', changefreq: 'weekly' },
+    ]),
+    { path: '/llms.txt', priority: '0.9', changefreq: 'weekly' },
+    { path: '/llms-full.txt', priority: '0.8', changefreq: 'weekly' },
+    { path: '/docs/all.md', priority: '0.8', changefreq: 'weekly' },
+    { path: '/intro/introduction.md', priority: '0.7', changefreq: 'weekly' },
+    { path: '/intro/installation.md', priority: '0.7', changefreq: 'weekly' },
+  ]
+
+  for (const page of urls) {
+    sitemapContent += '  <url>\n'
+    sitemapContent += `    <loc>${baseUrl}${page.path}</loc>\n`
+    sitemapContent += `    <lastmod>${currentDate}</lastmod>\n`
+    sitemapContent += `    <changefreq>${page.changefreq}</changefreq>\n`
+    sitemapContent += `    <priority>${page.priority}</priority>\n`
+    sitemapContent += '  </url>\n'
+  }
+
+  sitemapContent += '</urlset>\n'
+  await fsPromises.writeFile(join(nuxtWebPath, 'public', 'sitemap.xml'), sitemapContent)
+  console.log('Generated sitemap.xml')
+}
+
+export async function generateAiDiscoveryAssets() {
+  await generatePublicAiDocs()
+  await generateLLMsTxt()
+  await generateLLMsFullTxt()
+  await generateSitemap()
+  console.log('AI discovery assets ready')
+}
+
+const isDirectRun = process.argv[1]
+  && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))
+
+if (isDirectRun) {
+  await generateAiDiscoveryAssets()
+}

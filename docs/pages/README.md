@@ -96,7 +96,7 @@ Published on the website for crawlers and coding agents:
 - https://usemods.com/docs/{module}.md — per-module markdown (e.g. `/docs/formatters.md`)
 - https://usemods.com/robots.txt — allows major AI crawlers and advertises the files above
 
-Regenerate with `pnpm --prefix docs ai-docs`.
+These files regenerate automatically on website `build` / `generate` / `dev` (via Nuxt `build:before` and package pre-scripts). Manual: `pnpm --prefix docs ai-docs`.
 
 ## Contributing
 

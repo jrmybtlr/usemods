@@ -1,4 +1,14 @@
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
+
+async function generateAiDiscoveryAssets(): Promise<void> {
+  const generatorPath = resolve(import.meta.dirname, "../docs/generate-ai-docs.mjs");
+  const generator = await import(pathToFileURL(generatorPath).href) as {
+    generateAiDiscoveryAssets: () => Promise<void>;
+  };
+  await generator.generateAiDiscoveryAssets();
+}
 
 export default defineNuxtConfig({
   experimental: {
@@ -20,6 +30,13 @@ export default defineNuxtConfig({
     "nuxt-shiki",
     "usemods-nuxt",
   ],
+
+  // Keep llms.txt / markdown corpus / sitemap fresh on every website build
+  hooks: {
+    "build:before": async () => {
+      await generateAiDiscoveryAssets();
+    },
+  },
 
   app: {
     head: {
