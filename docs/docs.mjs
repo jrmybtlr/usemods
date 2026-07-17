@@ -15,7 +15,7 @@ const srcPath = resolve(import.meta.dirname, '../src')
 const nuxtWebPath = resolve(import.meta.dirname, '../nuxt-web')
 
 // Functions
-const functionPattern = /\/\*\*[\s\S]*?\*\/\s*(export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\([\s\S]*?\)\s*:\s*([\w<>,[\]\s]+(?:\{[\s\S]*?})?)?)/gms
+const functionPattern = /\/\*\*[\s\S]*?\*\/\s*(export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\([\s\S]*?\)\s*:\s*([\w<>,[\]\s|]+(?:\{[\s\S]*?})?)?)/gms
 const metadataPattern = /\/\/\s+(title|description|lead):\s+([^\r\n]*)/g
 const jsdocPattern = /\/\*\*([\s\S]*?)\*\//g
 
@@ -134,12 +134,44 @@ async function generateVue(file, name) {
   const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
   await copyFile(file, join(nuxtWebPath, 'utils/mods', basename(file)))
 
-  // If Tailwind stop here
-  // If you're reading this...it's a great first fix to contribute to the project.
-
-  if (name === '11.tailwind') return
-
   const fileBaseName = basename(file, extname(file))
+
+  // Tailwind has no per-function playgrounds yet — emit a title-only page.
+  if (fileBaseName === 'tailwind') {
+    const title = metadata.title || 'Tailwind'
+    const description = metadata.description || ''
+    const vueContent = `<template>
+  <DocsLayout>
+    <PageTitle>
+      <h1>${title}</h1>
+      <p>${description}</p>
+    </PageTitle>
+
+  </DocsLayout>
+</template>
+
+<script setup lang="ts">
+import DocsLayout from '~/components/DocsLayout.vue'
+import PageTitle from '~/components/content/PageTitle.vue'
+
+const toc = []
+const pageId = 'tailwind'
+
+provide('toc', toc)
+provide('pageId', pageId)
+</script>
+`
+    const tailwindDocsDir = join(nuxtWebPath, 'pages', 'docs')
+    try {
+      await fsPromises.mkdir(tailwindDocsDir, { recursive: true })
+    }
+    catch {
+      // Directory might already exist
+    }
+    await writeFile(join(tailwindDocsDir, 'tailwind.vue'), vueContent)
+    return
+  }
+
   const category = fileBaseName
   const componentDir = componentDirMap[category] || category
 
@@ -299,7 +331,9 @@ async function generateVue(file, name) {
   vueContent += '<script setup lang="ts">\n'
   vueContent += 'import DocsLayout from \'~/components/DocsLayout.vue\'\n'
   vueContent += 'import PageTitle from \'~/components/content/PageTitle.vue\'\n'
-  vueContent += 'import PageFunction from \'~/components/content/PageFunction.vue\'\n'
+  if (componentUsages.length > 0) {
+    vueContent += 'import PageFunction from \'~/components/content/PageFunction.vue\'\n'
+  }
   for (const importLine of Array.from(imports).sort()) {
     vueContent += importLine + '\n'
   }
@@ -327,10 +361,10 @@ async function generateMarkdown(file, name) {
   const content = await readFile(file, 'utf8')
   const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
 
-  // If Tailwind stop here (same as Vue generation)
-  if (name === '11.tailwind') return
-
   const fileBaseName = basename(file, extname(file))
+
+  // Tailwind has a hand-maintained docs page (same as Vue generation)
+  if (fileBaseName === 'tailwind') return
 
   // Functions
   const functions = [...content.matchAll(functionPattern)]

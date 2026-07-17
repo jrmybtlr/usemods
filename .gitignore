@@ -17,6 +17,9 @@ dist
 .output
 sw.*
 
+# Generated lint reports (machine-specific absolute paths)
+**/dslint-report.json
+
 # Environment variables
 .env
 

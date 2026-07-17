@@ -913,7 +913,7 @@ This file contains functions that are related to numbers.
 **Parameters:**
 - `numbers` (`number[]`)
 
-**Returns:** `number[]`
+**Returns:** `number[] | null`
 
 ### min
 
@@ -987,7 +987,7 @@ A collection of functions for formatting, filtering and taming wild arrays and o
 - `items` (`object | string[] | number[]`)
 - `options?` (`{ property?: string, order?: 'asc' | 'desc' }`)
 
-**Returns:** `object`
+**Returns:** `object | string[] | number[]`
 
 ### dataReverse
 
@@ -1150,12 +1150,12 @@ A collection of validators for common data types
 
 ### parseDate
 
-**Description:** Coerce a value to a {
+**Description:** Coerce a value to a Date when it represents a valid instant; otherwise `null`.
 
 **Parameters:**
 - `value` (`unknown`)
 
-**Returns:** `Date`
+**Returns:** `Date | null`
 
 ### isDate
 
@@ -1408,19 +1408,19 @@ Don't forget to add a mousemove event listener to the window
 
 **Description:** Detect the current color scheme (Light or Dark)
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 ### detectUserTimezone
 
 **Description:** Detect the current user's Timezone
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 ### detectBreakpoint
 
 **Description:** Detect the current breakpoint based on Tailwind CSS breakpoints
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 Add a listener to the window resize event to detect changes
 
@@ -1431,7 +1431,7 @@ Add a listener to the window resize event to detect changes
 **Parameters:**
 - `element` (`HTMLElement`)
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 Add a listener to the window resize event to detect changes
 
@@ -1439,13 +1439,13 @@ Add a listener to the window resize event to detect changes
 
 **Description:** Detect the current network status of the user (Online or Offline)
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 ### detectUrl
 
 **Description:** Returns the current URL
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 ### detectUrlPath
 
@@ -1454,7 +1454,7 @@ Add a listener to the window resize event to detect changes
 **Parameters:**
 - `format` (`'array' | 'string' = 'array'`)
 
-**Returns:** `string[]`
+**Returns:** `string[] | string | null`
 
 ### detectUrlParams
 
@@ -1469,25 +1469,25 @@ Add a listener to the window resize event to detect changes
 
 **Description:** Returns a value from the URL hash by name
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 ### detectHost
 
 **Description:** Returns the current host or domain name from the URL
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 ### detectHostName
 
 **Description:** Returns the current hostname from the URL
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 ### detectPort
 
 **Description:** Returns the current port
 
-**Returns:** `string`
+**Returns:** `string | null`
 
 
 ---
@@ -1511,7 +1511,7 @@ Client-side detections user's machines.
 **Parameters:**
 - `userAgent?` (`string`)
 
-**Returns:** `object`
+**Returns:** `object | string`
 
 ### addDeviceClasses
 

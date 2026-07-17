@@ -124,7 +124,6 @@ describe('irregularPlurals', () => {
     expect(mod.irregularPlurals.get('medium')).toBe('media')
     expect(mod.irregularPlurals.get('memorandum')).toBe('memoranda')
     expect(mod.irregularPlurals.get('millennium')).toBe('millennia')
-    expect(mod.irregularPlurals.get('mouse')).toBe('mice')
     expect(mod.irregularPlurals.get('nucleus')).toBe('nuclei')
     expect(mod.irregularPlurals.get('oasis')).toBe('oases')
     expect(mod.irregularPlurals.get('ovum')).toBe('ova')

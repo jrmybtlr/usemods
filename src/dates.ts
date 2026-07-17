@@ -8,7 +8,6 @@ export type DateInput = Date | string | number
 
 export interface LocaleTimeZone {
   locale?: string
-  timeZone?: string
 }
 
 export type DateRangeOptions = {
@@ -21,10 +20,9 @@ type CalendarParts = {
   day: number
 }
 
-function baseLocaleTimeZone(options?: LocaleTimeZone): { locale: string, timeZone: string | undefined } {
+function baseLocaleTimeZone(options?: LocaleTimeZone): { locale: string } {
   return {
     locale: options?.locale ?? 'en-US',
-    timeZone: options?.timeZone,
   }
 }
 
@@ -106,7 +104,7 @@ function timeFromEnglishCompact(
 
 /**
  * Show how long ago or how far away a date is, like "Now", "1 min ago", or "in 4 months". English locales get compact labels. Other locales use Intl.RelativeTimeFormat.
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat Intl.RelativeTimeFormat} (MDN)
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat
  */
 export function timeFrom(
   date: DateInput,

@@ -119,7 +119,7 @@
 
     <PageFunction
       name="parseDate"
-      description="Coerce a value to a {"
+      description="Coerce a value to a Date when it represents a valid instant; otherwise `null`."
       params='[{"name":"value","type":"unknown"}]'
     >
       <ParseDate />

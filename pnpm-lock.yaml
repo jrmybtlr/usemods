@@ -4677,6 +4677,9 @@ packages:
   usemods-nuxt@1.16.0:
     resolution: {integrity: sha512-9UEa4gpiCsi+zriNn33O+IVqQRxTOZ/3J/hNaG5auy7HULMeZsUHdRiOCpg15SBpv6vKu63uJbjyqm5EY630gA==}
 
+  usemods@1.16.0:
+    resolution: {integrity: sha512-UA+mpJzowftS2Lf9dXEK0S2BAKoUHitPUhEsGUPdHlmULlHv2S3UXjrDre/cPJDbhqFgjG596Uh2nUlHYgxYMQ==}
+
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -9978,9 +9981,11 @@ snapshots:
   usemods-nuxt@1.16.0(magicast@0.5.2):
     dependencies:
       '@nuxt/kit': 4.4.2(magicast@0.5.2)
-      usemods: 'link:'
+      usemods: 1.16.0
     transitivePeerDependencies:
       - magicast
+
+  usemods@1.16.0: {}
 
   util-deprecate@1.0.2: {}
 
