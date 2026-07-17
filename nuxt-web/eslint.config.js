@@ -14,6 +14,11 @@ export default withNuxt(
   },
   {
     plugins: { tailwindcss: pluginTailwindCSS },
+    settings: {
+      tailwindcss: {
+        cssConfigPath: './assets/css/tailwind.css',
+      },
+    },
     rules: pluginTailwindCSS.configs.recommended.rules,
   },
 )

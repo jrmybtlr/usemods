@@ -14,7 +14,7 @@
     "nuxt-module:dev": "pnpm i --prefix ./nuxt-module && pnpm run --prefix ./nuxt-module dev",
     "nuxt-module:release": "node sync-versions.mjs && pnpm run --prefix ./nuxt-module release",
     "prepublishOnly": "pnpm run --prefix docs bundle",
-    "deploy": "pnpm dlx nuxthub deploy --prefix ./nuxt-web"
+    "deploy": "pnpm run --prefix docs ai-docs && pnpm dlx nuxthub deploy --prefix ./nuxt-web"
   },
   "keywords": [
     "bun",
@@ -64,40 +64,25 @@
     "url": "git+https://github.com/LittleFoxCompany/usemods.git"
   },
   "devDependencies": {
-    "@nuxt/kit": "^4.4.2",
+    "@nuxt/kit": "^4.4.8",
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/node": "^25.5.0",
-    "@types/web": "^0.0.344",
-    "@vitest/coverage-v8": "^4.1.0",
+    "@types/node": "^26.1.0",
+    "@types/web": "^0.0.352",
+    "@vitest/coverage-v8": "^4.1.9",
     "changelogen": "^0.6.2",
     "fs-extra": "^11.3.4",
     "globals": "^17.4.0",
     "rollup": "^4.59.0",
-    "rollup-plugin-typescript2": "^0.36.0",
+    "rollup-plugin-typescript2": "^0.37.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.1",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.9"
   },
   "packageManager": "pnpm@10.13.1",
   "resolutions": {
     "debug": "4.3.4",
     "supports-color": "8.1.1"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "esbuild"
-    ],
-    "overrides": {
-      "tailwindcss": "4.2.2",
-      "usemods": "workspace:*",
-      "defu": "6.1.5",
-      "node-forge": "1.4.0",
-      "unhead": "2.1.13",
-      "serialize-javascript": "7.0.5",
-      "picomatch@^4.0.0": "4.0.4"
-    }
   }
 }
