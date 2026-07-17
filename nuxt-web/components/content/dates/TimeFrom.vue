@@ -1,16 +1,16 @@
 <template>
   <Example>
-    <ExampleInputs class="flex flex-col gap-2">
-      <div class="flex max-md:flex-col gap-2 w-full items-end">
+    <ExampleInputs class="flex flex-col gap-4">
+      <div class="flex w-full gap-4 max-md:flex-col">
         <FormInput v-model="value" label="Date" type="datetime-local" />
-        <FormInput v-model="now" label='Reference "now" (optional)' type="datetime-local" />
+        <FormInput v-model="now" label="Now (optional)" type="datetime-local" />
       </div>
-      <div class="flex max-md:flex-col gap-2 w-full items-end">
-        <FormSelectLocale v-model="locale" class="w-full" />
+      <div class="flex w-full gap-4 max-md:flex-col">
+        <FormSelectLocale v-model="locale" />
         <FormInput
           v-model.number="threshold"
-          class=" w-full"
-          label="Threshold (seconds)"
+          label="Threshold"
+          info="Seconds · default 30"
           type="number"
           min="0"
         />

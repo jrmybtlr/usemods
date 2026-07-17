@@ -4,11 +4,13 @@
       :label="label"
       :for="id"
       :info="info" />
-    <div class="group relative cursor-pointer">
+    <div class="group relative cursor-pointer" :class="{ 'pointer-events-none opacity-50': disabled }">
       <select
         :id="id"
         :value="modelValue"
+        :disabled="disabled"
         class="input appearance-none"
+        v-bind="$attrs"
         @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value)">
         <slot />
       </select>
@@ -20,6 +22,10 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({
+  inheritAttrs: false,
+})
+
 defineProps({
   modelValue: {
     type: [String, Boolean, Number],
@@ -29,6 +35,10 @@ defineProps({
   },
   info: {
     type: String,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 })
 

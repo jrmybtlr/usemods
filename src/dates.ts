@@ -41,96 +41,6 @@ function resolveTimeFromNow(options?: Pick<TimeFromOptions, 'now'>): Date {
   return parsed ?? new Date()
 }
 
-/**
- * Check if a date is today
- */
-export function isToday(date: DateInput): boolean {
-  const parsed = parseDate(date)
-  if (!parsed) {
-    return false
-  }
-  const a = calendarParts(parsed)
-  const b = calendarParts(new Date())
-  return a.year === b.year && a.month === b.month && a.day === b.day
-}
-
-/**
- * Check if a date is in the past.
- */
-export function isPast(date: DateInput): boolean {
-  const parsed = parseDate(date)
-  if (!parsed) {
-    return false
-  }
-  return parsed.getTime() < Date.now()
-}
-
-/**
- * Check if a date is in the future
- */
-export function isFuture(date: DateInput): boolean {
-  const parsed = parseDate(date)
-  if (!parsed) {
-    return false
-  }
-  return parsed.getTime() > Date.now()
-}
-
-/**
- * Check if two dates fall on the same calendar day in local time.
- */
-export function isSameDay(a: DateInput, b: DateInput): boolean {
-  const parsedA = parseDate(a)
-  const parsedB = parseDate(b)
-  if (!parsedA || !parsedB) {
-    return false
-  }
-  const partsA = calendarParts(parsedA)
-  const partsB = calendarParts(parsedB)
-  return partsA.year === partsB.year && partsA.month === partsB.month && partsA.day === partsB.day
-}
-
-/**
- * Check if two dates fall in the same calendar month in local time.
- */
-export function isSameMonth(a: DateInput, b: DateInput): boolean {
-  const parsedA = parseDate(a)
-  const parsedB = parseDate(b)
-  if (!parsedA || !parsedB) {
-    return false
-  }
-  const partsA = calendarParts(parsedA)
-  const partsB = calendarParts(parsedB)
-  return partsA.year === partsB.year && partsA.month === partsB.month
-}
-
-/**
- * Check if a date falls between a start and end date by timestamp.
- */
-export function isDateBetween(
-  date: DateInput,
-  start: DateInput,
-  end: DateInput,
-  options?: DateRangeOptions,
-): boolean {
-  const parsed = parseDate(date)
-  const parsedStart = parseDate(start)
-  const parsedEnd = parseDate(end)
-  if (!parsed || !parsedStart || !parsedEnd) {
-    return false
-  }
-
-  const inclusive = options?.inclusive ?? true
-
-  const t = parsed.getTime()
-  const low = Math.min(parsedStart.getTime(), parsedEnd.getTime())
-  const high = Math.max(parsedStart.getTime(), parsedEnd.getTime())
-  if (inclusive) {
-    return t >= low && t <= high
-  }
-  return t > low && t < high
-}
-
 export type TimeFromOptions = LocaleTimeZone & {
   // Base time (defaults to now).
   now?: DateInput
@@ -436,4 +346,94 @@ export function timeDifference(
     return formatAutoSegment(locale, nf, 0, 'second', style)
   }
   return parts.join(' ')
+}
+
+/**
+ * Check if a date is today
+ */
+export function isToday(date: DateInput): boolean {
+  const parsed = parseDate(date)
+  if (!parsed) {
+    return false
+  }
+  const a = calendarParts(parsed)
+  const b = calendarParts(new Date())
+  return a.year === b.year && a.month === b.month && a.day === b.day
+}
+
+/**
+ * Check if a date is in the past.
+ */
+export function isPast(date: DateInput): boolean {
+  const parsed = parseDate(date)
+  if (!parsed) {
+    return false
+  }
+  return parsed.getTime() < Date.now()
+}
+
+/**
+ * Check if a date is in the future
+ */
+export function isFuture(date: DateInput): boolean {
+  const parsed = parseDate(date)
+  if (!parsed) {
+    return false
+  }
+  return parsed.getTime() > Date.now()
+}
+
+/**
+ * Check if two dates fall on the same calendar day in local time.
+ */
+export function isSameDay(a: DateInput, b: DateInput): boolean {
+  const parsedA = parseDate(a)
+  const parsedB = parseDate(b)
+  if (!parsedA || !parsedB) {
+    return false
+  }
+  const partsA = calendarParts(parsedA)
+  const partsB = calendarParts(parsedB)
+  return partsA.year === partsB.year && partsA.month === partsB.month && partsA.day === partsB.day
+}
+
+/**
+ * Check if two dates fall in the same calendar month in local time.
+ */
+export function isSameMonth(a: DateInput, b: DateInput): boolean {
+  const parsedA = parseDate(a)
+  const parsedB = parseDate(b)
+  if (!parsedA || !parsedB) {
+    return false
+  }
+  const partsA = calendarParts(parsedA)
+  const partsB = calendarParts(parsedB)
+  return partsA.year === partsB.year && partsA.month === partsB.month
+}
+
+/**
+ * Check if a date falls between a start and end date by timestamp.
+ */
+export function isDateBetween(
+  date: DateInput,
+  start: DateInput,
+  end: DateInput,
+  options?: DateRangeOptions,
+): boolean {
+  const parsed = parseDate(date)
+  const parsedStart = parseDate(start)
+  const parsedEnd = parseDate(end)
+  if (!parsed || !parsedStart || !parsedEnd) {
+    return false
+  }
+
+  const inclusive = options?.inclusive ?? true
+
+  const t = parsed.getTime()
+  const low = Math.min(parsedStart.getTime(), parsedEnd.getTime())
+  const high = Math.max(parsedStart.getTime(), parsedEnd.getTime())
+  if (inclusive) {
+    return t >= low && t <= high
+  }
+  return t > low && t < high
 }

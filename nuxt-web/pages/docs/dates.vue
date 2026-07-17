@@ -6,6 +6,22 @@
     </PageTitle>
 
     <PageFunction
+      name="timeFrom"
+      description="Show how long ago or how far away a date is, like &quot;Now&quot;, &quot;1 min ago&quot;, or &quot;in 4 months&quot;. English locales get compact labels. Other locales use Intl.RelativeTimeFormat."
+      params='[{"name":"date","type":"DateInput"},{"name":"options?","type":"TimeFromOptions"}]'
+    >
+      <TimeFrom />
+    </PageFunction>
+
+    <PageFunction
+      name="timeDifference"
+      description="Measure the gap between two dates. With unit set to &quot;auto&quot;, you get a breakdown like &quot;2 days 5 hrs&quot;. Pick a single unit like &quot;days&quot; to get something like &quot;6212 days&quot;."
+      params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options?","type":"TimeDifferenceOptions"}]'
+    >
+      <TimeDifference />
+    </PageFunction>
+
+    <PageFunction
       name="isToday"
       description="Check if a date is today"
       params='[{"name":"date","type":"DateInput"}]'
@@ -53,22 +69,6 @@
       <IsDateBetween />
     </PageFunction>
 
-    <PageFunction
-      name="timeFrom"
-      description="Show how long ago or how far away a date is, like &quot;Now&quot;, &quot;1 min ago&quot;, or &quot;in 4 months&quot;. English locales get compact labels. Other locales use Intl.RelativeTimeFormat."
-      params='[{"name":"date","type":"DateInput"},{"name":"options?","type":"TimeFromOptions"}]'
-    >
-      <TimeFrom />
-    </PageFunction>
-
-    <PageFunction
-      name="timeDifference"
-      description="Measure the gap between two dates. With unit set to &quot;auto&quot;, you get a breakdown like &quot;2 days 5 hrs&quot;. Pick a single unit like &quot;days&quot; to get something like &quot;6212 days&quot;."
-      params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options?","type":"TimeDifferenceOptions"}]'
-    >
-      <TimeDifference />
-    </PageFunction>
-
   </DocsLayout>
 </template>
 
@@ -85,7 +85,7 @@ import IsToday from '~/components/content/dates/IsToday.vue'
 import TimeDifference from '~/components/content/dates/TimeDifference.vue'
 import TimeFrom from '~/components/content/dates/TimeFrom.vue'
 
-const toc = ["isToday","isPast","isFuture","isSameDay","isSameMonth","isDateBetween","timeFrom","timeDifference"]
+const toc = ["timeFrom","timeDifference","isToday","isPast","isFuture","isSameDay","isSameMonth","isDateBetween"]
 const pageId = 'dates'
 
 provide('toc', toc)

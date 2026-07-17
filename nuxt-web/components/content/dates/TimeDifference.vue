@@ -1,27 +1,40 @@
-  <template>
+<template>
   <Example>
-    <ExampleInputs class="flex flex-col gap-2">
-      <div class="flex max-md:flex-col gap-2 w-full items-end">
+    <ExampleInputs class="flex flex-col gap-4">
+      <div class="flex w-full gap-4 max-md:flex-col">
         <FormInput v-model="from" label="From" type="datetime-local" />
         <FormInput v-model="to" label="To" type="datetime-local" />
       </div>
-      <div class="flex max-md:flex-col gap-2 w-full items-end">
-        <FormSelect v-model="unit" label="Unit" class="w-full">
+      <div class="flex w-full gap-4 max-md:flex-col">
+        <FormSelect v-model="unit" label="Unit">
           <option value="auto">auto</option>
           <option value="days">days</option>
           <option value="hours">hours</option>
           <option value="minutes">minutes</option>
           <option value="seconds">seconds</option>
         </FormSelect>
-        <FormSelect v-model="style" label="Style (auto only)" class="w-full">
+        <FormSelectLocale v-model="locale" />
+      </div>
+      <div class="flex w-full gap-4 max-md:flex-col">
+        <FormSelect
+          v-model="style"
+          label="Style"
+          info="Auto mode"
+          :disabled="unit !== 'auto'"
+        >
           <option value="short">short</option>
           <option value="long">long</option>
           <option value="narrow">narrow</option>
         </FormSelect>
-      </div>
-      <div class="flex max-md:flex-col gap-2 w-full items-end">
-        <FormInput v-model.number="maxUnits" class="w-full" label="Max parts (auto)" info="Limits unit segments in auto mode (e.g. 2 → '1 yr 11 mo')" type="number" min="1" max="6" />
-        <FormSelectLocale v-model="locale" class="w-full" />
+        <FormInput
+          v-model.number="maxUnits"
+          label="Max parts"
+          info="Auto mode"
+          type="number"
+          min="1"
+          max="6"
+          :disabled="unit !== 'auto'"
+        />
       </div>
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />
