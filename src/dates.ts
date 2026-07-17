@@ -104,7 +104,6 @@ function timeFromEnglishCompact(
 
 /**
  * Show how long ago or how far away a date is, like "Now", "1 min ago", or "in 4 months". English locales get compact labels. Other locales use Intl.RelativeTimeFormat.
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat
  */
 export function timeFrom(
   date: DateInput,

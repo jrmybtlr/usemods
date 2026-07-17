@@ -125,7 +125,6 @@ export function isNull(value: unknown): boolean {
 
 /**
  * Coerce a value to a Date when it represents a valid instant; otherwise `null`.
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
  */
 export function parseDate(value: unknown): Date | null {
   if (value instanceof Date) {

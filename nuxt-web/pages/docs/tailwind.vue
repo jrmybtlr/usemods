@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
+import PageFunction from '~/components/content/PageFunction.vue'
 
 const toc = []
 const pageId = 'tailwind'
