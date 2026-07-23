@@ -814,6 +814,8 @@ async function generateLLMsFullTxt() {
 async function generateAll() {
   await Promise.all(files.map((file, index) => generateVue(join(srcPath, `${file}.ts`), `${String(index + 1).padStart(2, '0')}.${file}`)))
   await Promise.all(files.map((file, index) => generateMarkdown(join(srcPath, `${file}.ts`), `${String(index + 1).padStart(2, '0')}.${file}`)))
+  // Top-level utils/ so Nuxt auto-imports configLocales and other maps
+  await copyFile(join(srcPath, 'maps.ts'), join(nuxtWebPath, 'utils/maps.ts'))
   await copyFile(join(srcPath, 'maps.ts'), join(nuxtWebPath, 'utils/mods/maps.ts'))
   await generateNavigation()
   await generateAllMarkdown()
@@ -835,6 +837,7 @@ async function clearAll() {
   const publicDocNames = new Set([...files.map(file => `${file}.md`), 'all.md'])
 
   await Promise.all([
+    unlink(join(nuxtWebPath, 'utils/maps.ts')).catch(() => {}),
     ...webFiles.filter(file => file.endsWith('.ts')).map(file => unlink(join(nuxtWebPath, 'utils/mods', file))),
     ...docFiles.filter(file => file.endsWith('.vue') && files.includes(basename(file, '.vue'))).map(file => unlink(join(nuxtWebPath, 'pages/docs', file))),
     ...contentFiles.filter(file => (file.endsWith('.md') && files.includes(basename(file, '.md'))) || file === 'all.md').map(file => unlink(join(nuxtWebPath, 'content/2.docs', file))),

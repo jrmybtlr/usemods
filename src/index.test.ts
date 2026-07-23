@@ -56,5 +56,13 @@ describe('index exports', () => {
 
     // Tailwind
     expect(typeof mod.modDevices).toBe('function')
+
+    // Maps
+    expect(mod.configLocales).toBeInstanceOf(Set)
+    expect(mod.configLocales.has('en-US')).toBe(true)
+    expect(mod.configUnits).toBeInstanceOf(Set)
+    expect(mod.bytesInUnit).toBeInstanceOf(Map)
+    expect(mod.lengthUnitConversions).toBeInstanceOf(Map)
+    expect(mod.currencySymbols).toBeInstanceOf(Map)
   })
 })
