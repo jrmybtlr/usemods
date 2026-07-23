@@ -27,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+import { combineDates } from 'usemods'
+
 const from = ref("2025-01-01T10:00:00");
 const to = ref("2025-01-01T14:30:00");
 const locale = ref(undefined);
