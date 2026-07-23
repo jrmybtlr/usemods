@@ -49,7 +49,7 @@
       name="formatCombinedDates"
       description="Collapses two dates (or timestamps) into a human-readable string"
       info="Time is optional and will only be shown if day, month and year are the same"
-      params='[{"name":"from","type":"Date | string | number"},{"name":"to","type":"Date | string | number"},{"name":"options","type":"{ locale?: string, format?: &#39;short&#39; | &#39;long&#39;, timeZone?: string } = { locale: &#39;en-US&#39;, format: &#39;long&#39; }"}]'
+      params='[{"name":"from","type":"Date | string | number"},{"name":"to","type":"Date | string | number"},{"name":"options","type":"{ locale?: string, monthDisplay?: &#39;short&#39; | &#39;long&#39;, timeZone?: string } = { locale: &#39;en-US&#39;, monthDisplay: &#39;long&#39; }"}]'
     >
       <FormatCombinedDates />
     </PageFunction>
@@ -57,7 +57,7 @@
     <PageFunction
       name="formatDurationLabels"
       description="Format time into a human-readable string"
-      params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    labels?: &#39;short&#39; | &#39;long&#39;\n    round?: boolean\n    decimals?: number\n  }"}]'
+      params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    unitDisplay?: &#39;short&#39; | &#39;long&#39;\n    round?: boolean\n    decimals?: number\n  }"}]'
     >
       <FormatDurationLabels />
     </PageFunction>

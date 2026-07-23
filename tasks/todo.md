@@ -30,11 +30,18 @@ Align function parameter names across `/src` so related APIs read with the same 
 ## Left as-is (intentional)
 - Validator `value` — correct for polymorphic input
 - Formatter `number` vs `text` split — intentional by type
-- `formatDurationLabels` `labels` option — public API alias for display style
 - `devices` `win` — avoids shadowing `window`
 - `copyToClipboard(value)` — accepts `string | number`
+- Short/long defaults differ by domain (`unitDisplay` default `long` for unit/duration, `short` for file/length/temp)
+
+## Follow-up: short/long display options
+- [x] `formatDurationLabels`: prefer `unitDisplay`, keep `labels` alias
+- [x] `formatCombinedDates`: prefer `monthDisplay`, keep `format` alias
+- [x] Update docs + nuxt-web demos/params
+- [x] Tests for new keys + legacy aliases
 
 ## Review
 - Positional renames are DX-only (call sites using positional args unchanged)
 - Password options: preferred `numbers`/`symbols`, legacy `number`/`special` still accepted
+- Display options now share `*Display` naming across formatters
 - All 331 tests pass; `tsc --noEmit` clean

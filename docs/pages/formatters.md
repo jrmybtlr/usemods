@@ -128,7 +128,7 @@ formatPercentage(0.1234, { decimals: 1 }) // '12.3%'
 
 ---
 
-### `formatCombinedDates(from: Date | string | number, to: Date | string | number, options?: { locale?: string, format?: 'short' | 'long', timeZone?: string }): string`
+### `formatCombinedDates(from: Date | string | number, to: Date | string | number, options?: { locale?: string, monthDisplay?: 'short' | 'long', timeZone?: string }): string`
 
 Collapses two dates (or timestamps) into a human-readable string.
 
@@ -137,7 +137,8 @@ Collapses two dates (or timestamps) into a human-readable string.
 - `to` (Date | string | number): End date
 - `options` (object, optional):
   - `locale` (string, optional): Locale string. Defaults to `'en-US'`
-  - `format` ('short' | 'long', optional): Date format. Defaults to `'long'`
+  - `monthDisplay` ('short' | 'long', optional): Month name length. Defaults to `'long'`
+  - `format` ('short' | 'long', optional): Alias for `monthDisplay`
   - `timeZone` (string, optional): Timezone string
 
 **Returns:** Combined date range string
@@ -161,14 +162,15 @@ formatCombinedDates(sameDayStart, sameDayEnd)
 
 ---
 
-### `formatDurationLabels(seconds: number, options?: { labels?: 'short' | 'long', round?: boolean, decimals?: number }): string`
+### `formatDurationLabels(seconds: number, options?: { unitDisplay?: 'short' | 'long', round?: boolean, decimals?: number }): string`
 
 Format time into a human-readable string.
 
 **Parameters:**
 - `seconds` (number): Duration in seconds
 - `options` (object, optional):
-  - `labels` ('short' | 'long', optional): Label format. Defaults to `'long'`
+  - `unitDisplay` ('short' | 'long', optional): Unit display length. Defaults to `'long'`
+  - `labels` ('short' | 'long', optional): Alias for `unitDisplay`
   - `round` (boolean, optional): Round to largest unit
   - `decimals` (number, optional): Decimal places for rounding
 
@@ -179,7 +181,7 @@ Format time into a human-readable string.
 import { formatDurationLabels } from 'usemods'
 
 formatDurationLabels(3661) // '1 hour 1 minute 1 second'
-formatDurationLabels(3661, { labels: 'short' }) // '1 hr 1 min 1 sec'
+formatDurationLabels(3661, { unitDisplay: 'short' }) // '1 hr 1 min 1 sec'
 formatDurationLabels(3661, { round: true }) // '1 hour'
 ```
 

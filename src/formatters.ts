@@ -135,7 +135,13 @@ export function formatPercentage(
 export function formatCombinedDates(
   from: Date | string | number,
   to: Date | string | number,
-  options: { locale?: string, format?: 'short' | 'long', timeZone?: string } = { locale: 'en-US', format: 'long' },
+  options: {
+    locale?: string
+    monthDisplay?: 'short' | 'long'
+    /** @deprecated Use `monthDisplay` */
+    format?: 'short' | 'long'
+    timeZone?: string
+  } = { locale: 'en-US', monthDisplay: 'long' },
 ): string {
   // Parse dates only once
   const fromDate = new Date(from ?? Date.now())
@@ -166,8 +172,8 @@ export function formatCombinedDates(
   const sameDay = sameMonth && fromComponents.day === toComponents.day
   const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
 
-  // Simplified format options
-  const monthFormat = options.format ?? 'long'
+  // Prefer monthDisplay; keep format as a legacy alias
+  const monthFormat = options.monthDisplay ?? options.format ?? 'long'
   const locale = options.locale ?? 'en-US'
 
   // Formatting helper
@@ -202,12 +208,17 @@ export function formatCombinedDates(
 export function formatDurationLabels(
   seconds: number,
   options?: {
+    unitDisplay?: 'short' | 'long'
+    /** @deprecated Use `unitDisplay` */
     labels?: 'short' | 'long'
     round?: boolean
     decimals?: number
   },
 ): string {
-  if (seconds <= 0) return formatUnit(0, { unit: 'second', decimals: 0, unitDisplay: options?.labels ?? 'long' })
+  // Prefer unitDisplay to match formatUnit / formatFileSize / formatLength / formatTemperature
+  const unitDisplay = options?.unitDisplay ?? options?.labels ?? 'long'
+
+  if (seconds <= 0) return formatUnit(0, { unit: 'second', decimals: 0, unitDisplay })
 
   const units = [
     { unit: 'year', value: 31536000 },
@@ -224,24 +235,23 @@ export function formatDurationLabels(
         const unitValue = seconds / value
         const hasDecimal = unitValue % 1 !== 0
         const decimals = hasDecimal && unitValue.toFixed(1).endsWith('.0') ? 0 : hasDecimal ? 1 : 0
-        return formatUnit(unitValue, { unit, decimals, unitDisplay: options?.labels ?? 'long' })
+        return formatUnit(unitValue, { unit, decimals, unitDisplay })
       }
     }
   }
 
-  const labels = options?.labels ?? 'long'
   const results = []
 
   for (const { unit, value } of units) {
     const unitValue = Math.floor(seconds / value)
     if (unitValue > 0) {
-      results.push(formatUnit(unitValue, { unit, decimals: 0, unitDisplay: labels }))
+      results.push(formatUnit(unitValue, { unit, decimals: 0, unitDisplay }))
       seconds %= value
     }
   }
 
   const milliseconds = Math.floor((seconds % 1) * 1000)
-  if (milliseconds > 0) results.push(formatUnit(milliseconds, { unit: 'millisecond', decimals: 0, unitDisplay: labels }))
+  if (milliseconds > 0) results.push(formatUnit(milliseconds, { unit: 'millisecond', decimals: 0, unitDisplay }))
   return results.join(' ')
 }
 
