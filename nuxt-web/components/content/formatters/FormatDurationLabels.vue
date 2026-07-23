@@ -6,8 +6,8 @@
         label="Seconds"
         type="number" />
       <FormSelect
-        v-model="unitDisplay"
-        label="Unit Display"
+        v-model="display"
+        label="Display"
         info="Default: 'long'">
         <option
           value="short"
@@ -31,15 +31,15 @@
         </option>
       </FormSelect>
     </ExampleInputs>
-    <ExampleCode :code="`formatDurationLabels(${seconds}, { unitDisplay: '${unitDisplay}', round: ${round} })`" />
+    <ExampleCode :code="`formatDurationLabels(${seconds}, { display: '${display}', round: ${round} })`" />
     <ExampleResult>
-      {{ formatDurationLabels(seconds, { unitDisplay, round }) }}
+      {{ formatDurationLabels(seconds, { display, round }) }}
     </ExampleResult>
   </Example>
 </template>
 
 <script setup lang="ts">
 const seconds = ref(954321)
-const unitDisplay = ref<'long' | 'short'>('short')
+const display = ref<'long' | 'short'>('short')
 const round = ref(false)
 </script>

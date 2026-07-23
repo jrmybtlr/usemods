@@ -32,16 +32,16 @@ Align function parameter names across `/src` so related APIs read with the same 
 - Formatter `number` vs `text` split — intentional by type
 - `devices` `win` — avoids shadowing `window`
 - `copyToClipboard(value)` — accepts `string | number`
-- Short/long defaults differ by domain (`unitDisplay` default `long` for unit/duration, `short` for file/length/temp)
+- Short/long defaults differ by domain (`display` default `long` for unit/duration/dates, `short` for file/length/temp)
 
 ## Follow-up: short/long display options
-- [x] `formatDurationLabels`: prefer `unitDisplay`, keep `labels` alias
-- [x] `formatCombinedDates`: prefer `monthDisplay`, keep `format` alias
+- [x] Unify all short/long options to `display`
+- [x] Keep legacy aliases: `unitDisplay`, `labels`, `monthDisplay`, `format`
 - [x] Update docs + nuxt-web demos/params
-- [x] Tests for new keys + legacy aliases
+- [x] Tests for `display` + legacy aliases
 
 ## Review
 - Positional renames are DX-only (call sites using positional args unchanged)
 - Password options: preferred `numbers`/`symbols`, legacy `number`/`special` still accepted
-- Display options now share `*Display` naming across formatters
+- Short/long verbosity is always `display: 'short' | 'long'` across formatters
 - All 331 tests pass; `tsc --noEmit` clean

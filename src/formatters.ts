@@ -4,6 +4,30 @@
 
 import * as map from './maps'
 
+type DisplayLength = 'short' | 'long'
+
+/**
+ * Resolve short/long display options to a single `display` value.
+ * Legacy aliases (`unitDisplay`, `labels`, `monthDisplay`, `format`) remain supported.
+ */
+function resolveDisplay(
+  options: {
+    display?: DisplayLength
+    unitDisplay?: DisplayLength
+    labels?: DisplayLength
+    monthDisplay?: DisplayLength
+    format?: DisplayLength
+  } | undefined,
+  fallback: DisplayLength,
+): DisplayLength {
+  return options?.display
+    ?? options?.unitDisplay
+    ?? options?.labels
+    ?? options?.monthDisplay
+    ?? options?.format
+    ?? fallback
+}
+
 /**
  * Format numbers into neat and formatted strings for people
  */
@@ -85,17 +109,20 @@ export function formatUnit(
   options: {
     unit: string
     decimals?: number
-    unitDisplay?: 'short' | 'long'
+    display?: DisplayLength
+    /** @deprecated Use `display` */
+    unitDisplay?: DisplayLength
     locale?: string
   },
 ): string {
   const decimalPlaces = (number.toString().split('.').at(1) || '').length
   const safeDecimals = Math.min(options?.decimals ?? 21, decimalPlaces)
+  const display = resolveDisplay(options, 'long')
 
   const config: Intl.NumberFormatOptions = {
     unit: options.unit,
     style: 'unit',
-    unitDisplay: options.unitDisplay ?? 'long',
+    unitDisplay: display,
     minimumFractionDigits: safeDecimals,
     maximumFractionDigits: safeDecimals,
   }
@@ -137,11 +164,13 @@ export function formatCombinedDates(
   to: Date | string | number,
   options: {
     locale?: string
-    monthDisplay?: 'short' | 'long'
-    /** @deprecated Use `monthDisplay` */
-    format?: 'short' | 'long'
+    display?: DisplayLength
+    /** @deprecated Use `display` */
+    monthDisplay?: DisplayLength
+    /** @deprecated Use `display` */
+    format?: DisplayLength
     timeZone?: string
-  } = { locale: 'en-US', monthDisplay: 'long' },
+  } = { locale: 'en-US', display: 'long' },
 ): string {
   // Parse dates only once
   const fromDate = new Date(from ?? Date.now())
@@ -172,8 +201,7 @@ export function formatCombinedDates(
   const sameDay = sameMonth && fromComponents.day === toComponents.day
   const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
 
-  // Prefer monthDisplay; keep format as a legacy alias
-  const monthFormat = options.monthDisplay ?? options.format ?? 'long'
+  const monthFormat = resolveDisplay(options, 'long')
   const locale = options.locale ?? 'en-US'
 
   // Formatting helper
@@ -208,17 +236,18 @@ export function formatCombinedDates(
 export function formatDurationLabels(
   seconds: number,
   options?: {
-    unitDisplay?: 'short' | 'long'
-    /** @deprecated Use `unitDisplay` */
-    labels?: 'short' | 'long'
+    display?: DisplayLength
+    /** @deprecated Use `display` */
+    unitDisplay?: DisplayLength
+    /** @deprecated Use `display` */
+    labels?: DisplayLength
     round?: boolean
     decimals?: number
   },
 ): string {
-  // Prefer unitDisplay to match formatUnit / formatFileSize / formatLength / formatTemperature
-  const unitDisplay = options?.unitDisplay ?? options?.labels ?? 'long'
+  const display = resolveDisplay(options, 'long')
 
-  if (seconds <= 0) return formatUnit(0, { unit: 'second', decimals: 0, unitDisplay })
+  if (seconds <= 0) return formatUnit(0, { unit: 'second', decimals: 0, display })
 
   const units = [
     { unit: 'year', value: 31536000 },
@@ -235,7 +264,7 @@ export function formatDurationLabels(
         const unitValue = seconds / value
         const hasDecimal = unitValue % 1 !== 0
         const decimals = hasDecimal && unitValue.toFixed(1).endsWith('.0') ? 0 : hasDecimal ? 1 : 0
-        return formatUnit(unitValue, { unit, decimals, unitDisplay })
+        return formatUnit(unitValue, { unit, decimals, display })
       }
     }
   }
@@ -245,13 +274,13 @@ export function formatDurationLabels(
   for (const { unit, value } of units) {
     const unitValue = Math.floor(seconds / value)
     if (unitValue > 0) {
-      results.push(formatUnit(unitValue, { unit, decimals: 0, unitDisplay }))
+      results.push(formatUnit(unitValue, { unit, decimals: 0, display }))
       seconds %= value
     }
   }
 
   const milliseconds = Math.floor((seconds % 1) * 1000)
-  if (milliseconds > 0) results.push(formatUnit(milliseconds, { unit: 'millisecond', decimals: 0, unitDisplay }))
+  if (milliseconds > 0) results.push(formatUnit(milliseconds, { unit: 'millisecond', decimals: 0, display }))
   return results.join(' ')
 }
 
@@ -285,11 +314,14 @@ export function formatFileSize(
     decimals?: number
     inputUnit?: string
     outputUnit?: string
-    unitDisplay?: 'short' | 'long'
+    display?: DisplayLength
+    /** @deprecated Use `display` */
+    unitDisplay?: DisplayLength
     locale?: string
   },
 ): string {
-  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options ?? {}
+  const { decimals = undefined, locale = 'en-US', inputUnit = 'byte', outputUnit = 'auto' } = options ?? {}
+  const display = resolveDisplay(options, 'short')
   const valueInBytes = number * (map.bytesInUnit.get(inputUnit) ?? 1)
 
   const targetUnit = outputUnit === 'auto'
@@ -297,7 +329,7 @@ export function formatFileSize(
       .findLast(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
     : outputUnit
 
-  return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) ?? 1), { unit: targetUnit, decimals, unitDisplay, locale })
+  return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) ?? 1), { unit: targetUnit, decimals, display, locale })
 }
 
 /**
@@ -309,11 +341,14 @@ export function formatLength(
     decimals?: number
     inputUnit?: string
     outputUnit?: string
-    unitDisplay?: 'short' | 'long'
+    display?: DisplayLength
+    /** @deprecated Use `display` */
+    unitDisplay?: DisplayLength
     locale?: string
   },
 ): string {
-  const { decimals = undefined, unitDisplay = 'short', locale = 'en-US', inputUnit = 'millimeter', outputUnit = 'auto' } = options ?? {}
+  const { decimals = undefined, locale = 'en-US', inputUnit = 'millimeter', outputUnit = 'auto' } = options ?? {}
+  const display = resolveDisplay(options, 'short')
   const inputUnitValue = map.lengthUnitConversions.get(inputUnit)
 
   if (!inputUnitValue) {
@@ -329,7 +364,7 @@ export function formatLength(
       .findLast(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value ?? 0)) ?? inputUnit
     : outputUnit
 
-  return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value ?? 1), { unit: targetUnit, decimals, unitDisplay, locale })
+  return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value ?? 1), { unit: targetUnit, decimals, display, locale })
 }
 
 /**
@@ -341,11 +376,14 @@ export function formatTemperature(
     decimals?: number
     inputUnit?: string
     outputUnit?: string
-    unitDisplay?: 'short' | 'long'
+    display?: DisplayLength
+    /** @deprecated Use `display` */
+    unitDisplay?: DisplayLength
     locale?: string
   },
 ): string {
-  const { decimals, unitDisplay = 'short', locale = 'en-US', inputUnit = 'celsius', outputUnit = 'celsius' } = options ?? {}
+  const { decimals, locale = 'en-US', inputUnit = 'celsius', outputUnit = 'celsius' } = options ?? {}
+  const display = resolveDisplay(options, 'short')
 
   const validUnits = new Set(['auto', 'celsius', 'fahrenheit'])
 
@@ -355,7 +393,7 @@ export function formatTemperature(
   }
 
   if (inputUnit === outputUnit || inputUnit === 'auto' || outputUnit === 'auto') {
-    return formatUnit(number, { unit: inputUnit, decimals, unitDisplay, locale })
+    return formatUnit(number, { unit: inputUnit, decimals, display, locale })
   }
   else {
     let convertedNumber = number
@@ -365,7 +403,7 @@ export function formatTemperature(
     else if (inputUnit === 'fahrenheit' && outputUnit === 'celsius') {
       convertedNumber = (number - 32) * 5 / 9
     }
-    return formatUnit(convertedNumber, { unit: outputUnit, decimals, unitDisplay, locale })
+    return formatUnit(convertedNumber, { unit: outputUnit, decimals, display, locale })
   }
 }
 

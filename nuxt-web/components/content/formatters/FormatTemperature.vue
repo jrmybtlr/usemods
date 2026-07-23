@@ -14,7 +14,7 @@
         <FormSelectLocale v-model="locale" />
 
         <FormSelect
-          v-model="unitDisplay"
+          v-model="display"
           label="Display"
           info="Default: 'short'">
           <option value="long">
@@ -56,7 +56,7 @@
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />
     <ExampleResult>
-      {{ formatTemperature(number, { inputUnit, outputUnit, decimals: decimals || decimals === 0 ? decimals : undefined, unitDisplay, locale: locale ? locale : undefined }) }}
+      {{ formatTemperature(number, { inputUnit, outputUnit, decimals: decimals || decimals === 0 ? decimals : undefined, display, locale: locale ? locale : undefined }) }}
     </ExampleResult>
   </Example>
 </template>
@@ -67,7 +67,7 @@ const inputUnit = ref('celsius')
 const outputUnit = ref('auto')
 const decimals = ref<number | undefined>(undefined)
 const locale = ref<string | undefined>(undefined)
-const unitDisplay = ref<'short' | 'long'>('short')
+const display = ref<'short' | 'long'>('short')
 
 const temperatureUnitConversions = ref([
   'celsius',
@@ -79,7 +79,7 @@ const formattedCode = computed(() => {
     inputUnit: inputUnit.value,
     outputUnit: outputUnit.value,
     decimals: decimals.value,
-    unitDisplay: unitDisplay.value,
+    display: display.value,
     locale: locale.value,
   })
 })

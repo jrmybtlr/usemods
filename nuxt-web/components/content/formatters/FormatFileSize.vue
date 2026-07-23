@@ -15,7 +15,7 @@
         <FormSelectLocale v-model="locale" />
 
         <FormSelect
-          v-model="unitDisplay"
+          v-model="display"
           label="Display"
           info="Default: 'short'">
           <option value="long">
@@ -58,7 +58,7 @@
     <ExampleCode :code="formattedCode" />
 
     <ExampleResult>
-      {{ formatFileSize(number, { inputUnit, outputUnit, decimals: decimals || decimals === 0 ? decimals : undefined, unitDisplay, locale: locale ? locale : undefined }) }}
+      {{ formatFileSize(number, { inputUnit, outputUnit, decimals: decimals || decimals === 0 ? decimals : undefined, display, locale: locale ? locale : undefined }) }}
     </ExampleResult>
   </Example>
 </template>
@@ -69,14 +69,14 @@ const inputUnit = ref('byte')
 const outputUnit = ref('auto')
 const decimals = ref(null)
 const locale = ref('')
-const unitDisplay = ref<'short' | 'long'>('short')
+const display = ref<'short' | 'long'>('short')
 
 const formattedCode = computed(() => {
   return generateFormatterCode('formatFileSize', number.value, {
     inputUnit: inputUnit.value,
     outputUnit: outputUnit.value,
     decimals: decimals.value,
-    unitDisplay: unitDisplay.value,
+    display: display.value,
     locale: locale.value,
   })
 })
