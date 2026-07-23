@@ -6,7 +6,7 @@ Compare dates, show relative time, and measure durations. Helpful helpers when I
 
 ### timeFrom
 
-**Description:** Show how long ago or how far away a date is, like "Now", "1 min ago", or "in 4 months". English locales get compact labels. Other locales use Intl.RelativeTimeFormat.
+**Description:** Show how long ago or how far away a date is, like "Now", "1 minute ago", or "in 4 months". Use style "long" for "10 days ago", "short" for "10d ago". Other locales use Intl.RelativeTimeFormat.
 
 **Parameters:**
 - `date` (`DateInput`)
@@ -24,6 +24,21 @@ Compare dates, show relative time, and measure durations. Helpful helpers when I
 - `options?` (`TimeDifferenceOptions`)
 
 **Returns:** `string`
+
+### combineDates
+
+**Description:** Collapses two dates (or timestamps) into a human-readable string
+
+**Info:** Time is optional and will only be shown if day, month and year are the same
+
+**Parameters:**
+- `from` (`DateInput`)
+- `to` (`DateInput`)
+- `options?` (`CombinedDatesOptions`)
+
+**Returns:** `string`
+
+**Alias:** `formatCombinedDates`
 
 ### isToday
 

@@ -7,7 +7,7 @@
 
     <PageFunction
       name="timeFrom"
-      description="Show how long ago or how far away a date is, like &quot;Now&quot;, &quot;1 min ago&quot;, or &quot;in 4 months&quot;. English locales get compact labels. Other locales use Intl.RelativeTimeFormat."
+      description="Show how long ago or how far away a date is, like &quot;Now&quot;, &quot;1 minute ago&quot;, or &quot;in 4 months&quot;. Use style &quot;long&quot; for &quot;10 days ago&quot;, &quot;short&quot; for &quot;10d ago&quot;. Other locales use Intl.RelativeTimeFormat."
       params='[{"name":"date","type":"DateInput"},{"name":"options?","type":"TimeFromOptions"}]'
     >
       <TimeFrom />
@@ -19,6 +19,15 @@
       params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options?","type":"TimeDifferenceOptions"}]'
     >
       <TimeDifference />
+    </PageFunction>
+
+    <PageFunction
+      name="combineDates"
+      description="Collapses two dates (or timestamps) into a human-readable string"
+      info="Time is optional and will only be shown if day, month and year are the same"
+      params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options?","type":"CombinedDatesOptions"}]'
+    >
+      <CombineDates />
     </PageFunction>
 
     <PageFunction
@@ -76,6 +85,7 @@
 import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
+import CombineDates from '~/components/content/dates/CombineDates.vue'
 import IsDateBetween from '~/components/content/dates/IsDateBetween.vue'
 import IsFuture from '~/components/content/dates/IsFuture.vue'
 import IsPast from '~/components/content/dates/IsPast.vue'
@@ -85,7 +95,7 @@ import IsToday from '~/components/content/dates/IsToday.vue'
 import TimeDifference from '~/components/content/dates/TimeDifference.vue'
 import TimeFrom from '~/components/content/dates/TimeFrom.vue'
 
-const toc = ["timeFrom","timeDifference","isToday","isPast","isFuture","isSameDay","isSameMonth","isDateBetween"]
+const toc = ["timeFrom","timeDifference","combineDates","isToday","isPast","isFuture","isSameDay","isSameMonth","isDateBetween"]
 const pageId = 'dates'
 
 provide('toc', toc)

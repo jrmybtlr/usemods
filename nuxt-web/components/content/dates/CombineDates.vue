@@ -7,7 +7,7 @@
       </div>
       <div class="flex gap-2 w-full">
         <FormSelectLocale v-model="locale" />
-        <FormSelect v-model="format" info="Default: 'short'" label="Format">
+        <FormSelect v-model="format" info="Default: 'long'" label="Format">
           <option value="" disabled selected>Select Format</option>
           <option value="short">Short</option>
           <option value="long">Long</option>
@@ -17,7 +17,7 @@
     <ExampleCode :code="formattedCode" />
     <ExampleResult>
       {{
-        formatCombinedDates(from, to, {
+        combineDates(from, to, {
           locale: locale ? locale : undefined,
           format: format,
         })
@@ -34,9 +34,11 @@ const format = ref(undefined);
 
 // Demo Purposes Only
 const formattedCode = computed(() => {
-  return generateFormatterCode("formatCombinedDates", [from.value, to.value], {
+  return generateFormatterCode("combineDates", [from.value, to.value], {
     locale: locale.value,
     format: format.value,
+  }, {
+    format: 'long',
   });
 });
 </script>

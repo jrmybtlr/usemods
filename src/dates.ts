@@ -39,12 +39,14 @@ function resolveTimeFromNow(options?: Pick<TimeFromOptions, 'now'>): Date {
   return parsed ?? new Date()
 }
 
+export type TimeFromStyle = 'long' | 'short' | 'narrow'
+
 export type TimeFromOptions = LocaleTimeZone & {
   // Base time (defaults to now).
   now?: DateInput
 
-  // Intl.RelativeTimeFormat style (non-English locales only; English uses compact phrases).
-  style?: 'long' | 'short' | 'narrow'
+  // Output style. English: long "10 days ago", short/narrow "10d ago". Other locales use Intl.RelativeTimeFormat.
+  style?: TimeFromStyle
 
   // Label when the difference is within threshold seconds.
   nowLabel?: string
@@ -60,50 +62,76 @@ function isEnglishLocale(locale: string): boolean {
   return /^en([_-]|$)/i.test(locale)
 }
 
-function englishCompactUnitLabel(
+function englishUnitLabel(
   unit: Intl.RelativeTimeFormatUnit,
   pluralRule: Intl.LDMLPluralRule,
+  style: TimeFromStyle,
 ): string {
   function pick(one: string, other: string): string {
     return pluralRule === 'one' ? one : other
   }
+
+  // long → "days"; short/narrow → "d"
+  if (style === 'long') {
+    switch (unit) {
+      case 'year':
+        return pick('year', 'years')
+      case 'month':
+        return pick('month', 'months')
+      case 'week':
+        return pick('week', 'weeks')
+      case 'day':
+        return pick('day', 'days')
+      case 'hour':
+        return pick('hour', 'hours')
+      case 'minute':
+        return pick('minute', 'minutes')
+      case 'second':
+        return pick('second', 'seconds')
+      default:
+        return unit
+    }
+  }
+
   switch (unit) {
     case 'year':
-      return pick('year', 'years')
+      return 'y'
     case 'month':
-      return pick('month', 'months')
+      return 'mo'
     case 'week':
-      return pick('week', 'weeks')
+      return 'w'
     case 'day':
-      return pick('day', 'days')
+      return 'd'
     case 'hour':
-      return pick('hr', 'hrs')
+      return 'h'
     case 'minute':
-      return pick('min', 'mins')
+      return 'm'
     case 'second':
-      return pick('sec', 'secs')
+      return 's'
     default:
       return unit
   }
 }
 
-// Compact English phrases like "1 min ago", "in 4 months" (no "min." punctuation).
-function timeFromEnglishCompact(
+// English relative phrases: long "in 10 days", short/narrow "10d ago".
+function timeFromEnglish(
   value: number,
   unit: Intl.RelativeTimeFormatUnit,
+  style: TimeFromStyle,
 ): string {
   const n = Math.abs(value)
   const pr = new Intl.PluralRules('en-US')
-  const label = englishCompactUnitLabel(unit, pr.select(n))
+  const label = englishUnitLabel(unit, pr.select(n), style)
+  const amount = style === 'long' ? `${n} ${label}` : `${n}${label}`
 
   if (value < 0) {
-    return `${n} ${label} ago`
+    return `${amount} ago`
   }
-  return `in ${n} ${label}`
+  return `in ${amount}`
 }
 
 /**
- * Show how long ago or how far away a date is, like "Now", "1 min ago", or "in 4 months". English locales get compact labels. Other locales use Intl.RelativeTimeFormat.
+ * Show how long ago or how far away a date is, like "Now", "1 minute ago", or "in 4 months". Use style "long" for "10 days ago", "short" for "10d ago". Other locales use Intl.RelativeTimeFormat.
  */
 export function timeFrom(
   date: DateInput,
@@ -127,7 +155,7 @@ export function timeFrom(
   }
 
   const { locale } = baseLocaleTimeZone(options)
-  const style = options?.style ?? 'short'
+  const style = options?.style ?? 'long'
 
   const absSeconds = Math.abs(diffSeconds)
   const divisions: ReadonlyArray<{ unit: Intl.RelativeTimeFormatUnit, seconds: number }> = [
@@ -144,7 +172,7 @@ export function timeFrom(
   const value = Math.round(diffSeconds / division.seconds)
 
   if (isEnglishLocale(locale)) {
-    return timeFromEnglishCompact(value, division.unit)
+    return timeFromEnglish(value, division.unit, style)
   }
 
   const rtf = new Intl.RelativeTimeFormat(locale, {
@@ -344,6 +372,87 @@ export function timeDifference(
   }
   return parts.join(' ')
 }
+
+export type CombinedDatesFormat = 'short' | 'long'
+
+export type CombinedDatesOptions = {
+  locale?: string
+  format?: CombinedDatesFormat
+  timeZone?: string
+}
+
+/**
+ * Collapses two dates (or timestamps) into a human-readable string
+ * @info Time is optional and will only be shown if day, month and year are the same
+ */
+export function combineDates(
+  from: DateInput,
+  to: DateInput,
+  options: CombinedDatesOptions = { locale: 'en-US', format: 'long' },
+): string {
+  // Parse dates only once
+  const fromDate = new Date(from ?? Date.now())
+  const toDate = new Date(to ?? Date.now())
+
+  // Early return for invalid dates
+  if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return ''
+
+  // Cache commonly used date components (timezone-aware)
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
+  const getDateComponents = (date: Date) => {
+    if (options.timeZone) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric', month: 'numeric', day: 'numeric', timeZone: options.timeZone,
+      }).formatToParts(date)
+      const year = Number(parts.find(part => part.type === 'year')?.value)
+      const month = Number(parts.find(part => part.type === 'month')?.value) - 1
+      const day = Number(parts.find(part => part.type === 'day')?.value)
+      return { year, month, day }
+    }
+    return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() }
+  }
+
+  const fromComponents = getDateComponents(fromDate)
+  const toComponents = getDateComponents(toDate)
+
+  const sameYear = fromComponents.year === toComponents.year
+  const sameMonth = sameYear && fromComponents.month === toComponents.month
+  const sameDay = sameMonth && fromComponents.day === toComponents.day
+  const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
+
+  // Simplified format options
+  const monthFormat = options.format ?? 'long'
+  const locale = options.locale ?? 'en-US'
+
+  // Formatting helper
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
+  const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(locale, { ...opts, timeZone: options.timeZone }).format(date)
+
+  // Same day
+  if (sameDay) {
+    // Same day, same time
+    if (sameTime) {
+      return format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })
+    }
+    // Same day, different time
+    return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}, ${format(fromDate, { hour: 'numeric', minute: 'numeric', hour12: true })} - ${format(toDate, { hour: 'numeric', minute: 'numeric', hour12: true })}`
+  }
+
+  if (sameMonth) {
+    return `${fromComponents.day}-${toComponents.day} ${format(fromDate, { month: monthFormat, year: 'numeric' })}`
+  }
+
+  if (sameYear) {
+    const yearStr = format(fromDate, { year: 'numeric' })
+    return `${format(fromDate, { day: 'numeric', month: monthFormat })} - ${format(toDate, { day: 'numeric', month: monthFormat })}, ${yearStr}`
+  }
+
+  return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })} - ${format(toDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}`
+}
+
+/** @deprecated Use {@link combineDates} instead */
+export const formatCombinedDates = combineDates
 
 /**
  * Check if a date is today

@@ -78,6 +78,32 @@ export function formatValuation(
 }
 
 /**
+ * Format large numbers into compact K / M / B strings
+ */
+export function formatCompactNumber(
+  number: number,
+  options?: {
+    decimals?: number
+    locale?: string
+    trimZeros?: boolean
+  },
+): string {
+  const safeDecimals = Math.max(0, Math.min(options?.decimals ?? 2, 20))
+  const locale = options?.locale ?? 'en-US'
+  const trimZeros = options?.trimZeros ?? true
+
+  const config: Intl.NumberFormatOptions = {
+    style: 'decimal',
+    notation: 'compact',
+    compactDisplay: 'short',
+    minimumFractionDigits: trimZeros ? 0 : safeDecimals,
+    maximumFractionDigits: safeDecimals,
+  }
+
+  return new Intl.NumberFormat(locale, config).format(number)
+}
+
+/**
  * Format a number into a your unit of choice
  */
 export function formatUnit(
@@ -126,74 +152,6 @@ export function formatPercentage(
   formattedNumber = formattedNumber.replace(/(\.\d*?[1-9])0+%$/, '$1%').replace(/\.0+%$/, '%')
 
   return formattedNumber
-}
-
-/**
- * Collapses two dates (or timestamps) into a human-readable string
- * @info Time is optional and will only be shown if day, month and year are the same
- */
-export function formatCombinedDates(
-  from: Date | string | number,
-  to: Date | string | number,
-  options: { locale?: string, format?: 'short' | 'long', timeZone?: string } = { locale: 'en-US', format: 'long' },
-): string {
-  // Parse dates only once
-  const fromDate = new Date(from ?? Date.now())
-  const toDate = new Date(to ?? Date.now())
-
-  // Early return for invalid dates
-  if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return ''
-
-  // Cache commonly used date components (timezone-aware)
-  const getDateComponents = (date: Date) => {
-    if (options.timeZone) {
-      const parts = new Intl.DateTimeFormat('en-US', {
-        year: 'numeric', month: 'numeric', day: 'numeric', timeZone: options.timeZone,
-      }).formatToParts(date)
-      const year = Number(parts.find(part => part.type === 'year')?.value)
-      const month = Number(parts.find(part => part.type === 'month')?.value) - 1
-      const day = Number(parts.find(part => part.type === 'day')?.value)
-      return { year, month, day }
-    }
-    return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() }
-  }
-
-  const fromComponents = getDateComponents(fromDate)
-  const toComponents = getDateComponents(toDate)
-
-  const sameYear = fromComponents.year === toComponents.year
-  const sameMonth = sameYear && fromComponents.month === toComponents.month
-  const sameDay = sameMonth && fromComponents.day === toComponents.day
-  const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
-
-  // Simplified format options
-  const monthFormat = options.format ?? 'long'
-  const locale = options.locale ?? 'en-US'
-
-  // Formatting helper
-  const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
-    new Intl.DateTimeFormat(locale, { ...opts, timeZone: options.timeZone }).format(date)
-
-  // Same day
-  if (sameDay) {
-    // Same day, same time
-    if (sameTime) {
-      return format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })
-    }
-    // Same day, different time
-    return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}, ${format(fromDate, { hour: 'numeric', minute: 'numeric', hour12: true })} - ${format(toDate, { hour: 'numeric', minute: 'numeric', hour12: true })}`
-  }
-
-  if (sameMonth) {
-    return `${fromComponents.day}-${toComponents.day} ${format(fromDate, { month: monthFormat, year: 'numeric' })}`
-  }
-
-  if (sameYear) {
-    const yearStr = format(fromDate, { year: 'numeric' })
-    return `${format(fromDate, { day: 'numeric', month: monthFormat })} - ${format(toDate, { day: 'numeric', month: monthFormat })}, ${yearStr}`
-  }
-
-  return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })} - ${format(toDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}`
 }
 
 /**

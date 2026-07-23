@@ -42,6 +42,11 @@ I have seen the joy in the eyes of those who rediscover the simple pleasure of t
 Let us not dismiss the scooter as trivial or temporary. Let us instead recognize it as a powerful symbol of how small changes can transform society. When future generations look back on this era of transition, they will note that the revolution did not arrive with a roar but with the gentle whirr of small wheels on pavement. Today, I call upon each of you to consider how this unassuming vehicle might just carry us all toward a brighter tomorrow. ✨`)
 
 const formattedCode = computed(() => {
-  return generateFormatterCode('countBy', "your-text-here", { by: by.value, searchFor: searchFor.value })
+  return generateFormatterCode('countBy', "your-text-here", {
+    by: by.value,
+    searchFor: searchFor.value,
+  }, {
+    by: 'character',
+  })
 })
 </script>

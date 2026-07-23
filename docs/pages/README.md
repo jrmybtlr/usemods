@@ -8,9 +8,9 @@ Welcome to the UseMods documentation! This directory contains comprehensive mark
 
 - **[Actions](./actions.md)** - Browser interactions, form handling, scrolling, and function control (debounce/throttle)
 - **[Data](./data.md)** - Array and object manipulation (sort, reverse, flatten, deduplicate)
-- **[Dates](./dates.md)** - Date comparisons, relative time, and duration helpers
+- **[Dates](./dates.md)** - Date comparisons, relative time, date ranges, and duration helpers
 - **[Modifiers](./modifiers.md)** - String manipulation and transformation utilities
-- **[Formatters](./formatters.md)** - Number, currency, date, duration, and text formatting
+- **[Formatters](./formatters.md)** - Number, currency, duration, and text formatting
 - **[Generators](./generators.md)** - Random number generation, UUIDs, passwords, and placeholder content
 - **[Numbers](./numbers.md)** - Mathematical and statistical functions
 - **[Validators](./validators.md)** - Data type and format validation

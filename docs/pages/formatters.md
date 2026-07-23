@@ -80,6 +80,32 @@ formatValuation(5000000000) // '$5B'
 
 ---
 
+### `formatCompactNumber(number: number, options?: { decimals?: number, locale?: string, trimZeros?: boolean }): string`
+
+Format large numbers into compact K / M / B strings.
+
+**Parameters:**
+- `number` (number): The number to format
+- `options` (object, optional):
+  - `decimals` (number, optional): Maximum decimal places. Defaults to `2`
+  - `locale` (string, optional): Locale string. Defaults to `'en-US'`
+  - `trimZeros` (boolean, optional): Strip trailing zeros. Defaults to `true`
+
+**Returns:** Compact number format (e.g., "1.2K", "1.12M", "21.4B")
+
+**Example:**
+```typescript
+import { formatCompactNumber } from 'usemods'
+
+formatCompactNumber(1200) // '1.2K'
+formatCompactNumber(100350) // '100.35K'
+formatCompactNumber(1120000) // '1.12M'
+formatCompactNumber(21400000000) // '21.4B'
+formatCompactNumber(1200, { decimals: 2, trimZeros: false }) // '1.20K'
+```
+
+---
+
 ### `formatUnit(number: number, options: { unit: string, decimals?: number, unitDisplay?: 'short' | 'long', locale?: string }): string`
 
 Format a number into your unit of choice.
@@ -124,39 +150,6 @@ import { formatPercentage } from 'usemods'
 formatPercentage(0.5) // '50%'
 formatPercentage(0.1234) // '12.34%'
 formatPercentage(0.1234, { decimals: 1 }) // '12.3%'
-```
-
----
-
-### `formatCombinedDates(from: Date | string | number, to: Date | string | number, options?: { locale?: string, format?: 'short' | 'long', timeZone?: string }): string`
-
-Collapses two dates (or timestamps) into a human-readable string.
-
-**Parameters:**
-- `from` (Date | string | number): Start date
-- `to` (Date | string | number): End date
-- `options` (object, optional):
-  - `locale` (string, optional): Locale string. Defaults to `'en-US'`
-  - `format` ('short' | 'long', optional): Date format. Defaults to `'long'`
-  - `timeZone` (string, optional): Timezone string
-
-**Returns:** Combined date range string
-
-**Note:** Time is optional and will only be shown if day, month and year are the same.
-
-**Example:**
-```typescript
-import { formatCombinedDates } from 'usemods'
-
-const start = new Date('2024-01-15')
-const end = new Date('2024-01-20')
-formatCombinedDates(start, end) // 'January 15 - 20, 2024'
-
-// Same day with different times
-const sameDayStart = new Date('2024-01-15T10:00:00')
-const sameDayEnd = new Date('2024-01-15T14:00:00')
-formatCombinedDates(sameDayStart, sameDayEnd) 
-// 'January 15, 2024, 10:00 AM - 2:00 PM'
 ```
 
 ---
@@ -451,7 +444,7 @@ formatTextWrap('This is a long title that might wrap')
 ### Currency and Number Formatting
 
 ```typescript
-import { formatNumber, formatCurrency, formatValuation } from 'usemods'
+import { formatNumber, formatCurrency, formatValuation, formatCompactNumber } from 'usemods'
 
 // Format large numbers
 formatNumber(1234567.89) // '1,234,567.89'
@@ -463,17 +456,16 @@ formatCurrency(1234.56, { locale: 'en-GB' }) // '£1,234.56'
 // Format valuations
 formatValuation(1200000) // '$1.2M'
 formatValuation(5000000000) // '$5B'
+
+// Format compact numbers (no currency)
+formatCompactNumber(1200) // '1.2K'
+formatCompactNumber(1120000) // '1.12M'
 ```
 
 ### Date and Time Formatting
 
 ```typescript
-import { formatCombinedDates, formatDurationLabels, formatUnixTime } from 'usemods'
-
-// Date ranges
-const start = new Date('2024-01-15')
-const end = new Date('2024-01-20')
-formatCombinedDates(start, end) // 'January 15 - 20, 2024'
+import { formatDurationLabels, formatUnixTime } from 'usemods'
 
 // Durations
 formatDurationLabels(3661) // '1 hour 1 minute 1 second'

@@ -30,6 +30,14 @@
     </PageFunction>
 
     <PageFunction
+      name="formatCompactNumber"
+      description="Format large numbers into compact K / M / B strings"
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    locale?: string\n    trimZeros?: boolean\n  }"}]'
+    >
+      <FormatCompactNumber />
+    </PageFunction>
+
+    <PageFunction
       name="formatUnit"
       description="Format a number into a your unit of choice"
       params='[{"name":"number","type":"number"},{"name":"options","type":"{\n    unit: string\n    decimals?: number\n    unitDisplay?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
@@ -43,15 +51,6 @@
       params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    locale?: string\n  }"}]'
     >
       <FormatPercentage />
-    </PageFunction>
-
-    <PageFunction
-      name="formatCombinedDates"
-      description="Collapses two dates (or timestamps) into a human-readable string"
-      info="Time is optional and will only be shown if day, month and year are the same"
-      params='[{"name":"from","type":"Date | string | number"},{"name":"to","type":"Date | string | number"},{"name":"options","type":"{ locale?: string, format?: &#39;short&#39; | &#39;long&#39;, timeZone?: string } = { locale: &#39;en-US&#39;, format: &#39;long&#39; }"}]'
-    >
-      <FormatCombinedDates />
     </PageFunction>
 
     <PageFunction
@@ -167,7 +166,7 @@
 import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
-import FormatCombinedDates from '~/components/content/formatters/FormatCombinedDates.vue'
+import FormatCompactNumber from '~/components/content/formatters/FormatCompactNumber.vue'
 import FormatCurrency from '~/components/content/formatters/FormatCurrency.vue'
 import FormatDurationLabels from '~/components/content/formatters/FormatDurationLabels.vue'
 import FormatDurationNumbers from '~/components/content/formatters/FormatDurationNumbers.vue'
@@ -187,7 +186,7 @@ import FormatUnit from '~/components/content/formatters/FormatUnit.vue'
 import FormatUnixTime from '~/components/content/formatters/FormatUnixTime.vue'
 import FormatValuation from '~/components/content/formatters/FormatValuation.vue'
 
-const toc = ["formatNumber","formatCurrency","formatValuation","formatUnit","formatPercentage","formatCombinedDates","formatDurationLabels","formatDurationNumbers","formatFileSize","formatLength","formatTemperature","formatNumberToWords","formatParagraphs","formatInitials","formatUnixTime","formatList","formatTitle","formatSentenceCase","formatTextWrap"]
+const toc = ["formatNumber","formatCurrency","formatValuation","formatCompactNumber","formatUnit","formatPercentage","formatDurationLabels","formatDurationNumbers","formatFileSize","formatLength","formatTemperature","formatNumberToWords","formatParagraphs","formatInitials","formatUnixTime","formatList","formatTitle","formatSentenceCase","formatTextWrap"]
 const pageId = 'formatters'
 
 provide('toc', toc)

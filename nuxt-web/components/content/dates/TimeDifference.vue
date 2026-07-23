@@ -61,7 +61,9 @@ function buildOpts() {
   if (unit.value !== 'auto') {
     opts.unit = unit.value
   } else {
-    opts.style = style.value
+    if (style.value !== 'short') {
+      opts.style = style.value
+    }
     if (maxUnits.value !== 6) {
       opts.maxUnits = maxUnits.value
     }

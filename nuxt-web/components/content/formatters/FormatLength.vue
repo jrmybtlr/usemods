@@ -76,6 +76,10 @@ const formattedCode = computed(() => {
     decimals: decimals.value,
     unitDisplay: unitDisplay.value,
     locale: locale.value,
+  }, {
+    inputUnit: 'millimeter',
+    outputUnit: 'auto',
+    unitDisplay: 'short',
   })
 })
 </script>
