@@ -68,12 +68,12 @@ average([1, 2, 3, 4, 5]) // 3
 
 ---
 
-### `margin(value: number, percentage: number): number`
+### `margin(number: number, percentage: number): number`
 
 Calculates the margin based on a percentage.
 
 **Parameters:**
-- `value` (number): Base value
+- `number` (number): Base number
 - `percentage` (number): Margin percentage
 
 **Returns:** Margin amount
@@ -88,15 +88,15 @@ margin(50, 20) // 10 (20% of 50)
 
 ---
 
-### `addMargin(value: number, percentage: number): number`
+### `addMargin(number: number, percentage: number): number`
 
-Adds the margin to the value.
+Adds the margin to the number.
 
 **Parameters:**
-- `value` (number): Base value
+- `number` (number): Base number
 - `percentage` (number): Margin percentage
 
-**Returns:** Value with margin added
+**Returns:** Number with margin added
 
 **Example:**
 ```typescript
@@ -108,15 +108,15 @@ addMargin(50, 20) // 60 (50 + 20%)
 
 ---
 
-### `subtractMargin(value: number, percentage: number): number`
+### `subtractMargin(number: number, percentage: number): number`
 
-Subtracts the margin from the value.
+Subtracts the margin from the number.
 
 **Parameters:**
-- `value` (number): Base value
+- `number` (number): Base number
 - `percentage` (number): Margin percentage
 
-**Returns:** Value with margin subtracted
+**Returns:** Number with margin subtracted
 
 **Example:**
 ```typescript
@@ -128,15 +128,15 @@ subtractMargin(50, 20) // 40 (50 - 20%)
 
 ---
 
-### `addMarkup(value: number, percentage: number): number`
+### `addMarkup(number: number, percentage: number): number`
 
-Adds the markup to the value.
+Adds the markup to the number.
 
 **Parameters:**
-- `value` (number): Base value
+- `number` (number): Base number
 - `percentage` (number): Markup percentage
 
-**Returns:** Value with markup added (rounded to 2 decimals)
+**Returns:** Number with markup added (rounded to 2 decimals)
 
 **Example:**
 ```typescript
@@ -148,15 +148,15 @@ addMarkup(50, 25) // 62.5 (50 * 1.25)
 
 ---
 
-### `subtractMarkup(value: number, percentage: number): number`
+### `subtractMarkup(number: number, percentage: number): number`
 
 Calculates the markup based on a percentage.
 
 **Parameters:**
-- `value` (number): Value with markup
+- `number` (number): Number with markup
 - `percentage` (number): Markup percentage
 
-**Returns:** Original value before markup (rounded to 2 decimals)
+**Returns:** Original number before markup (rounded to 2 decimals)
 
 **Example:**
 ```typescript

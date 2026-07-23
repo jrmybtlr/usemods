@@ -7,17 +7,17 @@ import * as map from './maps'
 /**
  * Adds a prefix to a string if it doesn't already start with the prefix.
  */
-export function startWith(value: string, start: string): string {
-  if (value.startsWith(start)) return value
-  return start + value
+export function startWith(text: string, start: string): string {
+  if (text.startsWith(start)) return text
+  return start + text
 }
 
 /**
  * Removes a prefix from a string if it starts with the prefix.
  */
-export function startWithout(value: string, start: string): string {
-  if (value.startsWith(start)) return value.slice(start.length)
-  return value
+export function startWithout(text: string, start: string): string {
+  if (text.startsWith(start)) return text.slice(start.length)
+  return text
 }
 
 /**
@@ -50,12 +50,12 @@ export function surroundWith(text: string, start: string, end: string): string {
  * Adds plurals to a string except for excluded words.
  * @info This handles most english pluralisation rules, but there are exceptions.
  */
-export function pluralize(word: string, count: number): string {
-  if (count === 1 || !word || typeof word !== 'string') return word
+export function pluralize(text: string, count: number): string {
+  if (count === 1 || !text || typeof text !== 'string') return text
 
-  word = word.trim().toLowerCase()
-  if (map.unchangingPlurals.has(word)) return word
-  if (map.irregularPlurals.has(word)) return map.irregularPlurals.get(word)!
+  text = text.trim().toLowerCase()
+  if (map.unchangingPlurals.has(text)) return text
+  if (map.irregularPlurals.has(text)) return map.irregularPlurals.get(text)!
 
   const suffixRules = new Map<string, string>([
     ['ch', 'ches'],
@@ -70,33 +70,33 @@ export function pluralize(word: string, count: number): string {
     ['fe', 'ves'],
   ])
 
-  if (word.endsWith('y')) {
-    const beforeY = word.slice(-2, -1)
+  if (text.endsWith('y')) {
+    const beforeY = text.slice(-2, -1)
     if (!['a', 'e', 'i', 'o', 'u'].includes(beforeY)) {
-      return word.slice(0, -1) + 'ies'
+      return text.slice(0, -1) + 'ies'
     }
   }
 
   for (const [suffix, replacement] of suffixRules) {
-    if (word.endsWith(suffix)) {
-      return word.slice(0, -suffix.length) + replacement
+    if (text.endsWith(suffix)) {
+      return text.slice(0, -suffix.length) + replacement
     }
   }
 
-  return word + 's'
+  return text + 's'
 }
 
 /**
  * Removes plurals from a string.
  * @info This handles most english pluralisation rules, but there are exceptions.
  */
-export function singularize(value: string): string {
-  value = value.trim().toLowerCase()
+export function singularize(text: string): string {
+  text = text.trim().toLowerCase()
 
-  if (map.unchangingPlurals.has(value)) return value
+  if (map.unchangingPlurals.has(text)) return text
 
   for (const [singular, plural] of map.irregularPlurals) {
-    if (plural === value) return singular
+    if (plural === text) return singular
   }
 
   const singularRules = new Map<string, (value: string) => string>([
@@ -121,21 +121,21 @@ export function singularize(value: string): string {
   ])
 
   for (const [suffix, transform] of singularRules) {
-    if (value.endsWith(suffix)) {
-      return transform(value)
+    if (text.endsWith(suffix)) {
+      return transform(text)
     }
   }
 
-  return value
+  return text
 }
 
 /**
  * Converts a number to a string with ordinal suffix.
  */
-export function ordinalize(value: number): string {
+export function ordinalize(number: number): string {
   const suffixes = ['th', 'st', 'nd', 'rd']
-  const remainder = value % 100
-  return value + (suffixes[(remainder - 20) % 10] || suffixes[remainder] || suffixes.at(0) || 'th')
+  const remainder = number % 100
+  return number + (suffixes[(remainder - 20) % 10] || suffixes[remainder] || suffixes.at(0) || 'th')
 }
 
 /**

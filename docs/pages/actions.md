@@ -187,12 +187,12 @@ focusTrap(modal)
 
 ---
 
-### `debounce<T extends (...args: unknown[]) => unknown>(func: T, delay: number, options?: { leading?: boolean, trailing?: boolean }): ((...args: Parameters<T>) => void) & { cancel: () => void }`
+### `debounce<T extends (...args: unknown[]) => unknown>(fn: T, delay: number, options?: { leading?: boolean, trailing?: boolean }): ((...args: Parameters<T>) => void) & { cancel: () => void }`
 
 Runs a function only if there are no new calls during the delay.
 
 **Parameters:**
-- `func` (T): The function to debounce
+- `fn` (T): The function to debounce
 - `delay` (number): Delay in milliseconds
 - `options` (object, optional):
   - `leading` (boolean, optional): Execute on the leading edge. Defaults to `false`
@@ -217,13 +217,13 @@ debouncedSearch.cancel()
 
 ---
 
-### `throttle<T extends (...args: unknown[]) => void>(fn: T, threshold: number): ((...args: Parameters<T>) => void) & { cancel: () => void }`
+### `throttle<T extends (...args: unknown[]) => void>(fn: T, delay: number): ((...args: Parameters<T>) => void) & { cancel: () => void }`
 
-Throttles a function to ensure it only runs once per threshold.
+Throttles a function to ensure it only runs once per delay interval.
 
 **Parameters:**
 - `fn` (T): The function to throttle
-- `threshold` (number): Time threshold in milliseconds
+- `delay` (number): Minimum interval between runs in milliseconds
 
 **Returns:** Throttled function with a `cancel()` method
 
