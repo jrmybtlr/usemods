@@ -28,7 +28,7 @@
         View on GitHub
       </NuxtLink>
 
-      <NuxtLink v-if="pageId" :to="`/api/docs/${pageId}.md`" target="_blank"
+      <NuxtLink v-if="pageId" :to="`/docs/${pageId}.md`" target="_blank"
         class="flex items-center gap-1.5 text-sm font-medium leading-none text-zinc-500">
         <Icon name="lucide:file-text" class="-mt-px mr-1.5 size-4" />
         View Markdown

@@ -8,6 +8,7 @@ Welcome to the UseMods documentation! This directory contains comprehensive mark
 
 - **[Actions](./actions.md)** - Browser interactions, form handling, scrolling, and function control (debounce/throttle)
 - **[Data](./data.md)** - Array and object manipulation (sort, reverse, flatten, deduplicate)
+- **[Dates](./dates.md)** - Date comparisons, relative time, and duration helpers
 - **[Modifiers](./modifiers.md)** - String manipulation and transformation utilities
 - **[Formatters](./formatters.md)** - Number, currency, date, duration, and text formatting
 - **[Generators](./generators.md)** - Random number generation, UUIDs, passwords, and placeholder content
@@ -85,6 +86,18 @@ These documentation files are optimized for:
 - **Code Completion** - Detailed parameter and return type information
 - **Documentation Tools** - Standard markdown format that works with documentation generators
 - **Search** - Well-organized headings and keywords for easy discovery
+
+### Public AI discovery endpoints
+
+Published on the website for crawlers and coding agents:
+
+- https://usemods.com/llms.txt — curated index ([llmstxt.org](https://llmstxt.org))
+- https://usemods.com/llms-full.txt — full documentation corpus
+- https://usemods.com/docs/all.md — all modules in one markdown file
+- https://usemods.com/docs/{module}.md — per-module markdown (e.g. `/docs/formatters.md`)
+- https://usemods.com/robots.txt — allows major AI crawlers and advertises the files above
+
+These files regenerate automatically on website `build` / `generate` / `dev` (via Nuxt `build:before` and package pre-scripts) into gitignored paths under `nuxt-web/public/`. Manual: `pnpm --prefix docs ai-docs`.
 
 ## Contributing
 

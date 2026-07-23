@@ -6,7 +6,11 @@
  * Check if you're a server-side user.
  */
 export function isServerSide(): boolean {
-  return typeof window === 'undefined' || (typeof process !== 'undefined' && typeof process.versions === 'object' && 'node' in process.versions)
+  return typeof window === 'undefined'
+    || (typeof process !== 'undefined'
+      && typeof process.versions === 'object'
+      && process.versions !== null
+      && Object.hasOwn(process.versions, 'node'))
 }
 
 /**
