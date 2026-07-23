@@ -14,6 +14,12 @@ describe('index exports', () => {
     expect(typeof mod.formatNumber).toBe('function')
     expect(typeof mod.formatTitle).toBe('function')
 
+    // Dates
+    expect(typeof mod.isToday).toBe('function')
+    expect(typeof mod.timeFrom).toBe('function')
+    expect(typeof mod.timeDifference).toBe('function')
+    expect(typeof mod.parseDate).toBe('function')
+
     // Modifiers
     expect(typeof mod.camelCase).toBe('function')
     expect(typeof mod.kebabCase).toBe('function')
@@ -56,5 +62,13 @@ describe('index exports', () => {
 
     // Tailwind
     expect(typeof mod.modDevices).toBe('function')
+
+    // Maps
+    expect(mod.configLocales).toBeInstanceOf(Set)
+    expect(mod.configLocales.has('en-US')).toBe(true)
+    expect(mod.configUnits).toBeInstanceOf(Set)
+    expect(mod.bytesInUnit).toBeInstanceOf(Map)
+    expect(mod.lengthUnitConversions).toBeInstanceOf(Map)
+    expect(mod.currencySymbols).toBeInstanceOf(Map)
   })
 })

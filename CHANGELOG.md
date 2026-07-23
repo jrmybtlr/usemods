@@ -1,5 +1,66 @@
 # Changelog
 
+## v1.15.2
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.16.0...v1.15.2)
+
+### 🩹 Fixes
+
+- Export maps so locale and unit selects auto-import ([eb5c0cec](https://github.com/LittleFoxCompany/usemods/commit/eb5c0cec))
+
+### 💅 Refactors
+
+- **src:** Modernize function bodies with native ES2023+ APIs ([41251fdb](https://github.com/LittleFoxCompany/usemods/commit/41251fdb))
+- **src:** Apply safe native JS leftovers ([acdcb2b4](https://github.com/LittleFoxCompany/usemods/commit/acdcb2b4))
+
+### 📦 Build
+
+- Generate navigation and drop .md route hijack ([e640fced](https://github.com/LittleFoxCompany/usemods/commit/e640fced))
+
+### 🏡 Chore
+
+- **deps-dev:** Bump @types/node from 25.5.2 to 26.1.0 in /nuxt-module ([6846fd3d](https://github.com/LittleFoxCompany/usemods/commit/6846fd3d))
+- **deps-dev:** Bump nuxt from 4.4.2 to 4.4.7 in /nuxt-module ([#187](https://github.com/LittleFoxCompany/usemods/pull/187))
+- **deps-dev:** Bump nuxt from 4.4.7 to 4.4.8 in /nuxt-module ([3f22057b](https://github.com/LittleFoxCompany/usemods/commit/3f22057b))
+- **deps-dev:** Bump @types/node from 25.5.0 to 26.1.0 ([#197](https://github.com/LittleFoxCompany/usemods/pull/197))
+- **src:** Remove added MDN documentation comments ([414072df](https://github.com/LittleFoxCompany/usemods/commit/414072df))
+- **release:** V1.15.1 ([ada9b56c](https://github.com/LittleFoxCompany/usemods/commit/ada9b56c))
+
+### ❤️ Contributors
+
+- Jeremy Butler <jeremy.butler@laravel.com>
+- Cursor Agent ([@cursoragent](https://github.com/cursoragent))
+
+## v1.15.1
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.16.0...v1.15.1)
+
+### 🩹 Fixes
+
+- Export maps so locale and unit selects auto-import ([eb5c0cec](https://github.com/LittleFoxCompany/usemods/commit/eb5c0cec))
+
+### 💅 Refactors
+
+- **src:** Modernize function bodies with native ES2023+ APIs ([41251fdb](https://github.com/LittleFoxCompany/usemods/commit/41251fdb))
+- **src:** Apply safe native JS leftovers ([acdcb2b4](https://github.com/LittleFoxCompany/usemods/commit/acdcb2b4))
+
+### 📦 Build
+
+- Generate navigation and drop .md route hijack ([e640fced](https://github.com/LittleFoxCompany/usemods/commit/e640fced))
+
+### 🏡 Chore
+
+- **deps-dev:** Bump @types/node from 25.5.2 to 26.1.0 in /nuxt-module ([6846fd3d](https://github.com/LittleFoxCompany/usemods/commit/6846fd3d))
+- **deps-dev:** Bump nuxt from 4.4.2 to 4.4.7 in /nuxt-module ([#187](https://github.com/LittleFoxCompany/usemods/pull/187))
+- **deps-dev:** Bump nuxt from 4.4.7 to 4.4.8 in /nuxt-module ([3f22057b](https://github.com/LittleFoxCompany/usemods/commit/3f22057b))
+- **deps-dev:** Bump @types/node from 25.5.0 to 26.1.0 ([#197](https://github.com/LittleFoxCompany/usemods/pull/197))
+- **src:** Remove added MDN documentation comments ([414072df](https://github.com/LittleFoxCompany/usemods/commit/414072df))
+
+### ❤️ Contributors
+
+- Jeremy Butler <jeremy.butler@laravel.com>
+- Cursor Agent ([@cursoragent](https://github.com/cursoragent))
+
 ## v1.15.0
 
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.14.2...v1.15.0)
