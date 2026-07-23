@@ -13,5 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import { parseDate } from 'usemods'
+
 const value = ref('2024-01-01')
 </script>
