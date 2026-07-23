@@ -145,6 +145,7 @@ async function generatePublicAiDocs() {
 
   await fsPromises.writeFile(join(publicDocsDir, 'all.md'), allMarkdownContent)
   console.log('Generated public/docs markdown')
+  return allMarkdownContent
 }
 
 async function generateLLMsTxt() {
@@ -195,9 +196,10 @@ async function generateLLMsTxt() {
   console.log('Generated llms.txt')
 }
 
-async function generateLLMsFullTxt() {
+async function generateLLMsFullTxt(allMarkdownContent) {
+  // Use in-memory corpus from generatePublicAiDocs — avoid re-reading disk,
+  // which races when docs.mjs clearAll() runs in a parallel workspace build.
   const baseUrl = 'https://usemods.com'
-  const allMarkdownContent = await fsPromises.readFile(join(nuxtWebPath, 'public', 'docs', 'all.md'), 'utf8')
   let llmsFullContent = `# UseMods - Full Documentation\n\n`
   llmsFullContent += `Complete documentation for all UseMods functions, optimized for AI and LLM consumption.\n\n`
   llmsFullContent += `Base URL: ${baseUrl}\n`
@@ -248,9 +250,9 @@ async function generateSitemap() {
 export async function generateAiDiscoveryAssets() {
   // Website build requires navigation.ts (gitignored generated file)
   await generateNavigation()
-  await generatePublicAiDocs()
+  const allMarkdownContent = await generatePublicAiDocs()
   await generateLLMsTxt()
-  await generateLLMsFullTxt()
+  await generateLLMsFullTxt(allMarkdownContent)
   await generateSitemap()
   console.log('AI discovery assets ready')
 }

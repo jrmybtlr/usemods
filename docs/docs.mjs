@@ -737,6 +737,7 @@ async function generatePublicAiDocs() {
 
   await writeFile(join(publicDocsDir, 'all.md'), allMarkdownContent)
   console.log('Generated public AI markdown docs')
+  return allMarkdownContent
 }
 
 async function generateLLMsTxt() {
@@ -813,23 +814,22 @@ async function generateLLMsTxt() {
   console.log('Generated llms.txt')
 }
 
-async function generateLLMsFullTxt() {
+async function generateLLMsFullTxt(allMarkdownContent) {
   const baseUrl = 'https://usemods.com'
-  const allMdPath = join(nuxtWebPath, 'public', 'docs', 'all.md')
+  let corpus = allMarkdownContent
 
-  // Prefer the rich public corpus; fall back to generated content docs
-  let allMarkdownContent = ''
-  try {
-    allMarkdownContent = await readFile(allMdPath, 'utf8')
-  }
-  catch {
-    await generatePublicAiDocs()
+  // Prefer caller-provided corpus; fall back to disk / regeneration
+  if (!corpus) {
+    const allMdPath = join(nuxtWebPath, 'public', 'docs', 'all.md')
     try {
-      allMarkdownContent = await readFile(allMdPath, 'utf8')
+      corpus = await readFile(allMdPath, 'utf8')
     }
     catch {
-      await generateAllMarkdown()
-      allMarkdownContent = await readFile(join(nuxtWebPath, 'content', '2.docs', 'all.md'), 'utf8')
+      corpus = await generatePublicAiDocs()
+      if (!corpus) {
+        await generateAllMarkdown()
+        corpus = await readFile(join(nuxtWebPath, 'content', '2.docs', 'all.md'), 'utf8')
+      }
     }
   }
 
@@ -838,7 +838,7 @@ async function generateLLMsFullTxt() {
   llmsFullContent += `Base URL: ${baseUrl}\n`
   llmsFullContent += `Index: ${baseUrl}/llms.txt\n\n`
   llmsFullContent += `---\n\n`
-  llmsFullContent += allMarkdownContent
+  llmsFullContent += corpus
 
   const publicDir = join(nuxtWebPath, 'public')
   await fsPromises.mkdir(publicDir, { recursive: true })
@@ -854,10 +854,10 @@ async function generateAll() {
   await copyFile(join(srcPath, 'maps.ts'), join(nuxtWebPath, 'utils/mods/maps.ts'))
   await generateNavigation()
   await generateAllMarkdown()
-  await generatePublicAiDocs()
+  const allMarkdownContent = await generatePublicAiDocs()
   await generateSitemap()
   await generateLLMsTxt()
-  await generateLLMsFullTxt()
+  await generateLLMsFullTxt(allMarkdownContent)
 }
 
 async function clearAll() {
@@ -881,26 +881,27 @@ async function clearAll() {
   ])
 }
 
-// Clear and Generate on State
-clearAll().then(generateAll)
-
-// Watch for Changes
+// CLI — do not clear/generate on every import; --bundle must not wipe public/docs
+// while nuxt-web prebuild is generating AI discovery assets in parallel.
 if (args.includes('--watch')) {
+  await clearAll()
+  await generateAll()
   watch(srcPath, { recursive: true }, async () => {
     await generateAll()
     console.log('Generated all files')
   })
 }
 else if (args.includes('--bundle')) {
-  generateBundle()
+  await generateBundle()
   console.log('Generated bundle')
 }
 else if (args.includes('--build')) {
-  generateAll()
+  await clearAll()
+  await generateAll()
   console.log('Generated all files')
 }
 else {
-  console.log('No valid command provided. Use --watch or --build.')
+  console.log('No valid command provided. Use --watch, --build, or --bundle.')
 }
 
 async function generateBundle() {
