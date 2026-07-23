@@ -1,8 +1,12 @@
 <template>
   <Example>
     <ExampleInputs class="flex flex-col gap-4">
-      <FormInput v-model="text" label="Text" />
-      <FormSelect v-model="by" label="By"  >
+      <FormInput
+        v-model="text"
+        label="Text" />
+      <FormSelect
+        v-model="by"
+        label="By">
         <option value="character">
           Character
         </option>
@@ -19,7 +23,10 @@
           Unique
         </option>
       </FormSelect>
-      <FormInput v-model="searchFor" label="Search For" v-if="by === 'unique'" />
+      <FormInput
+        v-if="by === 'unique'"
+        v-model="searchFor"
+        label="Search For" />
     </ExampleInputs>
     <ExampleResult>
       {{ countBy(text, { by, searchFor }) }}
@@ -42,7 +49,7 @@ I have seen the joy in the eyes of those who rediscover the simple pleasure of t
 Let us not dismiss the scooter as trivial or temporary. Let us instead recognize it as a powerful symbol of how small changes can transform society. When future generations look back on this era of transition, they will note that the revolution did not arrive with a roar but with the gentle whirr of small wheels on pavement. Today, I call upon each of you to consider how this unassuming vehicle might just carry us all toward a brighter tomorrow. ✨`)
 
 const formattedCode = computed(() => {
-  return generateFormatterCode('countBy', "your-text-here", {
+  return generateFormatterCode('countBy', 'your-text-here', {
     by: by.value,
     searchFor: searchFor.value,
   }, {
