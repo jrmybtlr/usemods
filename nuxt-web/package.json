@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",
-    "build": "nuxi build",
+    "build": "pnpm --dir .. run bundle && nuxi build",
     "generate": "nuxi generate",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

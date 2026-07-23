@@ -10,7 +10,7 @@
     "release:major": "pnpm run test && changelogen --release --major && git push --follow-tags",
     "release:minor": "pnpm run test && changelogen --release --minor && git push --follow-tags",
     "release:patch": "pnpm run test && changelogen --release --patch && git push --follow-tags",
-    "build": "pnpm i --no-frozen-lockfile && pnpm -r --stream build",
+    "build": "pnpm i --no-frozen-lockfile && pnpm run bundle && pnpm -r --stream build",
     "nuxt-module:dev": "pnpm i --prefix ./nuxt-module && pnpm run --prefix ./nuxt-module dev",
     "nuxt-module:release": "node sync-versions.mjs && pnpm run --prefix ./nuxt-module release",
     "prepublishOnly": "pnpm run --prefix docs bundle",

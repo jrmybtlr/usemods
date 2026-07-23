@@ -30,15 +30,12 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
     resolve: {
-      alias:
-        process.env.NODE_ENV === "development"
-          ? {
-              // In this monorepo, `usemods` is linked via pnpm and points at the
-              // prebuilt `dist/` bundle. That bundle can break Vite transforms
-              // during dev (e.g. duplicate symbol errors). Use source instead.
-              usemods: resolve(repoRoot, "src/index.ts"),
-            }
-          : {},
+      // Monorepo: always resolve to source. Production `exports.default` points at
+      // gitignored `dist/`, which is missing on fresh CI (Cloudflare) until bundle runs.
+      // Source also avoids Vite transform issues with the prebuilt dist bundle.
+      alias: {
+        usemods: resolve(repoRoot, "src/index.ts"),
+      },
     },
     server: {
       fs: {
