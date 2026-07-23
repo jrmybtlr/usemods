@@ -1,4 +1,27 @@
 /**
+ * Serializes a playground argument into valid JS source.
+ * Arrays become comma-separated args (multi-parameter demos).
+ */
+function formatArg(value: unknown): string {
+  if (Array.isArray(value)) {
+    return value.map(formatArg).join(', ')
+  }
+  if (typeof value === 'string') {
+    return JSON.stringify(value)
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value)
+  }
+  if (value === undefined) {
+    return 'undefined'
+  }
+  if (value === null) {
+    return 'null'
+  }
+  return JSON.stringify(value)
+}
+
+/**
  * Builds a docs playground function call string.
  * Omits empty values and any option that matches its default.
  */
@@ -37,5 +60,5 @@ export function generateFormatterCode(
       }).replace(/"([^"]+)":/g, '$1:')}`
     : ''
 
-  return `${name}(${value}${optionsString})`
+  return `${name}(${formatArg(value)}${optionsString})`
 }

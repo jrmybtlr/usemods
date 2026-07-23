@@ -12,7 +12,7 @@ const nuxtWebPath = resolve(root, 'nuxt-web')
 const srcPath = resolve(root, 'src')
 
 const metadataPattern = /\/\/\s+(title|description|lead):\s+([^\r\n]*)/g
-const files = ['formatters', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
+const files = ['formatters', 'dates', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
 
 function stripFrontmatter(content) {
   return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
