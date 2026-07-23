@@ -61,7 +61,7 @@
     "@rollup/plugin-typescript": "^12.3.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^26.1.0",
-    "@types/web": "^0.0.352",
+    "@types/web": "^0.0.353",
     "@vitest/coverage-v8": "^4.1.9",
     "changelogen": "^0.6.2",
     "fs-extra": "^11.3.4",
