@@ -84,7 +84,7 @@ const formattedCode = computed(() => {
   }, {
     inputUnit: 'celsius',
     outputUnit: 'auto',
-    unitDisplay: 'short',
+    display: 'short',
   })
 })
 </script>

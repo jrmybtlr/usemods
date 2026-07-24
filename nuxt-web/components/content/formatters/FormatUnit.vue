@@ -61,7 +61,7 @@ const formattedCode = computed(() => {
     display: display.value,
     locale: locale.value,
   }, {
-    unitDisplay: 'long',
+    display: 'long',
   })
 })
 </script>

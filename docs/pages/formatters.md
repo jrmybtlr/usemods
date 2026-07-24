@@ -80,9 +80,6 @@ formatValuation(5000000000) // '$5B'
 
 ---
 
-<<<<<<< HEAD
-### `formatUnit(number: number, options: { unit: string, decimals?: number, display?: 'short' | 'long', locale?: string }): string`
-=======
 ### `formatCompactNumber(number: number, options?: { decimals?: number, locale?: string, trimZeros?: boolean }): string`
 
 Format large numbers into compact K / M / B strings.
@@ -109,8 +106,7 @@ formatCompactNumber(1200, { decimals: 2, trimZeros: false }) // '1.20K'
 
 ---
 
-### `formatUnit(number: number, options: { unit: string, decimals?: number, unitDisplay?: 'short' | 'long', locale?: string }): string`
->>>>>>> origin/main
+### `formatUnit(number: number, options: { unit: string, decimals?: number, display?: 'short' | 'long', locale?: string }): string`
 
 Format a number into your unit of choice.
 
@@ -159,45 +155,7 @@ formatPercentage(0.1234, { decimals: 1 }) // '12.3%'
 
 ---
 
-<<<<<<< HEAD
-### `formatCombinedDates(from: Date | string | number, to: Date | string | number, options?: { locale?: string, display?: 'short' | 'long', timeZone?: string }): string`
-
-Collapses two dates (or timestamps) into a human-readable string.
-
-**Parameters:**
-- `from` (Date | string | number): Start date
-- `to` (Date | string | number): End date
-- `options` (object, optional):
-  - `locale` (string, optional): Locale string. Defaults to `'en-US'`
-  - `display` ('short' | 'long', optional): Month name length. Defaults to `'long'`
-  - `monthDisplay` / `format` ('short' | 'long', optional): Aliases for `display`
-  - `timeZone` (string, optional): Timezone string
-
-**Returns:** Combined date range string
-
-**Note:** Time is optional and will only be shown if day, month and year are the same.
-
-**Example:**
-```typescript
-import { formatCombinedDates } from 'usemods'
-
-const start = new Date('2024-01-15')
-const end = new Date('2024-01-20')
-formatCombinedDates(start, end) // 'January 15 - 20, 2024'
-
-// Same day with different times
-const sameDayStart = new Date('2024-01-15T10:00:00')
-const sameDayEnd = new Date('2024-01-15T14:00:00')
-formatCombinedDates(sameDayStart, sameDayEnd) 
-// 'January 15, 2024, 10:00 AM - 2:00 PM'
-```
-
----
-
 ### `formatDurationLabels(seconds: number, options?: { display?: 'short' | 'long', round?: boolean, decimals?: number }): string`
-=======
-### `formatDurationLabels(seconds: number, options?: { labels?: 'short' | 'long', round?: boolean, decimals?: number }): string`
->>>>>>> origin/main
 
 Format time into a human-readable string.
 

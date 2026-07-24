@@ -1,47 +1,15 @@
-# Consistent `/src` parameter language
-
-## Goal
-Align function parameter names across `/src` so related APIs read with the same vocabulary.
-
-## Convention applied
-| Input kind | Param name |
-|---|---|
-| Unknown / polymorphic validators | `value` |
-| String content | `text` |
-| Single number (format / math scalar) | `number` (or domain: `seconds`, `timestamp`) |
-| Number arrays | `numbers` |
-| Collections | `items` |
-| Callbacks | `fn` |
-| Wait interval (ms) | `delay` |
-| Focus / query root | `container` |
-| Specific DOM node | `element` |
-| Inclusive ranges | `from` / `to` |
-| User agent | `userAgent` |
+# Fix PR #219 merge conflicts + consistency gaps
 
 ## Plan
-- [x] Align modifiers string params (`value`/`word` → `text`; `ordinalize` → `number`)
-- [x] Align `debounce` / `throttle` (`func`→`fn`, `threshold`→`delay`)
-- [x] Align password option keys between `generatePassword` and `checkPasswordStrength`
-- [x] Align numbers scalar margin/markup params (`value` → `number`)
-- [x] Update docs to match
-- [x] Run tests
-- [x] Commit, push, open PR
-
-## Left as-is (intentional)
-- Validator `value` — correct for polymorphic input
-- Formatter `number` vs `text` split — intentional by type
-- `devices` `win` — avoids shadowing `window`
-- `copyToClipboard(value)` — accepts `string | number`
-- Short/long defaults differ by domain (`display` default `long` for unit/duration/dates, `short` for file/length/temp)
-
-## Follow-up: short/long display options
-- [x] Unify all short/long options to `display`
-- [x] Keep legacy aliases: `unitDisplay`, `labels`, `monthDisplay`, `format`
-- [x] Update docs + nuxt-web demos/params
-- [x] Tests for `display` + legacy aliases
+- [x] Resolve conflicts: drop `formatCombinedDates` from formatters (keep dates)
+- [x] Align `combineDates` to `display` + legacy `format` alias
+- [x] Update dates demo/docs/tests for `display`
+- [x] Sweep stale demos (password numbers/symbols, throttle delay, unitDisplay → display)
+- [x] Delete `FormatCombinedDates.vue`; verify tests
 
 ## Review
-- Positional renames are DX-only (call sites using positional args unchanged)
-- Password options: preferred `numbers`/`symbols`, legacy `number`/`special` still accepted
-- Short/long verbosity is always `display: 'short' | 'long'` across formatters
-- All 331 tests pass; `tsc --noEmit` clean
+- Conflicts cleared in `formatters.ts`, `formatters.test.ts`, `formatters.md`, `formatters.vue`
+- Canonical API remains `combineDates` in `dates.ts` with deprecated `formatCombinedDates` alias
+- `display` preferred; `format` kept as legacy alias
+- Demo/docs updated for password, throttle, formatter display defaults
+- 339 tests passed; `tsc --noEmit` clean; no conflict markers left

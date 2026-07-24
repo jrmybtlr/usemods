@@ -13,34 +13,6 @@ test('formatNumber', () => {
   expect(mod.formatNumber(1000.95, { decimals: 2, locale: 'id-ID' })).toBe('1.000,95')
 })
 
-<<<<<<< HEAD
-test('formatCombinedDates', () => {
-  // Same Day with different times
-  expect(mod.formatCombinedDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { timeZone: 'UTC' })).toBe('January 1, 2025, 12:00 AM - 8:00 AM')
-  expect(mod.formatCombinedDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { locale: 'en-AU', display: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 12:00 am - 8:00 am')
-  expect(mod.formatCombinedDates(new Date('2025-01-01T09:00:00Z'), new Date('2025-01-01T14:30:00Z'), { locale: 'en-AU', display: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 9:00 am - 2:30 pm')
-  // Legacy aliases still work
-  expect(mod.formatCombinedDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { locale: 'en-AU', format: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 12:00 am - 8:00 am')
-  expect(mod.formatCombinedDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { locale: 'en-AU', monthDisplay: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 12:00 am - 8:00 am')
-
-  // Same month
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-01-31T12:00:00Z'), { timeZone: 'UTC' })).toBe('1-31 January 2025')
-  // Same year
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-01-31T12:00:00Z'), { timeZone: 'UTC' })).toBe('1-31 January 2025')
-  // Same year, different month
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-02-01T12:00:00Z'), { timeZone: 'UTC' })).toBe('January 1 - February 1, 2025')
-  // Leap year (2024 is a leap year, not 2025)
-  expect(mod.formatCombinedDates(new Date('2024-01-01T12:00:00Z'), new Date('2024-02-29T12:00:00Z'), { timeZone: 'UTC' })).toBe('January 1 - February 29, 2024')
-  // Different year
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2026-01-31T12:00:00Z'), { timeZone: 'UTC' })).toBe('January 1, 2025 - January 31, 2026')
-  // Same Date
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-01-01T12:00:00Z'), { timeZone: 'UTC' })).toBe('January 1, 2025')
-  // Invalid Date
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('invalid'), { timeZone: 'UTC' })).toBe('')
-})
-
-=======
->>>>>>> origin/main
 test('formatCurrency', () => {
   expect(mod.formatCurrency(0.00)).toBe('$0.00')
   expect(mod.formatCurrency(0.10)).toBe('$0.10')

@@ -81,7 +81,7 @@ const formattedCode = computed(() => {
   }, {
     inputUnit: 'byte',
     outputUnit: 'auto',
-    unitDisplay: 'short',
+    display: 'short',
   })
 })
 </script>

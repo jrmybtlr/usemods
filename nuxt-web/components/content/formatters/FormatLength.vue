@@ -79,7 +79,7 @@ const formattedCode = computed(() => {
   }, {
     inputUnit: 'millimeter',
     outputUnit: 'auto',
-    unitDisplay: 'short',
+    display: 'short',
   })
 })
 </script>

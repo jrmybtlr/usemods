@@ -54,18 +54,6 @@
     </PageFunction>
 
     <PageFunction
-<<<<<<< HEAD
-      name="formatCombinedDates"
-      description="Collapses two dates (or timestamps) into a human-readable string"
-      info="Time is optional and will only be shown if day, month and year are the same"
-      params='[{"name":"from","type":"Date | string | number"},{"name":"to","type":"Date | string | number"},{"name":"options","type":"{ locale?: string, display?: &#39;short&#39; | &#39;long&#39;, timeZone?: string } = { locale: &#39;en-US&#39;, display: &#39;long&#39; }"}]'
-    >
-      <FormatCombinedDates />
-    </PageFunction>
-
-    <PageFunction
-=======
->>>>>>> origin/main
       name="formatDurationLabels"
       description="Format time into a human-readable string"
       params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    display?: &#39;short&#39; | &#39;long&#39;\n    round?: boolean\n    decimals?: number\n  }"}]'
