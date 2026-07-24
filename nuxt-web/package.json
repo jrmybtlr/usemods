@@ -40,7 +40,7 @@
     "nuxt-schema-org": "^5.0.10",
     "nuxt-seo-utils": "^7.0.19",
     "nuxt-shiki": "^0.3.2",
-    "nuxt-site-config": "^3.2.21",
+    "nuxt-site-config": "^4.1.2",
     "vite-plugin-useclassy": "^3.1.3"
   }
 }
