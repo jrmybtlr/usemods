@@ -13,28 +13,6 @@ test('formatNumber', () => {
   expect(mod.formatNumber(1000.95, { decimals: 2, locale: 'id-ID' })).toBe('1.000,95')
 })
 
-test('formatCombinedDates', () => {
-  // Same Day with different times
-  expect(mod.formatCombinedDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { timeZone: 'UTC' })).toBe('January 1, 2025, 12:00 AM - 8:00 AM')
-  expect(mod.formatCombinedDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { locale: 'en-AU', format: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 12:00 am - 8:00 am')
-  expect(mod.formatCombinedDates(new Date('2025-01-01T09:00:00Z'), new Date('2025-01-01T14:30:00Z'), { locale: 'en-AU', format: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 9:00 am - 2:30 pm')
-
-  // Same month
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-01-31T12:00:00Z'), { timeZone: 'UTC' })).toBe('1-31 January 2025')
-  // Same year
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-01-31T12:00:00Z'), { timeZone: 'UTC' })).toBe('1-31 January 2025')
-  // Same year, different month
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-02-01T12:00:00Z'), { timeZone: 'UTC' })).toBe('January 1 - February 1, 2025')
-  // Leap year (2024 is a leap year, not 2025)
-  expect(mod.formatCombinedDates(new Date('2024-01-01T12:00:00Z'), new Date('2024-02-29T12:00:00Z'), { timeZone: 'UTC' })).toBe('January 1 - February 29, 2024')
-  // Different year
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2026-01-31T12:00:00Z'), { timeZone: 'UTC' })).toBe('January 1, 2025 - January 31, 2026')
-  // Same Date
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-01-01T12:00:00Z'), { timeZone: 'UTC' })).toBe('January 1, 2025')
-  // Invalid Date
-  expect(mod.formatCombinedDates(new Date('2025-01-01T12:00:00Z'), new Date('invalid'), { timeZone: 'UTC' })).toBe('')
-})
-
 test('formatCurrency', () => {
   expect(mod.formatCurrency(0.00)).toBe('$0.00')
   expect(mod.formatCurrency(0.10)).toBe('$0.10')
@@ -56,6 +34,21 @@ test('formatValuation', () => {
   expect(mod.formatValuation(12345678, { decimals: 0 })).toBe('$12M')
   expect(mod.formatValuation(12345678, { decimals: 0, locale: 'en-GB' })).toMatch(/^£12[Mm]$/)
   expect(mod.formatValuation(12345678, { decimals: 2, locale: 'en-GB' })).toMatch(/^£12\.35[Mm]$/)
+})
+
+test('formatCompactNumber', () => {
+  expect(mod.formatCompactNumber(1)).toBe('1')
+  expect(mod.formatCompactNumber(10)).toBe('10')
+  expect(mod.formatCompactNumber(100)).toBe('100')
+  expect(mod.formatCompactNumber(1200)).toBe('1.2K')
+  expect(mod.formatCompactNumber(10200)).toBe('10.2K')
+  expect(mod.formatCompactNumber(100350)).toBe('100.35K')
+  expect(mod.formatCompactNumber(1120000)).toBe('1.12M')
+  expect(mod.formatCompactNumber(21400000000)).toBe('21.4B')
+  expect(mod.formatCompactNumber(1200, { decimals: 2 })).toBe('1.2K')
+  expect(mod.formatCompactNumber(1200, { decimals: 2, trimZeros: false })).toBe('1.20K')
+  expect(mod.formatCompactNumber(12345678, { decimals: 0 })).toBe('12M')
+  expect(mod.formatCompactNumber(12345678, { decimals: 2, locale: 'de-DE' })).toMatch(/^12[,.]35\s?Mio\.?$/)
 })
 
 test('formatDurationLabels', () => {

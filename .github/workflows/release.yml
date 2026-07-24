@@ -9,27 +9,39 @@ jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-    defaults:
-      run:
-        working-directory: ./package
+      contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: 16.x
+          version: 10.13.1
 
-      - run: npx changelogithub
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create GitHub Release
+        run: npx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: npm ci
-
-      - name: Publish package to NPM 📦
-        run: npm run release
+      - name: Publish usemods
+        run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync and publish usemods-nuxt
+        run: |
+          node sync-versions.mjs
+          pnpm install --prefix ./nuxt-module
+          pnpm run --prefix ./nuxt-module release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

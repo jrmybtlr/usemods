@@ -17,6 +17,9 @@ dist
 .output
 sw.*
 
+# Generated lint reports (machine-specific absolute paths)
+**/dslint-report.json
+
 # Environment variables
 .env
 
@@ -48,3 +51,5 @@ nuxt-web/utils/**/*.ts
 .data
 CLAUDE.md
 .pnpm-store/*
+tasks/todo.md
+tasks/todo.md

@@ -1,0 +1,12 @@
+{
+  "include_dirs": [
+    "src"
+  ],
+  "ignore_globs": [],
+  "css_entrypoints": [],
+  "playground_groups": {
+    "components": [
+      "src"
+    ]
+  }
+}

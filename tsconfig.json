@@ -6,7 +6,7 @@
     "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "noUnusedLocals": true,
     "useDefineForClassFields": true,

@@ -190,7 +190,7 @@ export function stripHtml(text: string): string {
         }
         return entities[entity] || match
       })
-  };
+  }
 
   return decodeEntities(stripTags(text)).trim()
 }
