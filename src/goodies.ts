@@ -68,9 +68,9 @@ export function checkPasswordStrength(text: string, options: {
   }
 
   if (text.length < length) return { score: 1, label: `Password must be at least ${length} characters long` }
-  if (counts.uppercase < uppercase) return { score: 1, label: `Password must contain ${uppercase} uppercase letter` }
-  if (counts.numbers < numbers) return { score: 1, label: `Password must contain ${numbers} number` }
-  if (counts.symbols < symbols) return { score: 1, label: `Password must contain ${symbols} special character` }
+  if (counts.uppercase < uppercase) return { score: 1, label: `Password must contain ${uppercase} uppercase letter${uppercase === 1 ? '' : 's'}` }
+  if (counts.numbers < numbers) return { score: 1, label: `Password must contain ${numbers} number${numbers === 1 ? '' : 's'}` }
+  if (counts.symbols < symbols) return { score: 1, label: `Password must contain ${symbols} special character${symbols === 1 ? '' : 's'}` }
 
   strength += text.length >= 8 ? 1 : 0
   strength += counts.uppercase >= 1 ? 1 : 0
