@@ -29,7 +29,7 @@ Compare dates, show relative time, and measure durations. Helpful helpers when I
 
 **Description:** Collapses two dates (or timestamps) into a human-readable string
 
-**Info:** Time is optional and will only be shown if day, month and year are the same
+**Info:** Times always show for same-day different clocks; for other ranges set showTime: true
 
 **Parameters:**
 - `from` (`DateInput`)

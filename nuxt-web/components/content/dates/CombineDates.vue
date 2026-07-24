@@ -30,6 +30,17 @@
             Long
           </option>
         </FormSelect>
+        <FormSelect
+          v-model="showTime"
+          info="Multi-day ranges"
+          label="Show Time">
+          <option value="false">
+            Off
+          </option>
+          <option value="true">
+            On
+          </option>
+        </FormSelect>
       </div>
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />
@@ -38,6 +49,7 @@
         combineDates(from, to, {
           locale: locale ? locale : undefined,
           format: format,
+          showTime: showTime === 'true',
         })
       }}
     </ExampleResult>
@@ -48,15 +60,17 @@
 import { combineDates } from 'usemods'
 
 const from = ref('2025-01-01T10:00:00')
-const to = ref('2025-01-01T14:30:00')
+const to = ref('2025-01-31T14:30:00')
 const locale = ref(undefined)
 const format = ref(undefined)
+const showTime = ref('false')
 
 // Demo Purposes Only
 const formattedCode = computed(() => {
   return generateFormatterCode('combineDates', [from.value, to.value], {
     locale: locale.value,
     format: format.value,
+    showTime: showTime.value === 'true' ? true : undefined,
   }, {
     format: 'long',
   })

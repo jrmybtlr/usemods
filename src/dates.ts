@@ -379,11 +379,13 @@ export type CombinedDatesOptions = {
   locale?: string
   format?: CombinedDatesFormat
   timeZone?: string
+  /** Include times on multi-day ranges. Same-day different times always show times. */
+  showTime?: boolean
 }
 
 /**
  * Collapses two dates (or timestamps) into a human-readable string
- * @info Time is optional and will only be shown if day, month and year are the same
+ * @info Times always show for same-day different clocks; for other ranges set showTime: true
  */
 export function combineDates(
   from: DateInput,
@@ -423,11 +425,16 @@ export function combineDates(
   // Simplified format options
   const monthFormat = options.format ?? 'long'
   const locale = options.locale ?? 'en-US'
+  const showTime = options.showTime === true
 
   // Formatting helper
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
   const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat(locale, { ...opts, timeZone: options.timeZone }).format(date)
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat#using_timestyle
+  const formatTime = (date: Date): string =>
+    format(date, { timeStyle: 'short' })
 
   // Same day
   if (sameDay) {
@@ -435,8 +442,17 @@ export function combineDates(
     if (sameTime) {
       return format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })
     }
-    // Same day, different time
-    return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}, ${format(fromDate, { hour: 'numeric', minute: 'numeric', hour12: true })} - ${format(toDate, { hour: 'numeric', minute: 'numeric', hour12: true })}`
+    // Same day, different time — always include times
+    return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}, ${formatTime(fromDate)} to ${formatTime(toDate)}`
+  }
+
+  // Multi-day with times: "February 1, 2025 10:00 AM — January 31, 2026 2:30 PM"
+  if (showTime) {
+    const fromDatePart = sameYear
+      ? format(fromDate, { day: 'numeric', month: monthFormat })
+      : format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })
+    const toDatePart = format(toDate, { day: 'numeric', month: monthFormat, year: 'numeric' })
+    return `${fromDatePart} ${formatTime(fromDate)} — ${toDatePart} ${formatTime(toDate)}`
   }
 
   if (sameMonth) {
