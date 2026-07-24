@@ -1,5 +1,33 @@
 # Changelog
 
+## v1.17.0
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/1.16.2...v1.17.0)
+
+### 🚀 Enhancements
+
+- Add combineDates function and formatCompactNumber formatter ([0b75855b](https://github.com/LittleFoxCompany/usemods/commit/0b75855b))
+- Import combineDates function in CombineDates component ([21a9d755](https://github.com/LittleFoxCompany/usemods/commit/21a9d755))
+- Enhance combineDates functionality and update documentation ([d8a4270c](https://github.com/LittleFoxCompany/usemods/commit/d8a4270c))
+
+### 🩹 Fixes
+
+- Patch Dependabot transitive dependency vulnerabilities ([e5655aae](https://github.com/LittleFoxCompany/usemods/commit/e5655aae))
+- Import parseDate in validators demo for CF prerender ([8fa3bef5](https://github.com/LittleFoxCompany/usemods/commit/8fa3bef5))
+
+### 💅 Refactors
+
+- Update date function parameters and sitemap lastmod timestamps ([ddb14b18](https://github.com/LittleFoxCompany/usemods/commit/ddb14b18))
+
+### 🏡 Chore
+
+- **release:** Bump version to 1.16.2 ([e63151f2](https://github.com/LittleFoxCompany/usemods/commit/e63151f2))
+- Update sitemap lastmod timestamps and modify package.json exports ([7c1de18b](https://github.com/LittleFoxCompany/usemods/commit/7c1de18b))
+
+### ❤️ Contributors
+
+- Jeremy Butler <jeremy.butler@laravel.com>
+
 ## v1.15.2
 
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.16.0...v1.15.2)
