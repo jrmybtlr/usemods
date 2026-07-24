@@ -53,12 +53,15 @@ test('formatCompactNumber', () => {
 
 test('formatDurationLabels', () => {
   expect(mod.formatDurationLabels(0)).toBe('0 seconds')
-  expect(mod.formatDurationLabels(0, { labels: 'short' })).toBe('0 sec')
+  expect(mod.formatDurationLabels(0, { display: 'short' })).toBe('0 sec')
   expect(mod.formatDurationLabels(0.005)).toBe('5 milliseconds')
   expect(mod.formatDurationLabels(0.5)).toBe('500 milliseconds')
   expect(mod.formatDurationLabels(3600)).toBe('1 hour')
+  expect(mod.formatDurationLabels(3600 * 2, { display: 'short' })).toBe('2 hr')
+  expect(mod.formatDurationLabels(3600 * 2, { display: 'long' })).toBe('2 hours')
+  // Legacy aliases still work
   expect(mod.formatDurationLabels(3600 * 2, { labels: 'short' })).toBe('2 hr')
-  expect(mod.formatDurationLabels(3600 * 2, { labels: 'long' })).toBe('2 hours')
+  expect(mod.formatDurationLabels(3600 * 2, { unitDisplay: 'short' })).toBe('2 hr')
   expect(mod.formatDurationLabels(3600 * 2 + 60)).toBe('2 hours 1 minute')
   expect(mod.formatDurationLabels(3600 * 2 + 60 + 1.5)).toBe('2 hours 1 minute 1 second 500 milliseconds')
   expect(mod.formatDurationLabels(3600 * 400 + 60 + 1)).toBe('16 days 16 hours 1 minute 1 second')
@@ -88,9 +91,10 @@ test('formatUnit', () => {
   expect(mod.formatUnit(0, { unit: 'meter' })).toBe('0 meters')
   expect(mod.formatUnit(1000, { unit: 'meter', decimals: 0 })).toBe('1,000 meters')
   expect(mod.formatUnit(1000, { unit: 'meter', decimals: 0 })).toBe('1,000 meters')
+  expect(mod.formatUnit(1000, { unit: 'meter', decimals: 2, display: 'short' })).toBe('1,000 m')
+  expect(mod.formatUnit(1000, { unit: 'meter', decimals: 2, display: 'long' })).toBe('1,000 meters')
+  expect(mod.formatUnit(1000, { unit: 'meter', decimals: 2, locale: 'en-AU', display: 'long' })).toBe('1,000 metres')
   expect(mod.formatUnit(1000, { unit: 'meter', decimals: 2, unitDisplay: 'short' })).toBe('1,000 m')
-  expect(mod.formatUnit(1000, { unit: 'meter', decimals: 2, unitDisplay: 'long' })).toBe('1,000 meters')
-  expect(mod.formatUnit(1000, { unit: 'meter', decimals: 2, locale: 'en-AU', unitDisplay: 'long' })).toBe('1,000 metres')
   // No UnitDisplay
   expect(mod.formatUnit(1000, { unit: 'meter', decimals: 2, locale: 'en-AU' })).toBe('1,000 metres')
 })
@@ -221,13 +225,15 @@ test('formatLength', () => {
 
 test('formatTemperature', () => {
   expect(mod.formatTemperature(0)).toBe('0°C')
-  expect(mod.formatTemperature(0, { unitDisplay: 'long' })).toBe('0 degrees Celsius')
-  expect(mod.formatTemperature(0, { unitDisplay: 'short' })).toBe('0°C')
+  expect(mod.formatTemperature(0, { display: 'long' })).toBe('0 degrees Celsius')
+  expect(mod.formatTemperature(0, { display: 'short' })).toBe('0°C')
   expect(mod.formatTemperature(0, { inputUnit: 'celsius', outputUnit: 'fahrenheit' })).toBe('32°F')
-  expect(mod.formatTemperature(0, { inputUnit: 'celsius', outputUnit: 'fahrenheit', unitDisplay: 'long' })).toBe('32 degrees Fahrenheit')
-  expect(mod.formatTemperature(0, { inputUnit: 'celsius', outputUnit: 'fahrenheit', unitDisplay: 'short' })).toBe('32°F')
-  expect(mod.formatTemperature(0, { inputUnit: 'fahrenheit', outputUnit: 'celsius', unitDisplay: 'short' })).toBe('-17.77777777777778°C')
-  expect(mod.formatTemperature(0, { inputUnit: 'fahrenheit', outputUnit: 'celsius', unitDisplay: 'short', decimals: 2 })).toBe('-17.78°C')
+  expect(mod.formatTemperature(0, { inputUnit: 'celsius', outputUnit: 'fahrenheit', display: 'long' })).toBe('32 degrees Fahrenheit')
+  expect(mod.formatTemperature(0, { inputUnit: 'celsius', outputUnit: 'fahrenheit', display: 'short' })).toBe('32°F')
+  expect(mod.formatTemperature(0, { inputUnit: 'fahrenheit', outputUnit: 'celsius', display: 'short' })).toBe('-17.77777777777778°C')
+  expect(mod.formatTemperature(0, { inputUnit: 'fahrenheit', outputUnit: 'celsius', display: 'short', decimals: 2 })).toBe('-17.78°C')
+  // Legacy alias still works
+  expect(mod.formatTemperature(0, { unitDisplay: 'short' })).toBe('0°C')
   // Invalid input unit
   expect(mod.formatTemperature(0, { inputUnit: 'kbdd' })).toBe('0')
 })

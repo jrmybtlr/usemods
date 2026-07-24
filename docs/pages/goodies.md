@@ -32,7 +32,7 @@ const wrapped = splitByWords(text)
 
 ---
 
-### `checkPasswordStrength(text: string, options?: { length?: number, uppercase?: number, number?: number, special?: number }): object`
+### `checkPasswordStrength(text: string, options?: { length?: number, uppercase?: number, numbers?: number, symbols?: number }): object`
 
 Check the strength of a password against a given policy.
 
@@ -41,12 +41,14 @@ Check the strength of a password against a given policy.
 - `options` (object, optional):
   - `length` (number, optional): Minimum length. Defaults to `8`
   - `uppercase` (number, optional): Minimum uppercase letters. Defaults to `1`
-  - `number` (number, optional): Minimum numbers. Defaults to `1`
-  - `special` (number, optional): Minimum special characters. Defaults to `1`
+  - `numbers` (number, optional): Minimum numbers. Defaults to `1`
+  - `symbols` (number, optional): Minimum special characters. Defaults to `1`
+  - `number` (number, optional): Alias for `numbers`
+  - `special` (number, optional): Alias for `symbols`
 
 **Returns:** Object with `score` (0-4) and `label` (string)
 
-**Note:** Don't forget to use our Password Generator in the Generators section
+**Note:** Don't forget to use our Password Generator in the Generators section. Option keys match `generatePassword`.
 
 **Example:**
 ```typescript
@@ -55,8 +57,8 @@ import { checkPasswordStrength } from 'usemods'
 const result = checkPasswordStrength('MyP@ssw0rd', {
   length: 8,
   uppercase: 1,
-  number: 1,
-  special: 1
+  numbers: 1,
+  symbols: 1
 })
 // { score: 4, label: 'Very Strong' }
 
@@ -204,8 +206,8 @@ function validatePassword(password: string) {
   const result = checkPasswordStrength(password, {
     length: 12,
     uppercase: 2,
-    number: 2,
-    special: 1
+    numbers: 2,
+    symbols: 1
   })
   
   if (result.score < 3) {

@@ -22,7 +22,7 @@
     <PageFunction
       name="combineDates"
       description="Include times on multi-day ranges. Same-day different times always show times."
-      params="[{&quot;name&quot;:&quot;from&quot;,&quot;type&quot;:&quot;DateInput&quot;},{&quot;name&quot;:&quot;to&quot;,&quot;type&quot;:&quot;DateInput&quot;},{&quot;name&quot;:&quot;options&quot;,&quot;type&quot;:&quot;CombinedDatesOptions = { locale: &#39;en-US&#39;, format: &#39;long&#39; }&quot;}]">
+      params="[{&quot;name&quot;:&quot;from&quot;,&quot;type&quot;:&quot;DateInput&quot;},{&quot;name&quot;:&quot;to&quot;,&quot;type&quot;:&quot;DateInput&quot;},{&quot;name&quot;:&quot;options&quot;,&quot;type&quot;:&quot;CombinedDatesOptions = { locale: &#39;en-US&#39;, display: &#39;long&#39; }&quot;}]">
       <CombineDates />
     </PageFunction>
 

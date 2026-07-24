@@ -30,44 +30,44 @@ export function average(numbers: number[]): number {
 /**
  * Calculates the margin based on a percentage.
  */
-export function margin(value: number, percentage: number): number {
-  return (value * percentage) / 100
+export function margin(number: number, percentage: number): number {
+  return (number * percentage) / 100
 }
 
 /**
- * Adds the margin to the value.
+ * Adds the margin to the number.
  */
-export function addMargin(value: number, percentage: number): number {
-  return value + margin(value, percentage)
+export function addMargin(number: number, percentage: number): number {
+  return number + margin(number, percentage)
 }
 
 /**
- * Subtracts the margin from the value.
+ * Subtracts the margin from the number.
  */
-export function subtractMargin(value: number, percentage: number): number {
-  return value - margin(value, percentage)
+export function subtractMargin(number: number, percentage: number): number {
+  return number - margin(number, percentage)
 }
 
 /**
- * Adds the markup to the value.
+ * Adds the markup to the number.
  */
-export function addMarkup(value: number, percentage: number): number {
-  if (value === 0) {
-    console.log('[MODS] addMarkup value is 0.')
+export function addMarkup(number: number, percentage: number): number {
+  if (number === 0) {
+    console.log('[MODS] addMarkup number is 0.')
     return 0
   }
-  return Math.round(value * (1 + percentage / 100) * 100) / 100
+  return Math.round(number * (1 + percentage / 100) * 100) / 100
 }
 
 /**
  * Calculates the markup based on a percentage.
  */
-export function subtractMarkup(value: number, percentage: number): number {
-  if (value === 0) {
-    console.log('[MODS] subtractMarkup value is 0.')
+export function subtractMarkup(number: number, percentage: number): number {
+  if (number === 0) {
+    console.log('[MODS] subtractMarkup number is 0.')
     return 0
   }
-  return Math.round((value / (1 + percentage / 100)) * 100) / 100
+  return Math.round((number / (1 + percentage / 100)) * 100) / 100
 }
 
 /**
