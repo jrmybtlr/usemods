@@ -41,6 +41,6 @@
     "nuxt-seo-utils": "^7.0.19",
     "nuxt-shiki": "^0.3.2",
     "nuxt-site-config": "^3.2.21",
-    "vite-plugin-useclassy": "^2.6.0"
+    "vite-plugin-useclassy": "^3.1.3"
   }
 }
