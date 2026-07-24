@@ -48,7 +48,19 @@
     "eslint": "^10.1.0",
     "nuxt": "^4.4.2",
     "typescript": "^5.9.3",
+    "vite": "8.0.16",
     "vitest": "^4.1.0",
     "vue-tsc": "^3.2.6"
+  },
+  "overrides": {
+    "ws": "8.21.1",
+    "launch-editor": "2.14.1",
+    "esbuild@>=0.27.3 <0.28.1": "0.28.1",
+    "@nuxt/vite-builder": {
+      "vite": "7.3.5"
+    },
+    "vite-node": {
+      "vite": "7.3.5"
+    }
   }
 }

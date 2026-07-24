@@ -81,6 +81,10 @@ const formattedCode = computed(() => {
     decimals: decimals.value,
     display: display.value,
     locale: locale.value,
+  }, {
+    inputUnit: 'celsius',
+    outputUnit: 'auto',
+    unitDisplay: 'short',
   })
 })
 </script>

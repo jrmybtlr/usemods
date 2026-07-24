@@ -119,6 +119,16 @@ test('isBoolean', () => {
   expect(mod.isBoolean('hello')).toBe(false)
 })
 
+test('parseDate', () => {
+  const d = new Date('2024-01-01T00:00:00.000Z')
+  expect(mod.parseDate(d)).toBe(d)
+  expect(mod.parseDate('2024-01-01')?.getFullYear()).toBe(2024)
+  expect(mod.parseDate(0)?.getTime()).toBe(0)
+  expect(mod.parseDate('2024-01-day')).toBeNull()
+  expect(mod.parseDate('hello')).toBeNull()
+  expect(mod.parseDate({ year: 2024, month: 1, day: 1 })).toBeNull()
+})
+
 test('isDate', () => {
   expect(mod.isDate(new Date())).toBe(true)
   expect(mod.isDate('2024-01-01')).toBe(true)

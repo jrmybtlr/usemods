@@ -80,7 +80,37 @@ formatValuation(5000000000) // '$5B'
 
 ---
 
+<<<<<<< HEAD
 ### `formatUnit(number: number, options: { unit: string, decimals?: number, display?: 'short' | 'long', locale?: string }): string`
+=======
+### `formatCompactNumber(number: number, options?: { decimals?: number, locale?: string, trimZeros?: boolean }): string`
+
+Format large numbers into compact K / M / B strings.
+
+**Parameters:**
+- `number` (number): The number to format
+- `options` (object, optional):
+  - `decimals` (number, optional): Maximum decimal places. Defaults to `2`
+  - `locale` (string, optional): Locale string. Defaults to `'en-US'`
+  - `trimZeros` (boolean, optional): Strip trailing zeros. Defaults to `true`
+
+**Returns:** Compact number format (e.g., "1.2K", "1.12M", "21.4B")
+
+**Example:**
+```typescript
+import { formatCompactNumber } from 'usemods'
+
+formatCompactNumber(1200) // '1.2K'
+formatCompactNumber(100350) // '100.35K'
+formatCompactNumber(1120000) // '1.12M'
+formatCompactNumber(21400000000) // '21.4B'
+formatCompactNumber(1200, { decimals: 2, trimZeros: false }) // '1.20K'
+```
+
+---
+
+### `formatUnit(number: number, options: { unit: string, decimals?: number, unitDisplay?: 'short' | 'long', locale?: string }): string`
+>>>>>>> origin/main
 
 Format a number into your unit of choice.
 
@@ -129,6 +159,7 @@ formatPercentage(0.1234, { decimals: 1 }) // '12.3%'
 
 ---
 
+<<<<<<< HEAD
 ### `formatCombinedDates(from: Date | string | number, to: Date | string | number, options?: { locale?: string, display?: 'short' | 'long', timeZone?: string }): string`
 
 Collapses two dates (or timestamps) into a human-readable string.
@@ -164,6 +195,9 @@ formatCombinedDates(sameDayStart, sameDayEnd)
 ---
 
 ### `formatDurationLabels(seconds: number, options?: { display?: 'short' | 'long', round?: boolean, decimals?: number }): string`
+=======
+### `formatDurationLabels(seconds: number, options?: { labels?: 'short' | 'long', round?: boolean, decimals?: number }): string`
+>>>>>>> origin/main
 
 Format time into a human-readable string.
 
@@ -457,7 +491,7 @@ formatTextWrap('This is a long title that might wrap')
 ### Currency and Number Formatting
 
 ```typescript
-import { formatNumber, formatCurrency, formatValuation } from 'usemods'
+import { formatNumber, formatCurrency, formatValuation, formatCompactNumber } from 'usemods'
 
 // Format large numbers
 formatNumber(1234567.89) // '1,234,567.89'
@@ -469,17 +503,16 @@ formatCurrency(1234.56, { locale: 'en-GB' }) // '£1,234.56'
 // Format valuations
 formatValuation(1200000) // '$1.2M'
 formatValuation(5000000000) // '$5B'
+
+// Format compact numbers (no currency)
+formatCompactNumber(1200) // '1.2K'
+formatCompactNumber(1120000) // '1.12M'
 ```
 
 ### Date and Time Formatting
 
 ```typescript
-import { formatCombinedDates, formatDurationLabels, formatUnixTime } from 'usemods'
-
-// Date ranges
-const start = new Date('2024-01-15')
-const end = new Date('2024-01-20')
-formatCombinedDates(start, end) // 'January 15 - 20, 2024'
+import { formatDurationLabels, formatUnixTime } from 'usemods'
 
 // Durations
 formatDurationLabels(3661) // '1 hour 1 minute 1 second'

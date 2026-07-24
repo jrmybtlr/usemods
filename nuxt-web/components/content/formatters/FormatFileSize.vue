@@ -78,6 +78,10 @@ const formattedCode = computed(() => {
     decimals: decimals.value,
     display: display.value,
     locale: locale.value,
+  }, {
+    inputUnit: 'byte',
+    outputUnit: 'auto',
+    unitDisplay: 'short',
   })
 })
 </script>

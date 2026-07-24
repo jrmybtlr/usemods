@@ -15,16 +15,17 @@ const srcPath = resolve(import.meta.dirname, '../src')
 const nuxtWebPath = resolve(import.meta.dirname, '../nuxt-web')
 
 // Functions
-const functionPattern = /\/\*\*[\s\S]*?\*\/\s*(export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\([\s\S]*?\)\s*:\s*([\w<>,[\]\s]+(?:\{[\s\S]*?})?)?)/gms
+const functionPattern = /\/\*\*[\s\S]*?\*\/\s*(export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\([\s\S]*?\)\s*:\s*([\w<>,[\]\s|]+(?:\{[\s\S]*?})?)?)/gms
 const metadataPattern = /\/\/\s+(title|description|lead):\s+([^\r\n]*)/g
 const jsdocPattern = /\/\*\*([\s\S]*?)\*\//g
 
 // Files
-const files = ['formatters', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
+const files = ['formatters', 'dates', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
 
 // Map file names to component directory names
 const componentDirMap = {
   formatters: 'formatters',
+  dates: 'dates',
   modifiers: 'modifiers',
   generators: 'generators',
   actions: 'actions',
@@ -133,12 +134,44 @@ async function generateVue(file, name) {
   const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
   await copyFile(file, join(nuxtWebPath, 'utils/mods', basename(file)))
 
-  // If Tailwind stop here
-  // If you're reading this...it's a great first fix to contribute to the project.
-
-  if (name === '11.tailwind') return
-
   const fileBaseName = basename(file, extname(file))
+
+  // Tailwind has no per-function playgrounds yet — emit a title-only page.
+  if (fileBaseName === 'tailwind') {
+    const title = metadata.title || 'Tailwind'
+    const description = metadata.description || ''
+    const vueContent = `<template>
+  <DocsLayout>
+    <PageTitle>
+      <h1>${title}</h1>
+      <p>${description}</p>
+    </PageTitle>
+
+  </DocsLayout>
+</template>
+
+<script setup lang="ts">
+import DocsLayout from '~/components/DocsLayout.vue'
+import PageTitle from '~/components/content/PageTitle.vue'
+
+const toc = []
+const pageId = 'tailwind'
+
+provide('toc', toc)
+provide('pageId', pageId)
+</script>
+`
+    const tailwindDocsDir = join(nuxtWebPath, 'pages', 'docs')
+    try {
+      await fsPromises.mkdir(tailwindDocsDir, { recursive: true })
+    }
+    catch {
+      // Directory might already exist
+    }
+    await writeFile(join(tailwindDocsDir, 'tailwind.vue'), vueContent)
+    return
+  }
+
   const category = fileBaseName
   const componentDir = componentDirMap[category] || category
 
@@ -298,7 +331,9 @@ async function generateVue(file, name) {
   vueContent += '<script setup lang="ts">\n'
   vueContent += 'import DocsLayout from \'~/components/DocsLayout.vue\'\n'
   vueContent += 'import PageTitle from \'~/components/content/PageTitle.vue\'\n'
-  vueContent += 'import PageFunction from \'~/components/content/PageFunction.vue\'\n'
+  if (componentUsages.length > 0) {
+    vueContent += 'import PageFunction from \'~/components/content/PageFunction.vue\'\n'
+  }
   for (const importLine of Array.from(imports).sort()) {
     vueContent += importLine + '\n'
   }
@@ -326,10 +361,10 @@ async function generateMarkdown(file, name) {
   const content = await readFile(file, 'utf8')
   const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
 
-  // If Tailwind stop here (same as Vue generation)
-  if (name === '11.tailwind') return
-
   const fileBaseName = basename(file, extname(file))
+
+  // Tailwind has a hand-maintained docs page (same as Vue generation)
+  if (fileBaseName === 'tailwind') return
 
   // Functions
   const functions = [...content.matchAll(functionPattern)]
@@ -702,6 +737,7 @@ async function generatePublicAiDocs() {
 
   await writeFile(join(publicDocsDir, 'all.md'), allMarkdownContent)
   console.log('Generated public AI markdown docs')
+  return allMarkdownContent
 }
 
 async function generateLLMsTxt() {
@@ -778,23 +814,22 @@ async function generateLLMsTxt() {
   console.log('Generated llms.txt')
 }
 
-async function generateLLMsFullTxt() {
+async function generateLLMsFullTxt(allMarkdownContent) {
   const baseUrl = 'https://usemods.com'
-  const allMdPath = join(nuxtWebPath, 'public', 'docs', 'all.md')
+  let corpus = allMarkdownContent
 
-  // Prefer the rich public corpus; fall back to generated content docs
-  let allMarkdownContent = ''
-  try {
-    allMarkdownContent = await readFile(allMdPath, 'utf8')
-  }
-  catch {
-    await generatePublicAiDocs()
+  // Prefer caller-provided corpus; fall back to disk / regeneration
+  if (!corpus) {
+    const allMdPath = join(nuxtWebPath, 'public', 'docs', 'all.md')
     try {
-      allMarkdownContent = await readFile(allMdPath, 'utf8')
+      corpus = await readFile(allMdPath, 'utf8')
     }
     catch {
-      await generateAllMarkdown()
-      allMarkdownContent = await readFile(join(nuxtWebPath, 'content', '2.docs', 'all.md'), 'utf8')
+      corpus = await generatePublicAiDocs()
+      if (!corpus) {
+        await generateAllMarkdown()
+        corpus = await readFile(join(nuxtWebPath, 'content', '2.docs', 'all.md'), 'utf8')
+      }
     }
   }
 
@@ -803,7 +838,7 @@ async function generateLLMsFullTxt() {
   llmsFullContent += `Base URL: ${baseUrl}\n`
   llmsFullContent += `Index: ${baseUrl}/llms.txt\n\n`
   llmsFullContent += `---\n\n`
-  llmsFullContent += allMarkdownContent
+  llmsFullContent += corpus
 
   const publicDir = join(nuxtWebPath, 'public')
   await fsPromises.mkdir(publicDir, { recursive: true })
@@ -819,10 +854,10 @@ async function generateAll() {
   await copyFile(join(srcPath, 'maps.ts'), join(nuxtWebPath, 'utils/mods/maps.ts'))
   await generateNavigation()
   await generateAllMarkdown()
-  await generatePublicAiDocs()
+  const allMarkdownContent = await generatePublicAiDocs()
   await generateSitemap()
   await generateLLMsTxt()
-  await generateLLMsFullTxt()
+  await generateLLMsFullTxt(allMarkdownContent)
 }
 
 async function clearAll() {
@@ -846,26 +881,27 @@ async function clearAll() {
   ])
 }
 
-// Clear and Generate on State
-clearAll().then(generateAll)
-
-// Watch for Changes
+// CLI — do not clear/generate on every import; --bundle must not wipe public/docs
+// while nuxt-web prebuild is generating AI discovery assets in parallel.
 if (args.includes('--watch')) {
+  await clearAll()
+  await generateAll()
   watch(srcPath, { recursive: true }, async () => {
     await generateAll()
     console.log('Generated all files')
   })
 }
 else if (args.includes('--bundle')) {
-  generateBundle()
+  await generateBundle()
   console.log('Generated bundle')
 }
 else if (args.includes('--build')) {
-  generateAll()
+  await clearAll()
+  await generateAll()
   console.log('Generated all files')
 }
 else {
-  console.log('No valid command provided. Use --watch or --build.')
+  console.log('No valid command provided. Use --watch, --build, or --bundle.')
 }
 
 async function generateBundle() {
@@ -882,7 +918,9 @@ async function generateBundle() {
   await bundle.write({
     file: resolve(srcPath, '..', 'dist', 'index.js'),
     format: 'esm',
-    plugins: [terser()],
+    // Name mangling can reuse a letter (e.g. `h`) for a local helper that collides with another
+    // top-level binding after minification, which breaks when Vite re-parses this file (client-inject).
+    plugins: [terser({ compress: true, mangle: false })],
   })
 
   console.log('dist bundle created')

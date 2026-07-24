@@ -1,6 +1,16 @@
 import { resolve } from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
+
+const nuxtWebDir = fileURLToPath(new URL(".", import.meta.url));
+const repoRoot = resolve(nuxtWebDir, "..");
+const ignoredWatchPaths = [
+  resolve(repoRoot, "node_modules"),
+  resolve(repoRoot, "dist"),
+  resolve(repoRoot, "docs"),
+  resolve(repoRoot, ".git"),
+  resolve(repoRoot, "nuxt-module"),
+];
 
 async function generateAiDiscoveryAssets(): Promise<void> {
   const generatorPath = resolve(import.meta.dirname, "../docs/generate-ai-docs.mjs");
@@ -15,10 +25,40 @@ export default defineNuxtConfig({
     viteEnvironmentApi: false,
   },
 
+  watchers: {
+    chokidar: {
+      // Ensure Nuxt's own file watching also uses polling to avoid EMFILE on macOS.
+      usePolling: true,
+      ignored: ignoredWatchPaths,
+    },
+  },
+
   css: ["~/assets/css/main.css"],
 
   vite: {
     plugins: [tailwindcss()],
+    resolve: {
+      // Monorepo: always resolve to source. Production `exports.default` points at
+      // gitignored `dist/`, which is missing on fresh CI (Cloudflare) until bundle runs.
+      // Source also avoids Vite transform issues with the prebuilt dist bundle.
+      alias: {
+        usemods: resolve(repoRoot, "src/index.ts"),
+      },
+    },
+    server: {
+      fs: {
+        // pnpm workspaces often resolve deps from the repo root `node_modules/`,
+        // which is outside the Nuxt app root (`nuxt-web/`). Allow Vite to serve
+        // those files so `@fs/.../node_modules/...` imports don't 403.
+        allow: [repoRoot],
+      },
+      watch: {
+        // macOS can hit the per-process file watcher limit (EMFILE) in large
+        // workspaces. Polling avoids consuming one file descriptor per watcher.
+        usePolling: true,
+        ignored: ignoredWatchPaths,
+      },
+    },
   },
 
   modules: [

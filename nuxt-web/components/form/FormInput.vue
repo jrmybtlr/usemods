@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="w-full" :class="{ 'opacity-50': disabled }">
     <FormLabel
       :label="label"
       :info="info"
@@ -11,6 +11,7 @@
       :type="type"
       :placeholder="placeholder"
       :value="modelValue"
+      :disabled="disabled"
       v-bind="$attrs"
       @input="$event.target && emit('update:modelValue', ($event.target as HTMLInputElement).value)">
   </div>
@@ -18,7 +19,7 @@
 
 <script setup lang="ts">
 defineOptions({
-  inheritAttrs: true,
+  inheritAttrs: false,
 })
 
 defineProps({
@@ -37,6 +38,10 @@ defineProps({
   },
   info: {
     type: String,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 })
 

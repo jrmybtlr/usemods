@@ -124,15 +124,24 @@ export function isNull(value: unknown): boolean {
 }
 
 /**
+ * Coerce a value to a Date when it represents a valid instant; otherwise `null`.
+ */
+export function parseDate(value: unknown): Date | null {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value
+  }
+  if (typeof value === 'string' || typeof value === 'number') {
+    const date = new Date(value)
+    return Number.isNaN(date.getTime()) ? null : date
+  }
+  return null
+}
+
+/**
  * Check if any given value is a valid Date object.
  */
 export function isDate(value: unknown): boolean {
-  if (value instanceof Date) return !Number.isNaN(value.getTime())
-  else if (typeof value === 'string' || typeof value === 'number') {
-    const date = new Date(value)
-    return !Number.isNaN(date.getTime())
-  }
-  return false
+  return parseDate(value) !== null
 }
 
 /**

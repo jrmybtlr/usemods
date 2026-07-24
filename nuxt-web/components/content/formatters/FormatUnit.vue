@@ -60,6 +60,8 @@ const formattedCode = computed(() => {
     decimals: decimals.value,
     display: display.value,
     locale: locale.value,
+  }, {
+    unitDisplay: 'long',
   })
 })
 </script>

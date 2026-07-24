@@ -102,6 +102,32 @@ export function formatValuation(
 }
 
 /**
+ * Format large numbers into compact K / M / B strings
+ */
+export function formatCompactNumber(
+  number: number,
+  options?: {
+    decimals?: number
+    locale?: string
+    trimZeros?: boolean
+  },
+): string {
+  const safeDecimals = Math.max(0, Math.min(options?.decimals ?? 2, 20))
+  const locale = options?.locale ?? 'en-US'
+  const trimZeros = options?.trimZeros ?? true
+
+  const config: Intl.NumberFormatOptions = {
+    style: 'decimal',
+    notation: 'compact',
+    compactDisplay: 'short',
+    minimumFractionDigits: trimZeros ? 0 : safeDecimals,
+    maximumFractionDigits: safeDecimals,
+  }
+
+  return new Intl.NumberFormat(locale, config).format(number)
+}
+
+/**
  * Format a number into a your unit of choice
  */
 export function formatUnit(
@@ -156,6 +182,7 @@ export function formatPercentage(
 }
 
 /**
+<<<<<<< HEAD
  * Collapses two dates (or timestamps) into a human-readable string
  * @info Time is optional and will only be shown if day, month and year are the same
  */
@@ -231,6 +258,8 @@ export function formatCombinedDates(
 }
 
 /**
+=======
+>>>>>>> origin/main
  * Format time into a human-readable string
  */
 export function formatDurationLabels(
