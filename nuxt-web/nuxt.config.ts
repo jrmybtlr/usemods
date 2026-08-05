@@ -172,12 +172,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // postcss: {
-  //   plugins: {
-  //     autoprefixer: {},
-  //   },
-  // },
-
   shiki: {
     bundledThemes: ["nord", "one-light"],
     bundledLangs: ["bash", "vue", "typescript", "javascript", "json"],
