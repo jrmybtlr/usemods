@@ -24,11 +24,9 @@
     "@nuxtjs/color-mode": "^4.0.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "4.3.2",
-    "autoprefixer": "^10.4.27",
     "eslint": "^10.1.0",
     "eslint-plugin-tailwindcss": "^4.0.5",
     "nuxt": "^4.4.8",
-    "postcss": "^8.5.16",
     "tailwindcss": "^4.2.2",
     "tailwindcss-motion": "^1.1.1",
     "usemods": "workspace:*",
@@ -37,10 +35,7 @@
   "dependencies": {
     "@vueuse/core": "^14.2.1",
     "@vueuse/nuxt": "^14.2.1",
-    "nuxt-schema-org": "^5.0.10",
-    "nuxt-seo-utils": "^7.0.19",
     "nuxt-shiki": "^0.3.2",
-    "nuxt-site-config": "^3.2.21",
     "vite-plugin-useclassy": "^3.1.3"
   }
 }
