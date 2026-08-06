@@ -20,17 +20,15 @@
 
 <script setup lang="ts">
 const length = ref(10)
-const result = ref('')
+const result = useState('demo-getSecureRandomValues', () => {
+  const array = new Uint8Array(length.value)
+  getSecureRandomValues(array)
+  return Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('')
+})
 
 function generate() {
   const array = new Uint8Array(length.value)
   getSecureRandomValues(array)
   result.value = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('')
 }
-
-onMounted(() => {
-  nextTick(() => {
-    generate()
-  })
-})
 </script>

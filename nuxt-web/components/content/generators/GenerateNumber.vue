@@ -7,7 +7,7 @@
         :min="1" />
       <Button
         color="secondary"
-        @click="result = generateNumber(length)">
+        @click="generate">
         Generate
       </Button>
     </ExampleInputs>
@@ -20,9 +20,9 @@
 
 <script setup lang="ts">
 const length = ref(8)
-const result = ref(0)
+const result = useState('demo-generateNumber', () => String(generateNumber(length.value)))
 
-onMounted(() => {
-  result.value = generateNumber(length.value)
-})
+function generate() {
+  result.value = String(generateNumber(length.value))
+}
 </script>

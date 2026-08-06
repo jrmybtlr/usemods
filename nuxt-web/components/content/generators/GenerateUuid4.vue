@@ -14,14 +14,9 @@
 </template>
 
 <script setup lang="ts">
-const result = ref('')
+const result = useState('demo-generateUuid4', () => generateUuid4())
+
 function generate() {
   result.value = generateUuid4()
 }
-
-onMounted(() => {
-  nextTick(() => {
-    generate()
-  })
-})
 </script>

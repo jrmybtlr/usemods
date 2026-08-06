@@ -12,7 +12,7 @@
         label="Max" />
       <Button
         color="secondary"
-        @click="result = generateNumberBetween(min, max)">
+        @click="generate">
         Generate
       </Button>
     </ExampleInputs>
@@ -26,9 +26,9 @@
 <script setup lang="ts">
 const min = ref(1)
 const max = ref(10)
-const result = ref(0)
+const result = useState('demo-generateNumberBetween', () => String(generateNumberBetween(min.value, max.value)))
 
-onMounted(() => {
-  result.value = generateNumberBetween(min.value, max.value)
-})
+function generate() {
+  result.value = String(generateNumberBetween(min.value, max.value))
+}
 </script>

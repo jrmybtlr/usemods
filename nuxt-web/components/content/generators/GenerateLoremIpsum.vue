@@ -18,15 +18,25 @@
           Paragraphs
         </option>
       </FormSelect>
+      <Button
+        color="secondary"
+        @click="generate">
+        Generate
+      </Button>
     </ExampleInputs>
     <ExampleCode :code="`generateLoremIpsum(${length}, { format: '${type}' })`" />
     <ExampleResult>
-      {{ generateLoremIpsum(length, { format: type as 'words' | 'sentences' | 'paragraphs' }) }}
+      {{ result }}
     </ExampleResult>
   </Example>
 </template>
 
 <script setup lang="ts">
 const length = ref(2)
-const type = ref('words')
+const type = ref<'words' | 'sentences' | 'paragraphs'>('words')
+const result = useState('demo-generateLoremIpsum', () => generateLoremIpsum(length.value, { format: type.value }))
+
+function generate() {
+  result.value = generateLoremIpsum(length.value, { format: type.value })
+}
 </script>
