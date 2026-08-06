@@ -1,11 +1,19 @@
 <template>
   <Example>
     <ExampleInputs>
-      <FormInput v-model="threshold" label="Threshold" type="number" />
-      <Button @click="handleClick()">Click me</Button>
+      <FormInput
+        v-model="threshold"
+        label="Threshold"
+        type="number" />
+      <Button @click="handleClick()">
+        Click me
+      </Button>
     </ExampleInputs>
 
-    <ClickLog :executions="executions" :clicks="clicks" :executionLog="executionLog" />
+    <ClickLog
+      :executions="executions"
+      :clicks="clicks"
+      :execution-log="executionLog" />
 
     <ExampleCode :code="`throttle(() => { executions.value++ }, ${threshold})`" />
   </Example>

@@ -51,7 +51,8 @@
     <ExampleResult>
       <h1
         :key="animationKey"
-        class="text-balance text-center text-4xl font-bold leading-[1.25em] text-gray-900 dark:text-white"
+        class="text-center text-4xl leading-[1.25em] font-bold text-balance text-gray-900"
+        class:dark="text-white"
         v-html="animated" />
     </ExampleResult>
   </Example>

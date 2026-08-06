@@ -26,20 +26,24 @@
         <button
           type="button"
           name="decrement"
-          class="flex touch-manipulation select-none text-zinc-500 opacity-50 transition-all hover:text-white hover:opacity-100"
+          class="flex touch-manipulation text-zinc-500 opacity-50 transition-all select-none"
+          class:hover="text-white opacity-100"
           @click.stop="decrementValue">
           <Icon
             name="heroicons:minus-circle-20-solid"
-            class="size-5 text-indigo-600 dark:text-white" />
+            class="size-5 text-indigo-600"
+            class:dark="text-white" />
         </button>
         <button
           type="button"
           name="increment"
-          class="flex touch-manipulation select-none text-zinc-500 opacity-50 transition-all hover:text-white hover:opacity-100"
+          class="flex touch-manipulation text-zinc-500 opacity-50 transition-all select-none"
+          class:hover="text-white opacity-100"
           @click.stop="incrementValue">
           <Icon
             name="heroicons:plus-circle-20-solid"
-            class="size-5 text-indigo-600 dark:text-white" />
+            class="size-5 text-indigo-600"
+            class:dark="text-white" />
         </button>
       </div>
     </div>

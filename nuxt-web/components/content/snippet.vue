@@ -1,6 +1,10 @@
 <template>
   <ClientOnly>
-    <Shiki :key="`shiki-${shikiTheme}-${code.length}`" :lang="shikiLang" :code="code" :theme="shikiTheme" />
+    <Shiki
+      :key="`shiki-${shikiTheme}-${code.length}`"
+      :lang="shikiLang"
+      :code="code"
+      :theme="shikiTheme" />
     <template #fallback>
       <pre class="shiki-fallback"><code>{{ code }}</code></pre>
     </template>
@@ -35,7 +39,7 @@ onMounted(() => {
 
   observer.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['class']
+    attributeFilter: ['class'],
   })
 
   onUnmounted(() => {
@@ -51,7 +55,8 @@ watch(() => colorMode.value, (newValue) => {
       isDark.value = newIsDark
       themeKey.value++ // Force re-render
     }
-  } else {
+  }
+  else {
     const newIsDark = newValue === 'dark'
     if (newIsDark !== isDark.value) {
       isDark.value = newIsDark
@@ -62,6 +67,7 @@ watch(() => colorMode.value, (newValue) => {
 
 const shikiTheme = computed(() => isDark.value ? 'nord' : 'one-light')
 </script>
+
 <style scoped>
 @reference "~/assets/css/tailwind.css";
 

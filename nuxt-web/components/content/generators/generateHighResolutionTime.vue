@@ -1,7 +1,11 @@
 <template>
   <Example>
     <ExampleInputs>
-      <Button @click="result = generateHighResolutionTime().toString()" color="secondary">Generate</Button>
+      <Button
+        color="secondary"
+        @click="result = generateHighResolutionTime().toString()">
+        Generate
+      </Button>
     </ExampleInputs>
     <ExampleResult>
       {{ result }}

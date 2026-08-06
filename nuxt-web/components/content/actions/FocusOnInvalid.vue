@@ -3,7 +3,8 @@
     <ExampleInputs>
       <form
         ref="form"
-        class="flex w-full items-end gap-3 max-md:flex-col">
+        class="flex w-full items-end gap-3"
+        class:max-md="flex-col">
         <FormInput
           label="Name"
           type="text"

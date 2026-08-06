@@ -1,5 +1,7 @@
 <template>
-  <div v-bind="passthroughAttrs" :class="rootClass">
+  <div
+    v-bind="passthroughAttrs"
+    :class="rootClass">
     <slot />
   </div>
 </template>

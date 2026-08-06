@@ -1,16 +1,29 @@
 <template>
-  <section :id="name" ref="section" class="pb-12 text-gray-900 dark:text-white">
-    <div :id="props.name.toLowerCase()" class="relative flex w-full cursor-pointer items-end gap-3"
+  <section
+    :id="name"
+    ref="section"
+    class="pb-12 text-gray-900"
+    class:dark="text-white">
+    <div
+      :id="props.name.toLowerCase()"
+      class="relative flex w-full cursor-pointer items-end gap-3"
       @click="copyToClipboard(`${detectHost()}${route.fullPath}#${props.name.toLowerCase()}`), copied()"
-      @mouseover="showCopyToClipboard = true" @mouseout="showCopyToClipboard = false">
-      <h2 class="text-2xl font-semibold md:text-3xl">
+      @mouseover="showCopyToClipboard = true"
+      @mouseout="showCopyToClipboard = false">
+      <h2
+        class="text-2xl font-semibold"
+        class:md="text-3xl">
         {{ name }}
       </h2>
 
       <div
-        class="mb-1 flex size-6 items-center justify-center rounded-md border border-zinc-200 bg-white/3 text-zinc-500 transition-all hover:text-indigo-600 dark:border-white/5 dark:hover:border-white/20 dark:hover:text-white"
+        class="mb-1 flex size-6 items-center justify-center rounded-md border border-zinc-200 bg-white/3 text-zinc-500 transition-all dark:hover:border-white/20 dark:hover:text-white"
+        class:hover="text-indigo-600"
+        class:dark="border-white/5"
         :class="showCopyToClipboard ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'">
-        <Icon name="heroicons:hashtag" class="size-4" />
+        <Icon
+          name="heroicons:hashtag"
+          class="size-4" />
       </div>
 
       <div
@@ -21,15 +34,21 @@
     </div>
 
     <!-- Description -->
-    <p class="mt-2.5 text-pretty md:text-lg">
+    <p
+      class="mt-2.5 text-pretty"
+      class:md="text-lg">
       {{ description }}
     </p>
 
     <slot />
 
     <!-- Info -->
-    <Callout v-if="info" class="mt-6">
-      <Icon name="heroicons:information-circle-solid" class="size-5 shrink-0 text-indigo-500" />
+    <Callout
+      v-if="info"
+      class="mt-6">
+      <Icon
+        name="heroicons:information-circle-solid"
+        class="size-5 shrink-0 text-indigo-500" />
       {{ info }}
     </Callout>
   </section>
@@ -80,10 +99,12 @@ watch(
         if (!activeSections.value.includes(props.name)) {
           activeSections.value.push(props.name)
         }
-      } else {
+      }
+      else {
         activeSections.value = activeSections.value.filter((section: string) => section !== props.name)
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.warn(`[MODS] Failed to update active sections for ${props.name}:`, error)
     }
   },
@@ -93,7 +114,8 @@ watch(
 onUnmounted(() => {
   try {
     activeSections.value = activeSections.value.filter((section: string) => section !== props.name)
-  } catch (error) {
+  }
+  catch (error) {
     console.warn(`[MODS] Failed to cleanup active sections for ${props.name}:`, error)
   }
 })

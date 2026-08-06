@@ -3,7 +3,6 @@
     v-model="selectedLocale"
     label="Locale"
     info="Default: 'en-US'">
-
     <option
       value=""
       disabled>

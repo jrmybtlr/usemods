@@ -1,7 +1,9 @@
 <template>
   <Example>
     <ExampleInputs class="flex flex-col items-stretch gap-4">
-      <div class="flex gap-4 max-md:flex-col">
+      <div
+        class="flex gap-4"
+        class:max-md="flex-col">
         <FormInput
           v-model="number"
           label="Number"
@@ -26,7 +28,9 @@
         </FormSelect>
       </div>
 
-      <div class="flex gap-4 max-md:flex-col">
+      <div
+        class="flex gap-4"
+        class:max-md="flex-col">
         <FormSelect
           v-model="inputUnit"
           label="Input Unit"

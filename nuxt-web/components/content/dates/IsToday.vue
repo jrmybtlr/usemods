@@ -1,7 +1,12 @@
 <template>
   <Example>
-    <ExampleInputs class="flex max-md:flex-col gap-2">
-      <FormInput v-model="value" label="Date" type="datetime-local" />
+    <ExampleInputs
+      class="flex gap-2"
+      class:max-md="flex-col">
+      <FormInput
+        v-model="value"
+        label="Date"
+        type="datetime-local" />
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />
     <ExampleResult>

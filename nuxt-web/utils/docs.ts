@@ -45,19 +45,19 @@ export function generateFormatterCode(
 
   const optionsString = hasNonEmptyOptions
     ? `, ${JSON.stringify(filteredOptions, (_key, value) => {
-        if (value === undefined || value === null || value === '') {
-          return undefined
-        }
-        if (typeof value === 'object' && value !== null) {
-          return Object.entries(value).reduce<Record<string, unknown>>((acc, [k, v]) => {
-            if (v !== undefined && v !== null && v !== '') {
-              acc[k] = v
-            }
-            return acc
-          }, {})
-        }
-        return value
-      }).replace(/"([^"]+)":/g, '$1:')}`
+      if (value === undefined || value === null || value === '') {
+        return undefined
+      }
+      if (typeof value === 'object' && value !== null) {
+        return Object.entries(value).reduce<Record<string, unknown>>((acc, [k, v]) => {
+          if (v !== undefined && v !== null && v !== '') {
+            acc[k] = v
+          }
+          return acc
+        }, {})
+      }
+      return value
+    }).replace(/"([^"]+)":/g, '$1:')}`
     : ''
 
   return `${name}(${formatArg(value)}${optionsString})`

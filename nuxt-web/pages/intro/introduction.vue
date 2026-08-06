@@ -9,7 +9,9 @@
       </p>
     </PageTitle>
 
-    <div class="prose prose-lg dark:prose-invert max-w-none">
+    <div
+      class="prose prose-lg max-w-none"
+      class:dark="prose-invert">
       <h3>No Dependencies</h3>
       <p>
         UseMods don't need nobody! It's a mod rocker, standing tall and proud,
@@ -65,8 +67,8 @@
 </template>
 
 <script setup lang="ts">
-import DocsLayout from "~/components/DocsLayout.vue";
-import PageTitle from "~/components/content/PageTitle.vue";
+import DocsLayout from '~/components/DocsLayout.vue'
+import PageTitle from '~/components/content/PageTitle.vue'
 
-provide("toc", []);
+provide('toc', [])
 </script>

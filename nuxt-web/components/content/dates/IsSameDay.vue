@@ -1,8 +1,16 @@
 <template>
   <Example>
-    <ExampleInputs class="flex max-md:flex-col gap-2">
-      <FormInput v-model="a" label="Date A" type="datetime-local" />
-      <FormInput v-model="b" label="Date B" type="datetime-local" />
+    <ExampleInputs
+      class="flex gap-2"
+      class:max-md="flex-col">
+      <FormInput
+        v-model="a"
+        label="Date A"
+        type="datetime-local" />
+      <FormInput
+        v-model="b"
+        label="Date B"
+        type="datetime-local" />
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />
     <ExampleResult>

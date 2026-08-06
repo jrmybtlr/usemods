@@ -19,7 +19,9 @@
     <Teleport to="body">
       <div
         v-if="show"
-        class="absolute left-1/2 top-16 z-50 flex -translate-x-1/2 rounded-lg border border-black/5 bg-white/80 p-1 shadow-2xl backdrop-blur transition-all duration-300 dark:border-white/5 dark:bg-zinc-900/95 max-md:w-[90vw]"
+        class="absolute top-16 left-1/2 z-50 flex -translate-x-1/2 rounded-lg border border-black/5 bg-white/80 p-1 shadow-2xl backdrop-blur transition-all duration-300"
+        class:dark="border-white/5 bg-zinc-900/95"
+        class:max-md="w-[90vw]"
         :class="show ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'">
         <slot />
       </div>

@@ -5,20 +5,23 @@
 
     <!-- Pages -->
     <div
-      class="container relative mx-auto flex min-h-screen gap-8 py-2 max-md:flex-col md:gap-12 md:py-12"
-    >
+      class="relative container mx-auto flex min-h-screen gap-8 py-2"
+      class:max-md="flex-col"
+      class:md="gap-12 py-12">
       <div
-        class="top-6 flex h-fit w-full flex-col max-md:hidden md:sticky md:-mt-2 md:w-2/12"
-      >
+        class="top-6 flex h-fit w-full flex-col"
+        class:max-md="hidden"
+        class:md="sticky -mt-2 w-2/12">
         <NuxtLink
           v-for="link in introLinks"
           :key="link.title"
           prefetch
           :to="link.path"
-          class="flex items-center gap-3 py-2 text-xl font-medium text-gray-500 dark:text-gray-500 dark:hover:text-white/75"
-          active-class="active"
-        >
-          <Icon :name="link.title" class="size-5 shrink-0" />
+          class="flex items-center gap-3 py-2 text-xl font-medium text-gray-500 dark:hover:text-white/75"
+          class:dark="text-gray-500">
+          <Icon
+            :name="link.title"
+            class="size-5 shrink-0" />
           {{ link.title }}
         </NuxtLink>
 
@@ -28,10 +31,11 @@
             :key="link.title"
             prefetch
             :to="link.path"
-            class="flex items-center gap-3 py-2 font-medium text-gray-500 dark:text-gray-500 dark:hover:text-white/75"
-            active-class="active"
-          >
-            <Icon :name="link.title" class="size-5 shrink-0" />
+            class="flex items-center gap-3 py-2 font-medium text-gray-500 dark:hover:text-white/75"
+            class:dark="text-gray-500">
+            <Icon
+              :name="link.title"
+              class="size-5 shrink-0" />
             {{ link.title }}
           </NuxtLink>
         </div>
@@ -39,9 +43,10 @@
 
       <!-- Content -->
       <div
-        class="min-h-screen motion-preset-focus w-full text-gray-950 dark:text-white lg:w-7/12"
-        :class="route.params.slug?.at(-1) ?? route.name"
-      >
+        class="motion-preset-focus min-h-screen w-full text-gray-950"
+        class:dark="text-white"
+        class:lg="w-7/12"
+        :class="pageClass">
         <slot />
 
         <!-- Jagger Swagger -->
@@ -50,27 +55,37 @@
 
       <!-- Table of Contents -->
       <TableOfContents
-        class="sticky top-8 h-fit shrink max-lg:hidden max-md:hidden"
-      />
+        class="sticky top-8 h-fit shrink"
+        class:max-lg="hidden"
+        class:max-md="hidden" />
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
 interface NavLink {
-  title: string;
-  path: string;
+  title: string
+  path: string
 }
 
-const route = useRoute();
-const introLinks = inject<NavLink[]>("intro-links", []);
-const docLinks = inject<NavLink[]>("doc-links", []);
+const route = useRoute()
+const introLinks = inject<NavLink[]>('intro-links', [])
+const docLinks = inject<NavLink[]>('doc-links', [])
+
+const pageClass = computed((): string => {
+  const slug = route.params.slug
+  const fromSlug = Array.isArray(slug) ? slug.at(-1) : slug
+  if (typeof fromSlug === 'string') return fromSlug
+  return typeof route.name === 'string' ? route.name : ''
+})
 </script>
 
 <style scoped>
 @reference "~/assets/css/tailwind.css";
 
-.active {
+/* Prefer router defaults: UseClassy treats static `active-class="…"` as a class attr
+   (its lookbehind allows matching after `-`), which baked `active` onto every link. */
+.router-link-active {
   @apply text-indigo-600 dark:text-amber-400;
 }
 </style>

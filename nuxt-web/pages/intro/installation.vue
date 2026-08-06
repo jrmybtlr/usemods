@@ -5,7 +5,9 @@
       <p>Running and loving mods</p>
     </PageTitle>
 
-    <div class="prose prose-lg dark:prose-invert max-w-none">
+    <div
+      class="prose prose-lg max-w-none"
+      class:dark="prose-invert">
       <p>To install, simply run the following command in your terminal:</p>
 
       <Shiki
@@ -17,8 +19,7 @@ npm install usemods
 yarn add usemods
 
 # Trying bun
-bun add usemods"
-      />
+bun add usemods" />
 
       <h2>Nuxt</h2>
       <p>
@@ -27,7 +28,9 @@ bun add usemods"
         Nuxt-specific features, so stay tuned!
       </p>
 
-      <Shiki lang="bash" code="npx nuxi module add usemods-nuxt" />
+      <Shiki
+        lang="bash"
+        code="npx nuxi module add usemods-nuxt" />
 
       <h2>Next</h2>
       <p>
@@ -57,16 +60,15 @@ bun add usemods"
 
 <script setup>
   import { copyToClipboard, formatNumber } from 'usemods'
-</script>"
-      />
+</script>" />
     </div>
   </DocsLayout>
 </template>
 
 <script setup lang="ts">
-import DocsLayout from "~/components/DocsLayout.vue";
-import PageTitle from "~/components/content/PageTitle.vue";
-import Shiki from "~/components/content/snippet.vue";
+import DocsLayout from '~/components/DocsLayout.vue'
+import PageTitle from '~/components/content/PageTitle.vue'
+import Shiki from '~/components/content/snippet.vue'
 
-provide("toc", []);
+provide('toc', [])
 </script>

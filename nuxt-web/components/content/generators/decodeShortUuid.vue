@@ -1,7 +1,9 @@
-<template>  
-    <Example>
+<template>
+  <Example>
     <ExampleInputs>
-      <FormInput v-model="shortUuid" label="Short UUID" />
+      <FormInput
+        v-model="shortUuid"
+        label="Short UUID" />
     </ExampleInputs>
     <ExampleCode :code="`decodeShortUuid(${shortUuid})`" />
     <ExampleResult>

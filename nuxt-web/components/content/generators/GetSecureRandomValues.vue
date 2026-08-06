@@ -6,8 +6,7 @@
         type="number"
         label="Length"
         min="1"
-        max="100"
-        />
+        max="100" />
       <Button
         @click="generate">
         Generate

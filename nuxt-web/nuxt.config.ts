@@ -1,28 +1,108 @@
-import { resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
-import tailwindcss from "@tailwindcss/vite";
+import { resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import tailwindcss from '@tailwindcss/vite'
+import useClassy from 'vite-plugin-useclassy'
 
-const nuxtWebDir = fileURLToPath(new URL(".", import.meta.url));
-const repoRoot = resolve(nuxtWebDir, "..");
+const nuxtWebDir = fileURLToPath(new URL('.', import.meta.url))
+const repoRoot = resolve(nuxtWebDir, '..')
 const ignoredWatchPaths = [
-  resolve(repoRoot, "node_modules"),
-  resolve(repoRoot, "dist"),
-  resolve(repoRoot, "docs"),
-  resolve(repoRoot, ".git"),
-  resolve(repoRoot, "nuxt-module"),
-];
+  resolve(repoRoot, 'node_modules'),
+  resolve(repoRoot, 'dist'),
+  resolve(repoRoot, 'docs'),
+  resolve(repoRoot, '.git'),
+  resolve(repoRoot, 'nuxt-module'),
+]
 
 async function generateAiDiscoveryAssets(): Promise<void> {
-  const generatorPath = resolve(import.meta.dirname, "../docs/generate-ai-docs.mjs");
+  const generatorPath = resolve(import.meta.dirname, '../docs/generate-ai-docs.mjs')
   const generator = await import(pathToFileURL(generatorPath).href) as {
-    generateAiDiscoveryAssets: () => Promise<void>;
-  };
-  await generator.generateAiDiscoveryAssets();
+    generateAiDiscoveryAssets: () => Promise<void>
+  }
+  await generator.generateAiDiscoveryAssets()
 }
 
 export default defineNuxtConfig({
-  experimental: {
-    viteEnvironmentApi: false,
+
+  modules: [
+    '@vueuse/nuxt',
+    '@nuxt/image',
+    '@nuxtjs/color-mode',
+    '@nuxt/eslint',
+    '@nuxt/icon',
+    'nuxt-shiki',
+    'usemods-nuxt',
+  ],
+
+  devtools: { enabled: true },
+
+  app: {
+    head: {
+      htmlAttrs: { lang: 'en' },
+      title: 'UseMods',
+      meta: [
+        {
+          name: 'description',
+          content:
+            'Zero-dependency JavaScript utilities for frontend and SSR — formatters, validators, generators, modifiers, and browser helpers.',
+        },
+        { property: 'og:image', content: '/og-image.jpg' },
+        { name: 'robots', content: 'index, follow, max-snippet:-1' },
+        { name: 'ai-content', content: 'index' },
+      ],
+      link: [
+        { rel: 'alternate', type: 'text/plain', href: '/llms.txt', title: 'LLMs.txt' },
+        { rel: 'alternate', type: 'text/plain', href: '/llms-full.txt', title: 'LLMs full documentation' },
+        { rel: 'alternate', type: 'text/markdown', href: '/docs/all.md', title: 'Documentation (Markdown)' },
+        { rel: 'sitemap', href: '/sitemap.xml', type: 'application/xml' },
+      ],
+    },
+  },
+
+  css: ['~/assets/css/main.css'],
+
+  colorMode: {
+    classSuffix: '',
+  },
+
+  routeRules: {
+    '/': { prerender: true },
+    '/docs/**': {
+      swr: true,
+      prerender: true,
+    },
+    '/intro/**': {
+      swr: true,
+      prerender: true,
+    },
+    '/playground/**': {
+      ssr: false,
+    },
+    '/api/docs/**': {
+      cors: true,
+      headers: {
+        'Cache-Control': 'public, max-age=3600',
+      },
+    },
+    '/llms.txt': {
+      cors: true,
+      headers: {
+        'Cache-Control': 'public, max-age=3600',
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    },
+    '/llms-full.txt': {
+      cors: true,
+      headers: {
+        'Cache-Control': 'public, max-age=3600',
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    },
+    '/robots.txt': {
+      headers: {
+        'Cache-Control': 'public, max-age=3600',
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    },
   },
 
   watchers: {
@@ -32,17 +112,36 @@ export default defineNuxtConfig({
       ignored: ignoredWatchPaths,
     },
   },
+  experimental: {
+    viteEnvironmentApi: false,
+  },
+  compatibilityDate: '2024-11-14',
 
-  css: ["~/assets/css/main.css"],
+  nitro: {
+    preset: 'cloudflare_module',
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+    },
+    prerender: {
+      autoSubfolderIndex: false,
+      routes: ['/'],
+      crawlLinks: true,
+      ignore: ['/playground/**'],
+    },
+  },
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      useClassy({ language: 'vue' }),
+      tailwindcss(),
+    ],
     resolve: {
       // Monorepo: always resolve to source. Production `exports.default` points at
       // gitignored `dist/`, which is missing on fresh CI (Cloudflare) until bundle runs.
       // Source also avoids Vite transform issues with the prebuilt dist bundle.
       alias: {
-        usemods: resolve(repoRoot, "src/index.ts"),
+        usemods: resolve(repoRoot, 'src/index.ts'),
       },
     },
     server: {
@@ -61,109 +160,11 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    "@vueuse/nuxt",
-    "@nuxt/image",
-    "@nuxtjs/color-mode",
-    "@nuxt/eslint",
-    "@nuxt/icon",
-    "nuxt-shiki",
-    "usemods-nuxt",
-  ],
-
   // Keep llms.txt / markdown corpus / sitemap fresh on every website build
   hooks: {
-    "build:before": async () => {
-      await generateAiDiscoveryAssets();
+    'build:before': async () => {
+      await generateAiDiscoveryAssets()
     },
-  },
-
-  app: {
-    head: {
-      htmlAttrs: { lang: "en" },
-      title: "UseMods",
-      meta: [
-        {
-          name: "description",
-          content:
-            "Zero-dependency JavaScript utilities for frontend and SSR — formatters, validators, generators, modifiers, and browser helpers.",
-        },
-        { property: "og:image", content: "/og-image.jpg" },
-        { name: "robots", content: "index, follow, max-snippet:-1" },
-        { name: "ai-content", content: "index" },
-      ],
-      link: [
-        { rel: "alternate", type: "text/plain", href: "/llms.txt", title: "LLMs.txt" },
-        { rel: "alternate", type: "text/plain", href: "/llms-full.txt", title: "LLMs full documentation" },
-        { rel: "alternate", type: "text/markdown", href: "/docs/all.md", title: "Documentation (Markdown)" },
-        { rel: "sitemap", href: "/sitemap.xml", type: "application/xml" },
-      ],
-    },
-  },
-
-  nitro: {
-    preset: "cloudflare_module",
-    cloudflare: {
-        deployConfig: true,
-        nodeCompat: true
-    },
-    prerender: {
-      autoSubfolderIndex: false,
-      routes: ["/"],
-      crawlLinks: true,
-      ignore: ["/playground/**"],
-    },
-  },
-
-  routeRules: {
-    "/": { prerender: true },
-    "/docs/**": {
-      swr: true,
-      prerender: true,
-    },
-    "/intro/**": {
-      swr: true,
-      prerender: true,
-    },
-    "/playground/**": {
-      ssr: false,
-    },
-    "/api/docs/**": {
-      cors: true,
-      headers: {
-        "Cache-Control": "public, max-age=3600",
-      },
-    },
-    "/llms.txt": {
-      cors: true,
-      headers: {
-        "Cache-Control": "public, max-age=3600",
-        "Content-Type": "text/plain; charset=utf-8",
-      },
-    },
-    "/llms-full.txt": {
-      cors: true,
-      headers: {
-        "Cache-Control": "public, max-age=3600",
-        "Content-Type": "text/plain; charset=utf-8",
-      },
-    },
-    "/robots.txt": {
-      headers: {
-        "Cache-Control": "public, max-age=3600",
-        "Content-Type": "text/plain; charset=utf-8",
-      },
-    },
-  },
-
-  image: {
-    cloudflare: {
-      baseURL: "https://public.usemods.com/",
-    },
-  },
-
-  colorMode: {
-    classSuffix: "",
   },
 
   eslint: {
@@ -172,32 +173,26 @@ export default defineNuxtConfig({
     },
   },
 
-  shiki: {
-    bundledThemes: ["nord", "one-light"],
-    bundledLangs: ["bash", "vue", "typescript", "javascript", "json"],
-    defaultTheme: "one-light",
-  },
-
   icon: {
     clientBundle: {
       icons: [
-        "fa6-brands:github",
-        "heroicons:moon-solid",
-        "heroicons:sun-solid",
-        "heroicons:arrow-right",
-        "heroicons:arrow-left-circle",
-        "heroicons:arrow-right-circle",
-        "heroicons:arrow-up",
-        "heroicons:hashtag",
-        "heroicons:information-circle-solid",
-        "lucide:terminal",
-        "logos:nuxt-icon",
-        "logos:nextjs-icon",
-        "logos:vue",
-        "logos:react",
-        "logos:svelte-icon",
-        "logos:solidjs-icon",
-        "logos:nodejs-icon",
+        'fa6-brands:github',
+        'heroicons:moon-solid',
+        'heroicons:sun-solid',
+        'heroicons:arrow-right',
+        'heroicons:arrow-left-circle',
+        'heroicons:arrow-right-circle',
+        'heroicons:arrow-up',
+        'heroicons:hashtag',
+        'heroicons:information-circle-solid',
+        'lucide:terminal',
+        'logos:nuxt-icon',
+        'logos:nextjs-icon',
+        'logos:vue',
+        'logos:react',
+        'logos:svelte-icon',
+        'logos:solidjs-icon',
+        'logos:nodejs-icon',
       ],
       scan: true,
       sizeLimitKb: 512,
@@ -205,9 +200,18 @@ export default defineNuxtConfig({
     serverBundle: {
       remote: true,
     },
-    provider: "iconify",
+    provider: 'iconify',
   },
 
-  devtools: { enabled: true },
-  compatibilityDate: "2024-11-14",
-});
+  image: {
+    cloudflare: {
+      baseURL: 'https://public.usemods.com/',
+    },
+  },
+
+  shiki: {
+    bundledThemes: ['nord', 'one-light'],
+    bundledLangs: ['bash', 'vue', 'typescript', 'javascript', 'json'],
+    defaultTheme: 'one-light',
+  },
+})

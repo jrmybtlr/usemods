@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full" :class="{ 'opacity-50': disabled }">
+  <div
+    class="w-full"
+    :class="{ 'opacity-50': disabled }">
     <FormLabel
       :label="label"
       :info="info"

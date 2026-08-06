@@ -1,11 +1,21 @@
 <template>
   <Example>
     <ExampleInputs>
-      <FormInput v-model="delay" label="Delay" type="number" />
-      <Button @click="handleClick" color="secondary">Click me</Button>
+      <FormInput
+        v-model="delay"
+        label="Delay"
+        type="number" />
+      <Button
+        color="secondary"
+        @click="handleClick">
+        Click me
+      </Button>
     </ExampleInputs>
 
-    <ClickLog :executions="executions" :clicks="clicks" :executionLog="executionLog" />
+    <ClickLog
+      :executions="executions"
+      :clicks="clicks"
+      :execution-log="executionLog" />
     <ExampleCode :code="`debounce(() => { executions.value++ }, ${delay})`" />
   </Example>
 </template>
@@ -25,10 +35,10 @@ const debouncedHandler = computed(() => {
     executionLog.value = executionLog.value.slice(-4) // Keep last 4 entries
     executionLog.value.push(new Date().toLocaleTimeString())
   }, delay.value)
-  
+
   // Clean up the previous debounced function when delay changes
   onUnmounted(() => handler.cancel?.())
-  
+
   return handler
 })
 

@@ -20,9 +20,9 @@
       </FormSelect>
       <FormSelect
         :model-value="round"
-        @update:model-value="val => round = val === 'true'"
         label="Rounding"
-        info="Default: false">
+        info="Default: false"
+        @update:model-value="val => round = val === 'true'">
         <option value="false">
           False
         </option>

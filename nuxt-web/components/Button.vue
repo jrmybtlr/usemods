@@ -1,6 +1,6 @@
 <template>
   <button
-    class="flex translate-y-0 touch-manipulation select-none items-center justify-center whitespace-nowrap rounded-lg border text-lg font-medium transition-all"
+    class="flex translate-y-0 touch-manipulation items-center justify-center rounded-lg border text-lg font-medium whitespace-nowrap transition-all select-none"
     :type="type"
     :class="[colorClasses, sizeClasses]">
     <slot />

@@ -1,10 +1,21 @@
 <template>
   <Example>
     <ExampleInputs class="flex flex-col gap-2">
-      <FormInput v-model="value" label="Date" type="datetime-local" />
-      <div class="flex max-md:flex-col gap-2 w-full">
-        <FormInput v-model="start" label="Start" type="datetime-local" />
-        <FormInput v-model="end" label="End" type="datetime-local" />
+      <FormInput
+        v-model="value"
+        label="Date"
+        type="datetime-local" />
+      <div
+        class="flex w-full gap-2"
+        class:max-md="flex-col">
+        <FormInput
+          v-model="start"
+          label="Start"
+          type="datetime-local" />
+        <FormInput
+          v-model="end"
+          label="End"
+          type="datetime-local" />
       </div>
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />

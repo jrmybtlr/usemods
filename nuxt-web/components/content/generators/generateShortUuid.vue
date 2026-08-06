@@ -1,7 +1,9 @@
 <template>
   <Example>
     <ExampleInputs>
-      <FormInput v-model="uuid" label="UUID" />
+      <FormInput
+        v-model="uuid"
+        label="UUID" />
     </ExampleInputs>
     <ExampleCode :code="`generateShortUuid(${uuid})`" />
     <ExampleResult>

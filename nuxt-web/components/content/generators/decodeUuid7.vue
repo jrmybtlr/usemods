@@ -1,8 +1,12 @@
 <template>
   <Example>
     <ExampleInputs>
-      <FormInput v-model="uuid" label="UUID" />
-      <Button color="secondary" @click="decode">
+      <FormInput
+        v-model="uuid"
+        label="UUID" />
+      <Button
+        color="secondary"
+        @click="decode">
         Decode
       </Button>
     </ExampleInputs>
@@ -24,4 +28,3 @@ onMounted(() => {
   decode()
 })
 </script>
-

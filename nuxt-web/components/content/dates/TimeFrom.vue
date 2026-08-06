@@ -1,26 +1,46 @@
 <template>
   <Example>
     <ExampleInputs class="flex flex-col gap-4">
-      <div class="flex w-full gap-4 max-md:flex-col">
-        <FormInput v-model="value" label="Date" type="datetime-local" />
-        <FormInput v-model="now" label="Now (optional)" type="datetime-local" />
+      <div
+        class="flex w-full gap-4"
+        class:max-md="flex-col">
+        <FormInput
+          v-model="value"
+          label="Date"
+          type="datetime-local" />
+        <FormInput
+          v-model="now"
+          label="Now (optional)"
+          type="datetime-local" />
       </div>
-      <div class="flex w-full gap-4 max-md:flex-col">
+      <div
+        class="flex w-full gap-4"
+        class:max-md="flex-col">
         <FormSelectLocale v-model="locale" />
-        <FormSelect v-model="style" label="Style" info="Default: long · short → 10d">
-          <option value="long">long</option>
-          <option value="short">short</option>
-          <option value="narrow">narrow</option>
+        <FormSelect
+          v-model="style"
+          label="Style"
+          info="Default: long · short → 10d">
+          <option value="long">
+            long
+          </option>
+          <option value="short">
+            short
+          </option>
+          <option value="narrow">
+            narrow
+          </option>
         </FormSelect>
       </div>
-      <div class="flex w-full gap-4 max-md:flex-col">
+      <div
+        class="flex w-full gap-4"
+        class:max-md="flex-col">
         <FormInput
           v-model.number="threshold"
           label="Threshold"
           info="Seconds · default 30"
           type="number"
-          min="0"
-        />
+          min="0" />
       </div>
     </ExampleInputs>
     <ExampleCode :code="formattedCode" />
