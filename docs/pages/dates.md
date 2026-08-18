@@ -34,7 +34,7 @@ Compare dates, show relative time, and measure durations. Helpful helpers when I
 **Parameters:**
 - `from` (`DateInput`)
 - `to` (`DateInput`)
-- `options?` (`CombinedDatesOptions`)
+- `options?` (`CombinedDatesOptions`): `{ locale?: string, display?: 'short' | 'long', timeZone?: string, showTime?: boolean }`. Defaults: `locale: 'en-US'`, `display: 'long'`. `format` is a deprecated alias for `display`.
 
 **Returns:** `string`
 

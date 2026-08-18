@@ -41,29 +41,41 @@ export function splitByWords(text: string): string {
  * Check the strength of a password against a given policy.
  * @info Don't forget to use our Password Generator in the Generators section
  */
-export function checkPasswordStrength(text: string, options: { length?: number, uppercase?: number, number?: number, special?: number } = {}): object {
+export function checkPasswordStrength(text: string, options: {
+  length?: number
+  uppercase?: number
+  numbers?: number
+  number?: number
+  symbols?: number
+  special?: number
+} = {}): object {
   if (!text) {
     console.warn('[MODS] Warning: No password to check')
     return { score: 0, label: 'Very Weak' }
   }
-  const { length = 8, uppercase = 1, number = 1, special = 1 } = options
+  const length = options.length ?? 8
+  const uppercase = options.uppercase ?? 1
+  // Support both 'numbers' and legacy 'number' (matches generatePassword)
+  const numbers = options.numbers ?? options.number ?? 1
+  // Support both 'symbols' and legacy 'special' (matches generatePassword)
+  const symbols = options.symbols ?? options.special ?? 1
   let strength = 0
 
   const counts = {
     uppercase: text.match(/[A-Z]/g)?.length ?? 0,
     numbers: text.match(/[0-9]/g)?.length ?? 0,
-    special: text.match(/[^a-zA-Z0-9]/g)?.length ?? 0,
+    symbols: text.match(/[^a-zA-Z0-9]/g)?.length ?? 0,
   }
 
   if (text.length < length) return { score: 1, label: `Password must be at least ${length} characters long` }
-  if (counts.uppercase < uppercase) return { score: 1, label: `Password must contain ${uppercase} uppercase letter` }
-  if (counts.numbers < number) return { score: 1, label: `Password must contain ${number} number` }
-  if (counts.special < special) return { score: 1, label: `Password must contain ${special} special character` }
+  if (counts.uppercase < uppercase) return { score: 1, label: `Password must contain ${uppercase} uppercase letter${uppercase === 1 ? '' : 's'}` }
+  if (counts.numbers < numbers) return { score: 1, label: `Password must contain ${numbers} number${numbers === 1 ? '' : 's'}` }
+  if (counts.symbols < symbols) return { score: 1, label: `Password must contain ${symbols} special character${symbols === 1 ? '' : 's'}` }
 
   strength += text.length >= 8 ? 1 : 0
   strength += counts.uppercase >= 1 ? 1 : 0
   strength += counts.numbers >= 1 ? 1 : 0
-  strength += counts.special >= 1 ? 1 : 0
+  strength += counts.symbols >= 1 ? 1 : 0
 
   switch (strength) {
     case 4:

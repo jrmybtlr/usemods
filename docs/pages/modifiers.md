@@ -10,12 +10,12 @@ The Modifiers module provides comprehensive string manipulation functions. These
 
 ## Functions
 
-### `startWith(value: string, start: string): string`
+### `startWith(text: string, start: string): string`
 
 Adds a prefix to a string if it doesn't already start with the prefix.
 
 **Parameters:**
-- `value` (string): The string to modify
+- `text` (string): The string to modify
 - `start` (string): The prefix to add
 
 **Returns:** String with prefix added if needed
@@ -30,12 +30,12 @@ startWith('https://example.com', 'https://') // 'https://example.com' (unchanged
 
 ---
 
-### `startWithout(value: string, start: string): string`
+### `startWithout(text: string, start: string): string`
 
 Removes a prefix from a string if it starts with the prefix.
 
 **Parameters:**
-- `value` (string): The string to modify
+- `text` (string): The string to modify
 - `start` (string): The prefix to remove
 
 **Returns:** String with prefix removed if present
@@ -111,12 +111,12 @@ surroundWith('[content]', '[', ']') // '[content]' (unchanged)
 
 ---
 
-### `pluralize(word: string, count: number): string`
+### `pluralize(text: string, count: number): string`
 
 Adds plurals to a string except for excluded words.
 
 **Parameters:**
-- `word` (string): The word to pluralize
+- `text` (string): The word to pluralize
 - `count` (number): The count to determine if pluralization is needed
 
 **Returns:** Pluralized word if count is not 1, otherwise returns the original word
@@ -136,12 +136,12 @@ pluralize('city', 2) // 'cities'
 
 ---
 
-### `singularize(value: string): string`
+### `singularize(text: string): string`
 
 Removes plurals from a string.
 
 **Parameters:**
-- `value` (string): The word to singularize
+- `text` (string): The word to singularize
 
 **Returns:** Singular form of the word
 
@@ -159,12 +159,12 @@ singularize('cities') // 'city'
 
 ---
 
-### `ordinalize(value: number): string`
+### `ordinalize(number: number): string`
 
 Converts a number to a string with ordinal suffix.
 
 **Parameters:**
-- `value` (number): The number to convert
+- `number` (number): The number to convert
 
 **Returns:** String with ordinal suffix (1st, 2nd, 3rd, 4th, etc.)
 

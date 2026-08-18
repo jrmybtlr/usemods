@@ -8,7 +8,7 @@
     <PageFunction
       name="startWith"
       description="Adds a prefix to a string if it doesn't already start with the prefix."
-      params='[{"name":"value","type":"string"},{"name":"start","type":"string"}]'
+      params='[{"name":"text","type":"string"},{"name":"start","type":"string"}]'
     >
       <StartWith />
     </PageFunction>
@@ -16,7 +16,7 @@
     <PageFunction
       name="startWithout"
       description="Removes a prefix from a string if it starts with the prefix."
-      params='[{"name":"value","type":"string"},{"name":"start","type":"string"}]'
+      params='[{"name":"text","type":"string"},{"name":"start","type":"string"}]'
     >
       <StartWithout />
     </PageFunction>
@@ -49,7 +49,7 @@
       name="pluralize"
       description="Adds plurals to a string except for excluded words."
       info="This handles most english pluralisation rules, but there are exceptions."
-      params='[{"name":"word","type":"string"},{"name":"count","type":"number"}]'
+      params='[{"name":"text","type":"string"},{"name":"count","type":"number"}]'
     >
       <Pluralize />
     </PageFunction>
@@ -58,7 +58,7 @@
       name="singularize"
       description="Removes plurals from a string."
       info="This handles most english pluralisation rules, but there are exceptions."
-      params='[{"name":"value","type":"string"}]'
+      params='[{"name":"text","type":"string"}]'
     >
       <Singularize />
     </PageFunction>
@@ -66,7 +66,7 @@
     <PageFunction
       name="ordinalize"
       description="Converts a number to a string with ordinal suffix."
-      params='[{"name":"value","type":"number"}]'
+      params='[{"name":"number","type":"number"}]'
     >
       <Ordinalize />
     </PageFunction>

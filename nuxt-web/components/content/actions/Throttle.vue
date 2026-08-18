@@ -2,8 +2,8 @@
   <Example>
     <ExampleInputs>
       <FormInput
-        v-model="threshold"
-        label="Threshold"
+        v-model="delay"
+        label="Delay"
         type="number" />
       <Button @click="handleClick()">
         Click me
@@ -15,12 +15,12 @@
       :clicks="clicks"
       :execution-log="executionLog" />
 
-    <ExampleCode :code="`throttle(() => { executions.value++ }, ${threshold})`" />
+    <ExampleCode :code="`throttle(() => { executions.value++ }, ${delay})`" />
   </Example>
 </template>
 
 <script lang="ts" setup>
-const threshold = ref(2000)
+const delay = ref(2000)
 const clicks = ref(0)
 const executions = ref(0)
 const executionLog = ref<string[]>([])
@@ -29,7 +29,7 @@ const throttledHandler = computed(() => throttle(() => {
   const currentTime = new Date().toLocaleTimeString()
   executions.value++
   executionLog.value = [...executionLog.value, currentTime].slice(-5)
-}, threshold.value))
+}, delay.value))
 
 function handleClick() {
   clicks.value++

@@ -14,14 +14,14 @@
       <div class="flex w-full gap-2">
         <FormSelectLocale v-model="locale" />
         <FormSelect
-          v-model="format"
+          v-model="display"
           info="Default: 'long'"
-          label="Format">
+          label="Display">
           <option
             value=""
             disabled
             selected>
-            Select Format
+            Select Display
           </option>
           <option value="short">
             Short
@@ -48,7 +48,7 @@
       {{
         combineDates(from, to, {
           locale: locale ? locale : undefined,
-          format: format,
+          display: display,
           showTime: showTime === 'true',
         })
       }}
@@ -62,17 +62,17 @@ import { combineDates } from 'usemods'
 const from = ref('2025-01-01T10:00:00')
 const to = ref('2025-01-31T14:30:00')
 const locale = ref(undefined)
-const format = ref(undefined)
+const display = ref(undefined)
 const showTime = ref('false')
 
 // Demo Purposes Only
 const formattedCode = computed(() => {
   return generateFormatterCode('combineDates', [from.value, to.value], {
     locale: locale.value,
-    format: format.value,
+    display: display.value,
     showTime: showTime.value === 'true' ? true : undefined,
   }, {
-    format: 'long',
+    display: 'long',
   })
 })
 </script>
