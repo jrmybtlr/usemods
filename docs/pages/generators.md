@@ -166,7 +166,7 @@ generateShortId(10) // '1705312345'
 
 ---
 
-### `generatePassword(options?: { length?: number, uppercase?: number, numbers?: number, symbols?: number, special?: number }): string`
+### `generatePassword(options?: { length?: number, uppercase?: number, numbers?: number, symbols?: number }): string`
 
 Generate a random, secure password with a mix of character types and pleasant special characters.
 
@@ -176,6 +176,7 @@ Generate a random, secure password with a mix of character types and pleasant sp
   - `uppercase` (number, optional): Number of uppercase letters. Defaults to `0`
   - `numbers` (number, optional): Number of digits. Defaults to `0`
   - `symbols` (number, optional): Number of special characters. Defaults to `0`
+  - `number` (number, optional): Alias for `numbers`
   - `special` (number, optional): Alias for `symbols`
 
 **Returns:** Generated password string

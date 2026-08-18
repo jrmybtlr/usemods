@@ -7,7 +7,7 @@
  */
 export function debounce<T extends (
   ...args: unknown[]) => unknown>(
-  func: T,
+  fn: T,
   delay: number,
   { leading = false, trailing = true }:
   { leading?: boolean, trailing?: boolean } = {},
@@ -23,13 +23,13 @@ export function debounce<T extends (
     timer = setTimeout(() => {
       timer = null
       if (trailing && lastArgs) {
-        func.apply(this, lastArgs)
+        fn.apply(this, lastArgs)
       }
       lastArgs = null
     }, delay)
 
     if (shouldCallNow) {
-      func.apply(this, args)
+      fn.apply(this, args)
     }
   }
 
@@ -43,19 +43,19 @@ export function debounce<T extends (
 }
 
 /**
- * Throttles a function to ensure it only runs once per threshold
+ * Throttles a function to ensure it only runs once per delay interval
  */
 export function throttle<T extends (
   ...args: unknown[]) => void>(
   fn: T,
-  threshold: number,
+  delay: number,
 ): ((...args: Parameters<T>) => void) & { cancel: () => void } {
   let lastRun = 0
   let timeout: ReturnType<typeof setTimeout> | null = null
 
   const throttledFn = function (this: ThisParameterType<T>, ...args: Parameters<T>) {
     const now = performance.now()
-    const remaining = threshold - (now - lastRun)
+    const remaining = delay - (now - lastRun)
 
     if (remaining <= 0) {
       if (timeout) {

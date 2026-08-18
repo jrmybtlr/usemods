@@ -25,15 +25,21 @@ test('checkPasswordStrength', () => {
   expect(mod.checkPasswordStrength('Hell0#', { length: 5 })).toEqual({ score: 3, label: 'Strong' })
   expect(mod.checkPasswordStrength('Hello1234#', { length: 10 })).toEqual({ score: 4, label: 'Very Strong' })
   expect(mod.checkPasswordStrength('Hello1234#', { length: 10, uppercase: 1 })).toEqual({ score: 4, label: 'Very Strong' })
-  expect(mod.checkPasswordStrength('Hello1234#', { length: 10, uppercase: 1, number: 1 })).toEqual({ score: 4, label: 'Very Strong' })
+  expect(mod.checkPasswordStrength('Hello1234#', { length: 10, uppercase: 1, numbers: 1 })).toEqual({ score: 4, label: 'Very Strong' })
+  expect(mod.checkPasswordStrength('Hello1234#', { length: 10, uppercase: 1, numbers: 1, symbols: 1 })).toEqual({ score: 4, label: 'Very Strong' })
+  // Legacy aliases still work
   expect(mod.checkPasswordStrength('Hello1234#', { length: 10, uppercase: 1, number: 1, special: 1 })).toEqual({ score: 4, label: 'Very Strong' })
+  // Plural failure labels when required count > 1
+  expect(mod.checkPasswordStrength('hello1234', { uppercase: 2 })).toEqual({ score: 1, label: 'Password must contain 2 uppercase letters' })
+  expect(mod.checkPasswordStrength('Hello', { length: 1, numbers: 2, symbols: 0 })).toEqual({ score: 1, label: 'Password must contain 2 numbers' })
+  expect(mod.checkPasswordStrength('Hello1', { length: 1, numbers: 0, symbols: 2 })).toEqual({ score: 1, label: 'Password must contain 2 special characters' })
 
   // Custom criteria checks
-  expect(mod.checkPasswordStrength('hell', { length: 1, uppercase: 0, number: 0, special: 0 })).toEqual({ score: 0, label: 'Very Weak' })
-  expect(mod.checkPasswordStrength('Hell', { length: 1, uppercase: 0, number: 0, special: 0 })).toEqual({ score: 1, label: 'Weak' })
-  expect(mod.checkPasswordStrength('Hell0', { length: 1, uppercase: 0, number: 0, special: 0 })).toEqual({ score: 2, label: 'Medium' })
-  expect(mod.checkPasswordStrength('Hell0#', { length: 1, uppercase: 0, number: 0, special: 0 })).toEqual({ score: 3, label: 'Strong' })
-  expect(mod.checkPasswordStrength('Heeeeell0#', { length: 1, uppercase: 0, number: 0, special: 0 })).toEqual({ score: 4, label: 'Very Strong' })
+  expect(mod.checkPasswordStrength('hell', { length: 1, uppercase: 0, numbers: 0, symbols: 0 })).toEqual({ score: 0, label: 'Very Weak' })
+  expect(mod.checkPasswordStrength('Hell', { length: 1, uppercase: 0, numbers: 0, symbols: 0 })).toEqual({ score: 1, label: 'Weak' })
+  expect(mod.checkPasswordStrength('Hell0', { length: 1, uppercase: 0, numbers: 0, symbols: 0 })).toEqual({ score: 2, label: 'Medium' })
+  expect(mod.checkPasswordStrength('Hell0#', { length: 1, uppercase: 0, numbers: 0, symbols: 0 })).toEqual({ score: 3, label: 'Strong' })
+  expect(mod.checkPasswordStrength('Heeeeell0#', { length: 1, uppercase: 0, numbers: 0, symbols: 0 })).toEqual({ score: 4, label: 'Very Strong' })
 })
 
 

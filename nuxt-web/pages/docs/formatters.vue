@@ -40,7 +40,7 @@
     <PageFunction
       name="formatUnit"
       description="Format a number into a your unit of choice"
-      params='[{"name":"number","type":"number"},{"name":"options","type":"{\n    unit: string\n    decimals?: number\n    unitDisplay?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options","type":"{\n    unit: string\n    decimals?: number\n    display?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
     >
       <FormatUnit />
     </PageFunction>
@@ -56,7 +56,7 @@
     <PageFunction
       name="formatDurationLabels"
       description="Format time into a human-readable string"
-      params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    labels?: &#39;short&#39; | &#39;long&#39;\n    round?: boolean\n    decimals?: number\n  }"}]'
+      params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    display?: &#39;short&#39; | &#39;long&#39;\n    round?: boolean\n    decimals?: number\n  }"}]'
     >
       <FormatDurationLabels />
     </PageFunction>
@@ -72,7 +72,7 @@
     <PageFunction
       name="formatFileSize"
       description="Format and auto calculate file size into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    unitDisplay?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
     >
       <FormatFileSize />
     </PageFunction>
@@ -80,7 +80,7 @@
     <PageFunction
       name="formatLength"
       description="Format and auto calculate length into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    unitDisplay?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
     >
       <FormatLength />
     </PageFunction>
@@ -88,7 +88,7 @@
     <PageFunction
       name="formatTemperature"
       description="Format and auto calculate temperature into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    unitDisplay?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
     >
       <FormatTemperature />
     </PageFunction>

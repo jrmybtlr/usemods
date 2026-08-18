@@ -76,8 +76,10 @@ test('timeDifference', () => {
 test('combineDates', () => {
   // Same Day with different times
   expect(mod.combineDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { timeZone: 'UTC' })).toBe('January 1, 2025, 12:00 AM to 8:00 AM')
+  expect(mod.combineDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { locale: 'en-AU', display: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 12:00 am to 8:00 am')
+  expect(mod.combineDates(new Date('2025-01-01T09:00:00Z'), new Date('2025-01-01T14:30:00Z'), { locale: 'en-AU', display: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 9:00 am to 2:30 pm')
+  // Legacy format alias still works
   expect(mod.combineDates(new Date('2025-01-01T00:00:00Z'), new Date('2025-01-01T08:00:00Z'), { locale: 'en-AU', format: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 12:00 am to 8:00 am')
-  expect(mod.combineDates(new Date('2025-01-01T09:00:00Z'), new Date('2025-01-01T14:30:00Z'), { locale: 'en-AU', format: 'short', timeZone: 'UTC' })).toBe('1 Jan 2025, 9:00 am to 2:30 pm')
 
   // Same month
   expect(mod.combineDates(new Date('2025-01-01T12:00:00Z'), new Date('2025-01-31T12:00:00Z'), { timeZone: 'UTC' })).toBe('1-31 January 2025')
@@ -99,8 +101,8 @@ test('combineDates', () => {
   expect(mod.combineDates(new Date('2025-01-01T10:00:00Z'), new Date('2025-02-01T11:00:00Z'), { locale: 'en-AU', timeZone: 'UTC', showTime: true })).toBe('1 January 10:00 am — 1 February 2025 11:00 am')
   expect(mod.combineDates(new Date('2025-01-01T10:00:00Z'), new Date('2026-01-31T11:00:00Z'), { locale: 'en-AU', timeZone: 'UTC', showTime: true })).toBe('1 January 2025 10:00 am — 31 January 2026 11:00 am')
   expect(mod.combineDates(new Date('2025-01-01T10:00:00Z'), new Date('2025-01-31T11:00:00Z'), { timeZone: 'UTC', showTime: true })).toBe('January 1 10:00 AM — January 31, 2025 11:00 AM')
-  expect(mod.combineDates(new Date('2025-02-01T10:00:00Z'), new Date('2026-01-31T14:30:00Z'), { format: 'short', timeZone: 'UTC', showTime: true })).toBe('Feb 1, 2025 10:00 AM — Jan 31, 2026 2:30 PM')
-  expect(mod.combineDates(new Date('2025-01-01T10:00:00Z'), new Date('2025-01-31T11:00:00Z'), { locale: 'en-AU', format: 'short', timeZone: 'UTC', showTime: true })).toBe('1 Jan 10:00 am — 31 Jan 2025 11:00 am')
+  expect(mod.combineDates(new Date('2025-02-01T10:00:00Z'), new Date('2026-01-31T14:30:00Z'), { display: 'short', timeZone: 'UTC', showTime: true })).toBe('Feb 1, 2025 10:00 AM — Jan 31, 2026 2:30 PM')
+  expect(mod.combineDates(new Date('2025-01-01T10:00:00Z'), new Date('2025-01-31T11:00:00Z'), { locale: 'en-AU', display: 'short', timeZone: 'UTC', showTime: true })).toBe('1 Jan 10:00 am — 31 Jan 2025 11:00 am')
   // Multi-day without showTime still omits times
   expect(mod.combineDates(new Date('2025-01-01T10:00:00Z'), new Date('2025-01-31T11:00:00Z'), { timeZone: 'UTC' })).toBe('1-31 January 2025')
 

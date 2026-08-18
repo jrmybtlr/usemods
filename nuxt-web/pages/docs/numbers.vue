@@ -32,31 +32,31 @@
     <PageFunction
       name="margin"
       description="Calculates the margin based on a percentage."
-      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      params='[{"name":"number","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <Margin />
     </PageFunction>
 
     <PageFunction
       name="addMargin"
-      description="Adds the margin to the value."
-      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      description="Adds the margin to the number."
+      params='[{"name":"number","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <AddMargin />
     </PageFunction>
 
     <PageFunction
       name="subtractMargin"
-      description="Subtracts the margin from the value."
-      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      description="Subtracts the margin from the number."
+      params='[{"name":"number","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <SubtractMargin />
     </PageFunction>
 
     <PageFunction
       name="addMarkup"
-      description="Adds the markup to the value."
-      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      description="Adds the markup to the number."
+      params='[{"name":"number","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <AddMarkup />
     </PageFunction>
@@ -64,7 +64,7 @@
     <PageFunction
       name="subtractMarkup"
       description="Calculates the markup based on a percentage."
-      params='[{"name":"value","type":"number"},{"name":"percentage","type":"number"}]'
+      params='[{"name":"number","type":"number"},{"name":"percentage","type":"number"}]'
     >
       <SubtractMarkup />
     </PageFunction>

@@ -24,7 +24,7 @@
     <PageFunction
       name="combineDates"
       description="Include times on multi-day ranges. Same-day different times always show times."
-      params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options","type":"CombinedDatesOptions = { locale: &#39;en-US&#39;, format: &#39;long&#39; }"}]'
+      params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options","type":"CombinedDatesOptions = { locale: &#39;en-US&#39;, display: &#39;long&#39; }"}]'
     >
       <CombineDates />
     </PageFunction>

@@ -614,7 +614,7 @@ describe('throttle', () => {
     vi.useRealTimers()
   })
 
-  test('should execute immediately if threshold has passed', () => {
+  test('should execute immediately if delay has passed', () => {
     const fn = vi.fn()
     const throttled = mod.throttle(fn, 1000)
 
@@ -640,7 +640,7 @@ describe('throttle', () => {
     vi.useRealTimers()
   })
 
-  test('should handle multiple calls within threshold', async () => {
+  test('should handle multiple calls within delay', async () => {
     vi.useFakeTimers()
     const fn = vi.fn()
     const throttled = mod.throttle(fn, 1000)
