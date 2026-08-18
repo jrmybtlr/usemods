@@ -1,0 +1,14 @@
+{
+  "include_dirs": [
+    "./nuxt-web/components"
+  ],
+  "ignore_globs": [],
+  "hidden_components": [],
+  "hidden_paths": [],
+  "css_entrypoints": [],
+  "playground_groups": {
+    "components": [
+      "./nuxt-web/components"
+    ]
+  }
+}

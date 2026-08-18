@@ -8,19 +8,16 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  type: {
-    type: String as PropType<'button' | 'reset' | 'submit'>,
-    default: 'button',
-  },
-  color: {
-    type: String as PropType<'primary' | 'secondary'>,
-    default: 'primary',
-  },
-  size: {
-    type: String as PropType<'sm' | 'md' | 'lg'>,
-    default: 'md',
-  },
+interface Props {
+  type?: 'button' | 'reset' | 'submit'
+  color?: 'primary' | 'secondary'
+  size?: 'sm' | 'md' | 'lg'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  type: 'button',
+  color: 'primary',
+  size: 'md',
 })
 
 const colorClasses = {
