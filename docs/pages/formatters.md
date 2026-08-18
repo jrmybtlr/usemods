@@ -106,7 +106,7 @@ formatCompactNumber(1200, { decimals: 2, trimZeros: false }) // '1.20K'
 
 ---
 
-### `formatUnit(number: number, options: { unit: string, decimals?: number, unitDisplay?: 'short' | 'long', locale?: string }): string`
+### `formatUnit(number: number, options: { unit: string, decimals?: number, display?: 'short' | 'long', locale?: string }): string`
 
 Format a number into your unit of choice.
 
@@ -115,7 +115,8 @@ Format a number into your unit of choice.
 - `options` (object):
   - `unit` (string): Unit name (e.g., 'meter', 'kilogram', 'second')
   - `decimals` (number, optional): Number of decimal places
-  - `unitDisplay` ('short' | 'long', optional): Unit display format. Defaults to `'long'`
+  - `display` ('short' | 'long', optional): Display length. Defaults to `'long'`
+  - `unitDisplay` ('short' | 'long', optional): Alias for `display`
   - `locale` (string, optional): Locale string. Defaults to `'en-US'`
 
 **Returns:** Formatted unit string
@@ -125,7 +126,7 @@ Format a number into your unit of choice.
 import { formatUnit } from 'usemods'
 
 formatUnit(5, { unit: 'meter' }) // '5 meters'
-formatUnit(5, { unit: 'meter', unitDisplay: 'short' }) // '5 m'
+formatUnit(5, { unit: 'meter', display: 'short' }) // '5 m'
 formatUnit(1.5, { unit: 'kilogram' }) // '1.5 kilograms'
 ```
 
@@ -154,14 +155,15 @@ formatPercentage(0.1234, { decimals: 1 }) // '12.3%'
 
 ---
 
-### `formatDurationLabels(seconds: number, options?: { labels?: 'short' | 'long', round?: boolean, decimals?: number }): string`
+### `formatDurationLabels(seconds: number, options?: { display?: 'short' | 'long', round?: boolean, decimals?: number }): string`
 
 Format time into a human-readable string.
 
 **Parameters:**
 - `seconds` (number): Duration in seconds
 - `options` (object, optional):
-  - `labels` ('short' | 'long', optional): Label format. Defaults to `'long'`
+  - `display` ('short' | 'long', optional): Display length. Defaults to `'long'`
+  - `unitDisplay` / `labels` ('short' | 'long', optional): Aliases for `display`
   - `round` (boolean, optional): Round to largest unit
   - `decimals` (number, optional): Decimal places for rounding
 
@@ -172,7 +174,7 @@ Format time into a human-readable string.
 import { formatDurationLabels } from 'usemods'
 
 formatDurationLabels(3661) // '1 hour 1 minute 1 second'
-formatDurationLabels(3661, { labels: 'short' }) // '1 hr 1 min 1 sec'
+formatDurationLabels(3661, { display: 'short' }) // '1 hr 1 min 1 sec'
 formatDurationLabels(3661, { round: true }) // '1 hour'
 ```
 
@@ -197,7 +199,7 @@ formatDurationNumbers(125) // '00:02:05'
 
 ---
 
-### `formatFileSize(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, unitDisplay?: 'short' | 'long', locale?: string }): string`
+### `formatFileSize(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, display?: 'short' | 'long', locale?: string }): string`
 
 Format and auto calculate file size into human-readable string.
 
@@ -207,7 +209,8 @@ Format and auto calculate file size into human-readable string.
   - `decimals` (number, optional): Decimal places
   - `inputUnit` (string, optional): Input unit. Defaults to `'byte'`
   - `outputUnit` (string, optional): Output unit or 'auto'. Defaults to `'auto'`
-  - `unitDisplay` ('short' | 'long', optional): Unit display. Defaults to `'short'`
+  - `display` ('short' | 'long', optional): Display length. Defaults to `'short'`
+  - `unitDisplay` ('short' | 'long', optional): Alias for `display`
   - `locale` (string, optional): Locale string. Defaults to `'en-US'`
 
 **Returns:** Formatted file size string
@@ -223,7 +226,7 @@ formatFileSize(1024, { inputUnit: 'kilobyte' }) // '1 MB'
 
 ---
 
-### `formatLength(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, unitDisplay?: 'short' | 'long', locale?: string }): string`
+### `formatLength(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, display?: 'short' | 'long', locale?: string }): string`
 
 Format and auto calculate length into human-readable string.
 
@@ -233,7 +236,8 @@ Format and auto calculate length into human-readable string.
   - `decimals` (number, optional): Decimal places
   - `inputUnit` (string, optional): Input unit. Defaults to `'millimeter'`
   - `outputUnit` (string, optional): Output unit or 'auto'. Defaults to `'auto'`
-  - `unitDisplay` ('short' | 'long', optional): Unit display. Defaults to `'short'`
+  - `display` ('short' | 'long', optional): Display length. Defaults to `'short'`
+  - `unitDisplay` ('short' | 'long', optional): Alias for `display`
   - `locale` (string, optional): Locale string. Defaults to `'en-US'`
 
 **Returns:** Formatted length string
@@ -248,7 +252,7 @@ formatLength(1, { inputUnit: 'meter', outputUnit: 'centimeter' }) // '100 cm'
 
 ---
 
-### `formatTemperature(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, unitDisplay?: 'short' | 'long', locale?: string }): string`
+### `formatTemperature(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, display?: 'short' | 'long', locale?: string }): string`
 
 Format and auto calculate temperature into human-readable string.
 
@@ -258,7 +262,8 @@ Format and auto calculate temperature into human-readable string.
   - `decimals` (number, optional): Decimal places
   - `inputUnit` (string, optional): Input unit. Defaults to `'celsius'`
   - `outputUnit` (string, optional): Output unit. Defaults to `'celsius'`
-  - `unitDisplay` ('short' | 'long', optional): Unit display. Defaults to `'short'`
+  - `display` ('short' | 'long', optional): Display length. Defaults to `'short'`
+  - `unitDisplay` ('short' | 'long', optional): Alias for `display`
   - `locale` (string, optional): Locale string. Defaults to `'en-US'`
 
 **Returns:** Formatted temperature string

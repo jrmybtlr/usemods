@@ -377,6 +377,8 @@ export type CombinedDatesFormat = 'short' | 'long'
 
 export type CombinedDatesOptions = {
   locale?: string
+  display?: CombinedDatesFormat
+  /** @deprecated Use `display` */
   format?: CombinedDatesFormat
   timeZone?: string
   /** Include times on multi-day ranges. Same-day different times always show times. */
@@ -390,7 +392,7 @@ export type CombinedDatesOptions = {
 export function combineDates(
   from: DateInput,
   to: DateInput,
-  options: CombinedDatesOptions = { locale: 'en-US', format: 'long' },
+  options: CombinedDatesOptions = { locale: 'en-US', display: 'long' },
 ): string {
   // Parse dates only once
   const fromDate = new Date(from ?? Date.now())
@@ -422,8 +424,8 @@ export function combineDates(
   const sameDay = sameMonth && fromComponents.day === toComponents.day
   const sameTime = sameDay && fromDate.getTime() === toDate.getTime()
 
-  // Simplified format options
-  const monthFormat = options.format ?? 'long'
+  // Prefer display; keep format as a legacy alias
+  const monthFormat = options.display ?? options.format ?? 'long'
   const locale = options.locale ?? 'en-US'
   const showTime = options.showTime === true
 

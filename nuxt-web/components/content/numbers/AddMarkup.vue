@@ -10,7 +10,7 @@
         label="Percent"
         type="text" />
     </ExampleInputs>
-    <ExampleCode :code="`subtractMargin(${value}, ${value2})`" />
+    <ExampleCode :code="`addMarkup(${value}, ${value2})`" />
     <ExampleResult>
       {{ addMarkup(value, value2) }}
     </ExampleResult>

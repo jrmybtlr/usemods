@@ -31,7 +31,7 @@
           </option>
         </FormSelect>
         <FormSelect
-          v-model="unitDisplay"
+          v-model="display"
           label="Display"
           info="Default: 'long'">
           <option value="long">
@@ -46,7 +46,7 @@
 
     <ExampleCode :code="formattedCode" />
     <ExampleResult>
-      {{ formatUnit(number, { unit, decimals: decimals || decimals === 0 ? decimals : undefined, unitDisplay, locale: locale ? locale : undefined }) }}
+      {{ formatUnit(number, { unit, decimals: decimals || decimals === 0 ? decimals : undefined, display, locale: locale ? locale : undefined }) }}
     </ExampleResult>
   </Example>
 </template>
@@ -56,16 +56,16 @@ const number = ref(0.12)
 const decimals = ref(null)
 const locale = ref('')
 const unit = ref('acre')
-const unitDisplay = ref<'long' | 'short'>('long')
+const display = ref<'long' | 'short'>('long')
 
 const formattedCode = computed(() => {
   return generateFormatterCode('formatUnit', number.value, {
     unit: unit.value,
     decimals: decimals.value,
-    unitDisplay: unitDisplay.value,
+    display: display.value,
     locale: locale.value,
   }, {
-    unitDisplay: 'long',
+    display: 'long',
   })
 })
 </script>
