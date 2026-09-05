@@ -99,6 +99,8 @@ Published on the website for crawlers and coding agents:
 
 These files regenerate automatically on website `build` / `generate` / `dev` (via Nuxt `build:before` and package pre-scripts) into gitignored paths under `nuxt-web/public/`. Manual: `pnpm --prefix docs ai-docs`.
 
+If AI crawlers still cannot fetch the site, Cloudflare AI Crawl Control may be injecting managed `Disallow` rules and bot challenges on `/docs/*.md`. Follow the unblock + Context7 steps in [`docs/ai-discovery.md`](../ai-discovery.md).
+
 ## Contributing
 
 When adding new functions to UseMods:

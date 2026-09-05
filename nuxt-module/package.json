@@ -1,7 +1,22 @@
 {
   "name": "usemods-nuxt",
   "version": "1.15.0",
-  "description": "Zippy little modifiers and utilities for your Nuxt app.",
+  "description": "Nuxt module for usemods — auto-imports zero-dependency formatters, validators, generators, modifiers, and browser helpers.",
+  "homepage": "https://usemods.com",
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "usemods",
+    "utils",
+    "helpers",
+    "formatters",
+    "validators",
+    "auto-imports",
+    "vue",
+    "ssr",
+    "llms.txt",
+    "ai-friendly"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LittleFoxCompany/usemods.git"

@@ -1,5 +1,8 @@
 # https://usemods.com/robots.txt
 # Allow search engines and AI crawlers to index documentation.
+#
+# IMPORTANT: If Cloudflare AI Crawl Control injects managed Disallow rules
+# above this file, those overrides win. See docs/ai-discovery.md.
 
 User-agent: *
 Allow: /
@@ -28,7 +31,7 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-# Google Gemini / AI training
+# Google Gemini / AI Overviews
 User-agent: Google-Extended
 Allow: /
 
@@ -44,6 +47,9 @@ Allow: /
 User-agent: meta-externalagent
 Allow: /
 
+User-agent: FacebookBot
+Allow: /
+
 # Bytespider
 User-agent: Bytespider
 Allow: /
@@ -56,10 +62,15 @@ Allow: /
 User-agent: Diffbot
 Allow: /
 
+# Amazon
+User-agent: Amazonbot
+Allow: /
+
 # Sitemap and AI discovery files
 Sitemap: https://usemods.com/sitemap.xml
 
-# AI / LLM ingest (llmstxt.org)
+# AI / LLM ingest (https://llmstxt.org)
 # https://usemods.com/llms.txt
 # https://usemods.com/llms-full.txt
 # https://usemods.com/docs/all.md
+# https://usemods.com/api/docs/

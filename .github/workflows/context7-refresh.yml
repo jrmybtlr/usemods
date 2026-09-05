@@ -1,0 +1,25 @@
+name: Refresh Context7 Docs
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Context7 Refresh
+        env:
+          CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
+        run: |
+          if [ -z "$CONTEXT7_API_KEY" ]; then
+            echo "CONTEXT7_API_KEY secret not set; skipping Context7 refresh."
+            echo "Add the secret, then submit the library at https://context7.com/add-library"
+            exit 0
+          fi
+          curl -sS -X POST https://context7.com/api/v1/refresh \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${CONTEXT7_API_KEY}" \
+            -d "{\"libraryName\": \"/${{ github.repository }}\"}"
