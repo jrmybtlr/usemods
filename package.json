@@ -1,7 +1,7 @@
 {
   "name": "usemods",
   "version": "1.17.0",
-  "description": "Zippy little modifiers and utilities for your frontend.",
+  "description": "Zero-dependency JavaScript utilities for frontend and SSR: format numbers/currency, validate emails/URLs, generate UUIDs/passwords, slugify, pluralize, debounce/throttle, clipboard, relative time, and browser helpers for Vue, React, Nuxt, and Next.js.",
   "scripts": {
     "dev": "pnpm -r dev",
     "bundle": "pnpm run --prefix docs bundle",
@@ -17,18 +17,43 @@
     "deploy": "pnpm run --prefix docs ai-docs && pnpm dlx nuxthub deploy --prefix ./nuxt-web"
   },
   "keywords": [
-    "bun",
     "usemods",
+    "javascript",
+    "typescript",
     "utils",
     "helpers",
-    "js",
+    "utilities",
+    "zero-dependency",
+    "formatters",
+    "format-number",
+    "format-currency",
+    "validators",
+    "email-validation",
+    "url-validation",
+    "uuid",
+    "password-generator",
+    "slugify",
+    "pluralize",
+    "debounce",
+    "throttle",
+    "clipboard",
+    "relative-time",
+    "date-utils",
+    "string-utils",
+    "number-utils",
+    "browser-helpers",
+    "ssr",
     "vue",
     "nuxt",
     "react",
-    "next"
+    "next",
+    "svelte",
+    "bun",
+    "llms.txt",
+    "ai-friendly"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/LittleFoxCompany/usemods#readme",
+  "homepage": "https://usemods.com",
   "bugs": "https://github.com/LittleFoxCompany/usemods/issues",
   "author": "Jeremy Butler <jeremy@littlefox.studio>",
   "contributors": [
@@ -44,7 +69,8 @@
     }
   ],
   "files": [
-    "dist"
+    "dist",
+    "AGENTS.md"
   ],
   "main": "dist/index.js",
   "exports": {

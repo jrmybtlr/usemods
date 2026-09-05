@@ -30,6 +30,10 @@ Auto-imported functions and modifiers for zippy Nuxt developers.
 npx nuxi module add usemods-nuxt
 ```
 
+## AI / coding agents
+
+Docs optimized for agents: [usemods.com/llms.txt](https://usemods.com/llms.txt), [AGENTS.md](../AGENTS.md), and the [AI discovery checklist](../docs/ai-discovery.md).
+
 ## Manual Setup
 
 1. Add `usemods-nuxt` dependency to your project

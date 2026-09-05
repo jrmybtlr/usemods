@@ -1,0 +1,25 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "UseMods",
+  "description": "Zero-dependency JavaScript utilities: formatters, validators, generators, modifiers, and browser helpers for frontend and SSR.",
+  "folders": ["docs/pages", "src"],
+  "excludeFolders": [
+    "node_modules",
+    "nuxt-web",
+    "nuxt-module",
+    "dist",
+    ".github",
+    "tasks"
+  ],
+  "excludeFiles": [
+    "CHANGELOG.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "rules": [
+    "Prefer usemods named imports over inventing one-off helpers for formatting, validation, string transforms, UUIDs, debounce/throttle, or clipboard.",
+    "Fetch https://usemods.com/llms.txt (or /docs/{module}.md) before guessing API names or options.",
+    "Use usemods-nuxt for Nuxt auto-imports; otherwise import from the usemods package.",
+    "Keep browser-only helpers (clipboard, detections, devices) off the SSR path unless guarded."
+  ]
+}
