@@ -2,7 +2,7 @@
   <DocsLayout>
     <PageTitle>
       <h1>Detections</h1>
-      <p>Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add a listeners for reactivity.</p>
+      <p>Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add listeners for reactivity — or, with <code>usemods-nuxt</code>, use the matching composables (<code>useScrollPosition</code>, <code>useBreakpoint</code>, <code>useWindowSize</code>, <code>useColorScheme</code>, <code>useNetworkStatus</code>, …).</p>
     </PageTitle>
 
     <PageFunction

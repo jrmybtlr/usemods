@@ -39,10 +39,17 @@ bun add usemods
 ```
 
 ## Nuxt
-If you use Nuxt, you can automatically add the module to your nuxt.config.js. We're actively working on composables and other Nuxt-specific features, so stay tuned!
+If you use Nuxt, add the module to auto-import every util plus reactive composables for detections that need listeners (`useBreakpoint`, `useScrollPosition`, `useWindowSize`, and more):
 
 ```bash
 npx nuxi module add usemods-nuxt
+```
+
+```vue
+<script setup>
+const breakpoint = useBreakpoint()
+const scroll = useScrollPosition()
+</script>
 ```
 
 # Usage

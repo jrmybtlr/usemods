@@ -1,5 +1,5 @@
 // title: Detections
-// description: Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add a listeners for reactivity.
+// description: Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add listeners for reactivity (or use usemods-nuxt composables).
 // lead: Listen to your clients
 
 /**

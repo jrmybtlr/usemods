@@ -1,7 +1,7 @@
 ![Frame 1209](https://public.usemods.com/Nuxt@2x.jpg)
 
 # Use Mods (Nuxt Module)
-Auto-imported functions and modifiers for zippy Nuxt developers. 
+Auto-imported functions, modifiers, and reactive Vue composables for zippy Nuxt developers.
 
 <!-- Badges -->
 [![npm version][npm-version-src]][npm-version-href]
@@ -28,6 +28,47 @@ Auto-imported functions and modifiers for zippy Nuxt developers.
 ## Quick Setup
 ```bash
 npx nuxi module add usemods-nuxt
+```
+
+## What you get
+
+- **Auto-imports** for every export from [`usemods`](https://www.npmjs.com/package/usemods) (`formatNumber`, `slugify`, `detectBreakpoint`, …)
+- **Reactive composables** for helpers that need event listeners (SSR-safe defaults until mounted):
+
+| Composable | Wraps |
+| --- | --- |
+| `useScrollPosition` | `detectScrollPosition` |
+| `useMousePosition` | `detectMousePosition` |
+| `useRelativeMousePosition` | `detectRelativeMousePosition` |
+| `useWindowSize` | `detectWindowSize` |
+| `useActiveBrowser` | `detectActiveBrowser` |
+| `useColorScheme` | `detectColorScheme` |
+| `useBreakpoint` | `detectBreakpoint` |
+| `useContainerBreakpoint` | `detectContainerBreakpoint` |
+| `useNetworkStatus` | `detectNetworkStatus` |
+| `useOrientation` | `isPortrait` / `isLandscape` |
+
+```vue
+<script setup>
+const breakpoint = useBreakpoint()
+const size = useWindowSize()
+const { isPortrait, isLandscape } = useOrientation()
+</script>
+```
+
+### Alias option
+
+Remap auto-imported names via `nuxt.config`:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['usemods-nuxt'],
+  usemods: {
+    alias: [
+      ['formatNumber', 'fmt'],
+    ],
+  },
+})
 ```
 
 ## AI / coding agents
@@ -58,4 +99,4 @@ export default defineNuxtConfig({
 })
 ```
 
-That's it! You've got every mod util in your Nuxt app ✨🛵
+That's it! You've got every mod util (and the reactive composables) in your Nuxt app ✨🛵

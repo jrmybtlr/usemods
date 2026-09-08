@@ -51,7 +51,9 @@
 
       <h3>Nuxt Module</h3>
       <p>
-        Easily integrate into your Nuxt application with extra composables that
+        Easily integrate into your Nuxt application with auto-imports and
+        reactive composables (<code>useBreakpoint</code>,
+        <code>useScrollPosition</code>, <code>useWindowSize</code>, …) that
         those Next.js folks can only dream of.
       </p>
 
