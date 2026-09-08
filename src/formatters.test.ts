@@ -67,6 +67,7 @@ test('formatDurationLabels', () => {
   expect(mod.formatDurationLabels(3600 * 400 + 60 + 1)).toBe('16 days 16 hours 1 minute 1 second')
   expect(mod.formatDurationLabels(3600 * 400 + 60 + 1, { round: true })).toBe('16.7 days')
   expect(mod.formatDurationLabels(9241233, { round: true })).toBe('107 days')
+  expect(mod.formatDurationLabels(3661, { locale: 'de-DE' })).toBe('1 Stunde 1 Minute 1 Sekunde')
 })
 
 test('formatDurationNumbers', () => {
@@ -111,6 +112,7 @@ test('formatList', () => {
   expect(mod.formatList(['Apple', 'Oranges', 'Bananas', 'Pears', 'Grapes'], { limit: 2 })).toBe('Apple, Oranges and 3 more')
   expect(mod.formatList(['Apple', 'Oranges', 'Bananas', 'Pears', 'Grapes'], { limit: 2, conjunction: 'or' })).toBe('Apple, Oranges or 3 more')
   expect(mod.formatList([], { limit: 2, conjunction: 'or' })).toBe('')
+  expect(mod.formatList(['Apple', 'Oranges', 'Bananas'], { locale: 'en-US' })).toBe('Apple, Oranges, and Bananas')
 })
 
 test('formatTitle', () => {

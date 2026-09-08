@@ -56,7 +56,7 @@
     <PageFunction
       name="formatDurationLabels"
       description="Format time into a human-readable string"
-      params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    display?: &#39;short&#39; | &#39;long&#39;\n    round?: boolean\n    decimals?: number\n  }"}]'
+      params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    display?: &#39;short&#39; | &#39;long&#39;\n    round?: boolean\n    decimals?: number\n    locale?: string\n  }"}]'
     >
       <FormatDurationLabels />
     </PageFunction>
@@ -129,7 +129,7 @@
     <PageFunction
       name="formatList"
       description="Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction"
-      params='[{"name":"items","type":"string | object | string[]"},{"name":"options?","type":"{\n    limit?: number\n    conjunction?: string\n  }"}]'
+      params='[{"name":"items","type":"string | object | string[]"},{"name":"options?","type":"{\n    limit?: number\n    conjunction?: string\n    locale?: string\n  }"}]'
     >
       <FormatList />
     </PageFunction>
