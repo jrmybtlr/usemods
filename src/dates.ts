@@ -20,23 +20,35 @@ type CalendarParts = {
   day: number
 }
 
-function baseLocaleTimeZone(options?: LocaleTimeZone): { locale: string } {
-  return {
-    locale: options?.locale ?? 'en-US',
-  }
+function baseLocale(options?: LocaleTimeZone): string {
+  return options?.locale ?? 'en-US'
 }
 
-function calendarParts(date: Date): CalendarParts {
-  return {
-    year: date.getFullYear(),
-    month: date.getMonth() + 1,
-    day: date.getDate(),
-  }
+/**
+ * Calendar Y/M/D via Intl so local and timeZone-aware callers share one path.
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
+ */
+function calendarParts(date: Date, timeZone?: string): CalendarParts {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    timeZone,
+  }).formatToParts(date)
+
+  const year = Number(parts.find(part => part.type === 'year')?.value)
+  const month = Number(parts.find(part => part.type === 'month')?.value)
+  const day = Number(parts.find(part => part.type === 'day')?.value)
+  return { year, month, day }
 }
 
 function resolveTimeFromNow(options?: Pick<TimeFromOptions, 'now'>): Date {
   const parsed = options?.now ? parseDate(options.now) : new Date()
   return parsed ?? new Date()
+}
+
+function isEnglishLocale(locale: string): boolean {
+  return /^en([_-]|$)/i.test(locale)
 }
 
 export type TimeFromStyle = 'long' | 'short' | 'narrow'
@@ -56,78 +68,6 @@ export type TimeFromOptions = LocaleTimeZone & {
 
   // Threshold in seconds to treat the difference as "now".
   threshold?: number
-}
-
-function isEnglishLocale(locale: string): boolean {
-  return /^en([_-]|$)/i.test(locale)
-}
-
-function englishUnitLabel(
-  unit: Intl.RelativeTimeFormatUnit,
-  pluralRule: Intl.LDMLPluralRule,
-  style: TimeFromStyle,
-): string {
-  function pick(one: string, other: string): string {
-    return pluralRule === 'one' ? one : other
-  }
-
-  // long → "days"; short/narrow → "d"
-  if (style === 'long') {
-    switch (unit) {
-      case 'year':
-        return pick('year', 'years')
-      case 'month':
-        return pick('month', 'months')
-      case 'week':
-        return pick('week', 'weeks')
-      case 'day':
-        return pick('day', 'days')
-      case 'hour':
-        return pick('hour', 'hours')
-      case 'minute':
-        return pick('minute', 'minutes')
-      case 'second':
-        return pick('second', 'seconds')
-      default:
-        return unit
-    }
-  }
-
-  switch (unit) {
-    case 'year':
-      return 'y'
-    case 'month':
-      return 'mo'
-    case 'week':
-      return 'w'
-    case 'day':
-      return 'd'
-    case 'hour':
-      return 'h'
-    case 'minute':
-      return 'm'
-    case 'second':
-      return 's'
-    default:
-      return unit
-  }
-}
-
-// English relative phrases: long "in 10 days", short/narrow "10d ago".
-function timeFromEnglish(
-  value: number,
-  unit: Intl.RelativeTimeFormatUnit,
-  style: TimeFromStyle,
-): string {
-  const n = Math.abs(value)
-  const pr = new Intl.PluralRules('en-US')
-  const label = englishUnitLabel(unit, pr.select(n), style)
-  const amount = style === 'long' ? `${n} ${label}` : `${n}${label}`
-
-  if (value < 0) {
-    return `${amount} ago`
-  }
-  return `in ${amount}`
 }
 
 /**
@@ -154,7 +94,7 @@ export function timeFrom(
     return nowLabel
   }
 
-  const { locale } = baseLocaleTimeZone(options)
+  const locale = baseLocale(options)
   const style = options?.style ?? 'long'
 
   const absSeconds = Math.abs(diffSeconds)
@@ -171,15 +111,15 @@ export function timeFrom(
   const division = divisions.find(d => absSeconds >= d.seconds) ?? divisions[divisions.length - 1]
   const value = Math.round(diffSeconds / division.seconds)
 
-  if (isEnglishLocale(locale)) {
-    return timeFromEnglish(value, division.unit, style)
-  }
+  // English short historically means compact "3d ago"; RTF's narrow style matches that.
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat
+  const rtfStyle: Intl.RelativeTimeFormatStyle
+    = isEnglishLocale(locale) && style === 'short' ? 'narrow' : style
 
-  const rtf = new Intl.RelativeTimeFormat(locale, {
-    numeric: 'auto',
-    style,
-  })
-  return rtf.format(value, division.unit)
+  return new Intl.RelativeTimeFormat(locale, {
+    numeric: isEnglishLocale(locale) ? 'always' : 'auto',
+    style: rtfStyle,
+  }).format(value, division.unit)
 }
 
 export type TimeDifferenceUnit = 'auto' | 'days' | 'hours' | 'minutes' | 'seconds'
@@ -203,33 +143,6 @@ type DurationKind = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second'
 type NonAutoTimeDifferenceUnit = Exclude<TimeDifferenceUnit, 'auto'>
 
 type TimeDifferenceStyle = NonNullable<TimeDifferenceOptions['style']>
-
-const DURATION_LABELS_LONG = {
-  year: ['year', 'years'],
-  month: ['month', 'months'],
-  day: ['day', 'days'],
-  hour: ['hour', 'hours'],
-  minute: ['minute', 'minutes'],
-  second: ['second', 'seconds'],
-} as const satisfies Record<DurationKind, readonly [string, string]>
-
-const DURATION_LABELS_SHORT = {
-  year: ['yr', 'yrs'],
-  month: ['mo', 'mos'],
-  day: ['day', 'days'],
-  hour: ['hr', 'hrs'],
-  minute: ['min', 'mins'],
-  second: ['sec', 'secs'],
-} as const satisfies Record<DurationKind, readonly [string, string]>
-
-const DURATION_LABELS_NARROW = {
-  year: 'y',
-  month: 'mo',
-  day: 'd',
-  hour: 'h',
-  minute: 'm',
-  second: 's',
-} as const satisfies Record<DurationKind, string>
 
 function secondsPerDifferenceUnit(unit: NonAutoTimeDifferenceUnit): number {
   switch (unit) {
@@ -257,31 +170,25 @@ function durationKindForDifferenceUnit(unit: NonAutoTimeDifferenceUnit): Duratio
   }
 }
 
-function durationLabel(
+/**
+ * Format a duration segment with Intl unit style (locale-aware pluralization).
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
+ */
+function formatDurationUnit(
   locale: string,
   value: number,
-  style: TimeDifferenceStyle,
   kind: DurationKind,
+  style: TimeDifferenceStyle,
 ): string {
-  const pr = new Intl.PluralRules(locale)
-  const rule = pr.select(value)
-  const isOne = rule === 'one'
-
-  if (style === 'long') {
-    const [singular, plural] = DURATION_LABELS_LONG[kind]
-    return isOne ? singular : plural
-  }
-
-  if (style === 'short') {
-    const [singular, plural] = DURATION_LABELS_SHORT[kind]
-    return isOne ? singular : plural
-  }
-
-  return DURATION_LABELS_NARROW[kind]
+  return new Intl.NumberFormat(locale, {
+    style: 'unit',
+    unit: kind,
+    unitDisplay: style,
+  }).format(value)
 }
 
 /**
- * Measure the gap between two dates. With unit set to "auto", you get a breakdown like "2 days 5 hrs". Pick a single unit like "days" to get something like "6212 days".
+ * Measure the gap between two dates. With unit set to "auto", you get a breakdown like "2 days 5 hr". Pick a single unit like "days" to get something like "6212 days".
  */
 export function timeDifference(
   from: DateInput,
@@ -299,6 +206,7 @@ export function timeDifference(
 
   const unit = options?.unit ?? 'auto'
   const rounding: NonNullable<TimeDifferenceOptions['rounding']> = options?.rounding ?? 'round'
+  const locale = baseLocale(options)
 
   function roundValue(value: number): number {
     if (rounding === 'floor') {
@@ -310,30 +218,12 @@ export function timeDifference(
     return Math.round(value)
   }
 
-  const formatAutoSegment = (
-    locale: string,
-    nf: Intl.NumberFormat,
-    value: number,
-    kind: DurationKind,
-    style: TimeDifferenceStyle,
-  ): string => {
-    const label = durationLabel(locale, value, style, kind)
-    if (style === 'narrow') {
-      return `${nf.format(value)}${label}`
-    }
-    return `${nf.format(value)} ${label}`
-  }
-
-  const { locale } = baseLocaleTimeZone(options)
-  const nf = new Intl.NumberFormat(locale)
-
   if (unit !== 'auto') {
     const seconds = absMs / 1000
     const divisor = secondsPerDifferenceUnit(unit)
     const value = roundValue(seconds / divisor)
     const kind = durationKindForDifferenceUnit(unit)
-    const labelWord = durationLabel(locale, value, 'long', kind)
-    return `${nf.format(value)} ${labelWord}`
+    return formatDurationUnit(locale, value, kind, 'long')
   }
 
   const maxUnits = Math.max(1, options?.maxUnits ?? 6)
@@ -350,7 +240,7 @@ export function timeDifference(
   ]
 
   if (absMs === 0) {
-    return formatAutoSegment(locale, nf, 0, 'second', style)
+    return formatDurationUnit(locale, 0, 'second', style)
   }
 
   let remaining = absMs
@@ -364,11 +254,11 @@ export function timeDifference(
       continue
     }
     remaining -= value * u.ms
-    parts.push(formatAutoSegment(locale, nf, value, u.kind, style))
+    parts.push(formatDurationUnit(locale, value, u.kind, style))
   }
 
   if (parts.length === 0) {
-    return formatAutoSegment(locale, nf, 0, 'second', style)
+    return formatDurationUnit(locale, 0, 'second', style)
   }
   return parts.join(' ')
 }
@@ -394,30 +284,13 @@ export function combineDates(
   to: DateInput,
   options: CombinedDatesOptions = { locale: 'en-US', display: 'long' },
 ): string {
-  // Parse dates only once
   const fromDate = new Date(from ?? Date.now())
   const toDate = new Date(to ?? Date.now())
 
-  // Early return for invalid dates
   if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return ''
 
-  // Cache commonly used date components (timezone-aware)
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
-  const getDateComponents = (date: Date) => {
-    if (options.timeZone) {
-      const parts = new Intl.DateTimeFormat('en-US', {
-        year: 'numeric', month: 'numeric', day: 'numeric', timeZone: options.timeZone,
-      }).formatToParts(date)
-      const year = Number(parts.find(part => part.type === 'year')?.value)
-      const month = Number(parts.find(part => part.type === 'month')?.value) - 1
-      const day = Number(parts.find(part => part.type === 'day')?.value)
-      return { year, month, day }
-    }
-    return { year: date.getFullYear(), month: date.getMonth(), day: date.getDate() }
-  }
-
-  const fromComponents = getDateComponents(fromDate)
-  const toComponents = getDateComponents(toDate)
+  const fromComponents = calendarParts(fromDate, options.timeZone)
+  const toComponents = calendarParts(toDate, options.timeZone)
 
   const sameYear = fromComponents.year === toComponents.year
   const sameMonth = sameYear && fromComponents.month === toComponents.month
@@ -429,9 +302,8 @@ export function combineDates(
   const locale = options.locale ?? 'en-US'
   const showTime = options.showTime === true
 
-  // Formatting helper
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
-  const format = (date: Date, opts: Intl.DateTimeFormatOptions) =>
+  const format = (date: Date, opts: Intl.DateTimeFormatOptions): string =>
     new Intl.DateTimeFormat(locale, { ...opts, timeZone: options.timeZone }).format(date)
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat#using_timestyle
@@ -440,11 +312,9 @@ export function combineDates(
 
   // Same day
   if (sameDay) {
-    // Same day, same time
     if (sameTime) {
       return format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })
     }
-    // Same day, different time — always include times
     return `${format(fromDate, { day: 'numeric', month: monthFormat, year: 'numeric' })}, ${formatTime(fromDate)} to ${formatTime(toDate)}`
   }
 
