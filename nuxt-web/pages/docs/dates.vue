@@ -15,7 +15,7 @@
 
     <PageFunction
       name="timeDifference"
-      description="Measure the gap between two dates. With unit set to &quot;auto&quot;, you get a breakdown like &quot;2 days 5 hrs&quot;. Pick a single unit like &quot;days&quot; to get something like &quot;6212 days&quot;."
+      description="Measure the gap between two dates. With unit set to &quot;auto&quot;, you get a breakdown like &quot;2 days 5 hr&quot;. Pick a single unit like &quot;days&quot; to get something like &quot;6212 days&quot;."
       params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options?","type":"TimeDifferenceOptions"}]'
     >
       <TimeDifference />

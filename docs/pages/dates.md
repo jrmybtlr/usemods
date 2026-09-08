@@ -16,7 +16,7 @@ Compare dates, show relative time, and measure durations. Helpful helpers when I
 
 ### timeDifference
 
-**Description:** Measure the gap between two dates. With unit set to "auto", you get a breakdown like "2 days 5 hrs". Pick a single unit like "days" to get something like "6212 days".
+**Description:** Measure the gap between two dates. With unit set to "auto", you get a breakdown like "2 days 5 hr". Pick a single unit like "days" to get something like "6212 days".
 
 **Parameters:**
 - `from` (`DateInput`)
