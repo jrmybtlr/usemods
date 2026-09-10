@@ -485,9 +485,10 @@ export function formatList(
 
   // ListFormat has no "N more" equivalent — keep truncation English-literal.
   if (list.length > effectiveLimit) {
-    const listedItems = list.slice(0, effectiveLimit).join(', ')
-    const remaining = list.length - effectiveLimit
-    return `${listedItems} ${conj} ${remaining} more`
+    const listed = list.slice(0, Math.max(0, effectiveLimit))
+    const remaining = list.length - listed.length
+    if (listed.length === 0) return `${remaining} more`
+    return `${listed.join(', ')} ${conj} ${remaining} more`
   }
 
   // Custom conjunctions beyond and/or cannot go through ListFormat type.
