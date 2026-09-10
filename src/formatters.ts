@@ -190,11 +190,13 @@ export function formatDurationLabels(
     labels?: DisplayLength
     round?: boolean
     decimals?: number
+    locale?: string
   },
 ): string {
   const display = resolveDisplay(options, 'long')
+  const locale = options?.locale ?? 'en-US'
 
-  if (seconds <= 0) return formatUnit(0, { unit: 'second', decimals: 0, display })
+  if (seconds <= 0) return formatUnit(0, { unit: 'second', decimals: 0, display, locale })
 
   const units = [
     { unit: 'year', value: 31536000 },
@@ -211,7 +213,7 @@ export function formatDurationLabels(
         const unitValue = seconds / value
         const hasDecimal = unitValue % 1 !== 0
         const decimals = hasDecimal && unitValue.toFixed(1).endsWith('.0') ? 0 : hasDecimal ? 1 : 0
-        return formatUnit(unitValue, { unit, decimals, display })
+        return formatUnit(unitValue, { unit, decimals, display, locale })
       }
     }
   }
@@ -221,13 +223,13 @@ export function formatDurationLabels(
   for (const { unit, value } of units) {
     const unitValue = Math.floor(seconds / value)
     if (unitValue > 0) {
-      results.push(formatUnit(unitValue, { unit, decimals: 0, display }))
+      results.push(formatUnit(unitValue, { unit, decimals: 0, display, locale }))
       seconds %= value
     }
   }
 
   const milliseconds = Math.floor((seconds % 1) * 1000)
-  if (milliseconds > 0) results.push(formatUnit(milliseconds, { unit: 'millisecond', decimals: 0, display }))
+  if (milliseconds > 0) results.push(formatUnit(milliseconds, { unit: 'millisecond', decimals: 0, display, locale }))
   return results.join(' ')
 }
 
@@ -459,27 +461,44 @@ export function formatUnixTime(timestamp?: number): string {
 }
 
 /**
- * Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction
+ * Create a locale-aware list string from an array, object, or string with an optional limit and conjunction.
+ * Uses Intl.ListFormat for full lists; truncation (`limit` / "N more") stays custom.
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat
  */
 export function formatList(
   items: string | object | string[],
   options?: {
     limit?: number
     conjunction?: string
+    locale?: string
   },
 ): string {
   if (typeof items === 'string') items = items.split(',').map(item => item.trim())
   if (typeof items === 'object' && !Array.isArray(items)) items = Object.values(items)
   if (!Array.isArray(items) || items.length === 0) return ''
+
+  // Default en-GB: no Oxford comma, matching historical English output.
+  const locale = options?.locale ?? 'en-GB'
   const conj = options?.conjunction ?? 'and'
-  if (items.length <= 2) return items.join(items.length === 2 ? ` ${conj} ` : '')
+  const list = items.map(String)
+  const effectiveLimit = options?.limit ?? list.length
 
-  const effectiveLimit = options?.limit ?? items.length
-  if (items.length <= effectiveLimit) return `${items.slice(0, -1).join(', ')} ${conj} ${items.at(-1)}`
+  // ListFormat has no "N more" equivalent — keep truncation English-literal.
+  if (list.length > effectiveLimit) {
+    const listed = list.slice(0, Math.max(0, effectiveLimit))
+    const remaining = list.length - listed.length
+    if (listed.length === 0) return `${remaining} more`
+    return `${listed.join(', ')} ${conj} ${remaining} more`
+  }
 
-  const listedItems = items.slice(0, effectiveLimit).join(', ')
-  const remaining = items.length - effectiveLimit
-  return `${listedItems} ${conj} ${remaining} more`
+  // Custom conjunctions beyond and/or cannot go through ListFormat type.
+  if (conj !== 'and' && conj !== 'or') {
+    if (list.length <= 2) return list.join(list.length === 2 ? ` ${conj} ` : '')
+    return `${list.slice(0, -1).join(', ')} ${conj} ${list.at(-1)}`
+  }
+
+  const type: Intl.ListFormatType = conj === 'or' ? 'disjunction' : 'conjunction'
+  return new Intl.ListFormat(locale, { type, style: 'long' }).format(list)
 }
 
 /**

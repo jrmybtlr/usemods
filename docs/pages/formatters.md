@@ -155,7 +155,7 @@ formatPercentage(0.1234, { decimals: 1 }) // '12.3%'
 
 ---
 
-### `formatDurationLabels(seconds: number, options?: { display?: 'short' | 'long', round?: boolean, decimals?: number }): string`
+### `formatDurationLabels(seconds: number, options?: { display?: 'short' | 'long', round?: boolean, decimals?: number, locale?: string }): string`
 
 Format time into a human-readable string.
 
@@ -166,6 +166,7 @@ Format time into a human-readable string.
   - `unitDisplay` / `labels` ('short' | 'long', optional): Aliases for `display`
   - `round` (boolean, optional): Round to largest unit
   - `decimals` (number, optional): Decimal places for rounding
+  - `locale` (string, optional): BCP 47 locale for unit labels. Defaults to `'en-US'`
 
 **Returns:** Human-readable duration string
 
@@ -176,6 +177,7 @@ import { formatDurationLabels } from 'usemods'
 formatDurationLabels(3661) // '1 hour 1 minute 1 second'
 formatDurationLabels(3661, { display: 'short' }) // '1 hr 1 min 1 sec'
 formatDurationLabels(3661, { round: true }) // '1 hour'
+formatDurationLabels(3661, { locale: 'de-DE' }) // '1 Stunde 1 Minute 1 Sekunde'
 ```
 
 ---
@@ -362,15 +364,16 @@ formatUnixTime(1609459200000) // '2021-01-01 00:00:00'
 
 ---
 
-### `formatList(items: string | object | string[], options?: { limit?: number, conjunction?: string }): string`
+### `formatList(items: string | object | string[], options?: { limit?: number, conjunction?: string, locale?: string }): string`
 
-Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction.
+Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction. Full lists use `Intl.ListFormat`; truncation (`limit` / "N more") stays custom.
 
 **Parameters:**
 - `items` (string | object | string[]): Items to format
 - `options` (object, optional):
   - `limit` (number, optional): Maximum items to show
-  - `conjunction` (string, optional): Conjunction word. Defaults to `'and'`
+  - `conjunction` (string, optional): Conjunction word. Defaults to `'and'` (`'or'` uses ListFormat disjunction)
+  - `locale` (string, optional): BCP 47 locale for ListFormat. Defaults to `'en-GB'` (no Oxford comma)
 
 **Returns:** Formatted list string
 
@@ -381,6 +384,7 @@ import { formatList } from 'usemods'
 formatList(['apple', 'banana', 'cherry']) // 'apple, banana and cherry'
 formatList(['apple', 'banana', 'cherry'], { limit: 2 }) // 'apple, banana and 1 more'
 formatList('apple, banana, cherry') // 'apple, banana and cherry'
+formatList(['apple', 'banana', 'cherry'], { locale: 'en-US' }) // 'apple, banana, and cherry'
 ```
 
 ---
