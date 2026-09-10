@@ -16,11 +16,22 @@ export function useColorScheme(): Readonly<Ref<string | null>> {
   onMounted(() => {
     update()
     media = window.matchMedia('(prefers-color-scheme: dark)')
-    media.addEventListener('change', update)
+
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', update)
+    } else {
+      media.addListener(update)
+    }
   })
 
   onUnmounted(() => {
-    media?.removeEventListener('change', update)
+    if (!media) return
+
+    if (typeof media.removeEventListener === 'function') {
+      media.removeEventListener('change', update)
+    } else {
+      media.removeListener(update)
+    }
   })
 
   return readonly(scheme)
