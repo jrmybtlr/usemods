@@ -461,8 +461,8 @@ export function formatUnixTime(timestamp?: number): string {
 }
 
 /**
- * Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction.
- * Uses Intl.ListFormat for locale-aware joining; truncation (`limit` / "N more") stays custom.
+ * Create a locale-aware list string from an array, object, or string with an optional limit and conjunction.
+ * Uses Intl.ListFormat for full lists; truncation (`limit` / "N more") stays custom.
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat
  */
 export function formatList(
