@@ -1,7 +1,7 @@
 {
   "name": "usemods-nuxt",
-  "version": "1.15.0",
-  "description": "Nuxt module for usemods — auto-imports zero-dependency formatters, validators, generators, modifiers, and browser helpers.",
+  "version": "1.17.0",
+  "description": "Nuxt module for usemods — auto-imports zero-dependency formatters, validators, generators, modifiers, browser helpers, and reactive Vue composables.",
   "homepage": "https://usemods.com",
   "keywords": [
     "nuxt",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.15.4 || ^4.0.0",
-    "usemods": "1.16.0"
+    "usemods": "1.17.0"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^1.15.2",

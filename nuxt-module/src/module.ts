@@ -1,4 +1,4 @@
-import { defineNuxtModule, addImports } from '@nuxt/kit'
+import { defineNuxtModule, addImports, addImportsDir, createResolver } from '@nuxt/kit'
 import * as utils from 'usemods'
 
 export interface ModuleOptions {
@@ -13,11 +13,11 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt: '^3.0.0 || ^4.0.0',
     },
   },
-  // Default configuration options of the Nuxt module
   defaults: {
     alias: [],
   },
   setup(options) {
+    const resolver = createResolver(import.meta.url)
     const aliasMap = new Map<string, string>(options.alias)
 
     // Import functions and map/set/array constants (e.g. configLocales)
@@ -33,5 +33,8 @@ export default defineNuxtModule<ModuleOptions>({
         from: 'usemods',
       })
     }
+
+    // Reactive Vue composables for detection helpers that need listeners
+    addImportsDir(resolver.resolve('./runtime/composables'))
   },
 })

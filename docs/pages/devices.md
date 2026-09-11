@@ -390,6 +390,9 @@ window.addEventListener('resize', () => {
     // Adjust layout
   }
 })
+
+// Or with usemods-nuxt:
+// const { isPortrait, isLandscape } = useOrientation()
 ```
 
 ---
@@ -580,5 +583,5 @@ if (isDeveloper()) {
 - `addDeviceClasses()` automatically adds lowercase class names to body
 - Device detection uses user agent parsing, which may not be 100% accurate
 - Bot detection uses common bot user agent patterns
-- Orientation detection requires window resize listeners for reactivity
+- Orientation detection requires window resize listeners for reactivity (or `useOrientation` from `usemods-nuxt`)
 - All functions accept optional userAgent parameter for testing or SSR

@@ -1,6 +1,6 @@
 # Detections
 
-Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add a listeners for reactivity.
+Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add listeners for reactivity — or, with `usemods-nuxt`, use the matching composables (`useScrollPosition`, `useBreakpoint`, `useWindowSize`, `useColorScheme`, `useNetworkStatus`, and more).
 
 **Lead:** Listen to your clients
 
@@ -466,9 +466,9 @@ if (network === 'Offline') {
 ## Notes
 
 - All functions return `null` in server-side environments
-- For reactivity, you need to add appropriate event listeners
+- For reactivity, add appropriate event listeners — or use `usemods-nuxt` composables (`useScrollPosition`, `useBreakpoint`, `useWindowSize`, `useColorScheme`, `useNetworkStatus`, …)
 - Breakpoint detection uses Tailwind CSS default breakpoints
 - Container breakpoints use Tailwind's container query breakpoints
 - URL detection functions work with the current browser URL
-- Mouse position functions require a MouseEvent from a mousemove listener
-- Network status can change, so use online/offline event listeners for reactivity
+- Mouse position functions require a MouseEvent from a mousemove listener (or `useMousePosition` / `useRelativeMousePosition`)
+- Network status can change, so use online/offline event listeners for reactivity (or `useNetworkStatus`)

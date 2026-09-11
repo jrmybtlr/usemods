@@ -23,14 +23,22 @@ bun add usemods" />
 
       <h2>Nuxt</h2>
       <p>
-        If you are using Nuxt, you can add the module to your nuxt.config.js
-        automagically. We're actively working on composables and other
-        Nuxt-specific features, so stay tuned!
+        If you are using Nuxt, add the module to auto-import every util plus
+        reactive composables for detections that need listeners
+        (<code>useBreakpoint</code>, <code>useScrollPosition</code>,
+        <code>useWindowSize</code>, and more):
       </p>
 
       <Shiki
         lang="bash"
         code="npx nuxi module add usemods-nuxt" />
+
+      <Shiki
+        lang="vue"
+        code="<script setup>
+const breakpoint = useBreakpoint()
+const scroll = useScrollPosition()
+</script>" />
 
       <h2>Next</h2>
       <p>
