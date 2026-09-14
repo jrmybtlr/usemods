@@ -1,6 +1,6 @@
 {
   "name": "usemods",
-  "version": "1.17.0",
+  "version": "1.18.0",
   "description": "Zero-dependency JavaScript utilities for frontend and SSR: format numbers/currency, validate emails/URLs, generate UUIDs/passwords, slugify, pluralize, debounce/throttle, clipboard, relative time, and browser helpers for Vue, React, Nuxt, and Next.js.",
   "scripts": {
     "dev": "pnpm -r dev",

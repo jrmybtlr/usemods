@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.18.0
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.17.0...v1.18.0)
+
+### 🚀 Enhancements
+
+- **nuxt-module:** Sync to 1.17.0 and add reactive detection composables ([3510ae78](https://github.com/LittleFoxCompany/usemods/commit/3510ae78))
+
+### ❤️ Contributors
+
+- Cursor Agent ([@cursoragent](https://github.com/cursoragent))
+
 ## v1.17.0
 
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/1.16.2...v1.17.0)
