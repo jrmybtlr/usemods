@@ -128,7 +128,7 @@
 
     <PageFunction
       name="formatList"
-      description="Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction"
+      description="Create a locale-aware list string from an array, object, or string with an optional limit and conjunction"
       params='[{"name":"items","type":"string | object | string[]"},{"name":"options?","type":"{\n    limit?: number\n    conjunction?: string\n    locale?: string\n  }"}]'
     >
       <FormatList />

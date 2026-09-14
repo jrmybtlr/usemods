@@ -366,7 +366,7 @@ formatUnixTime(1609459200000) // '2021-01-01 00:00:00'
 
 ### `formatList(items: string | object | string[], options?: { limit?: number, conjunction?: string, locale?: string }): string`
 
-Create a string of comma-separated values from an array, object, or string with an optional limit and conjunction. Full lists use `Intl.ListFormat`; truncation (`limit` / "N more") stays custom.
+Create a locale-aware list string from an array, object, or string with an optional limit and conjunction. Full lists use `Intl.ListFormat`; truncation (`limit` / "N more") stays custom.
 
 **Parameters:**
 - `items` (string | object | string[]): Items to format
