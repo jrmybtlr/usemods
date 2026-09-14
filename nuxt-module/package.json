@@ -1,7 +1,7 @@
 {
   "name": "usemods-nuxt",
   "version": "1.17.0",
-  "description": "Nuxt module for usemods — auto-imports zero-dependency formatters, validators, generators, modifiers, browser helpers, and reactive Vue composables.",
+  "description": "Nuxt module for usemods \u2014 auto-imports zero-dependency formatters, validators, generators, modifiers, browser helpers, and reactive Vue composables.",
   "homepage": "https://usemods.com",
   "keywords": [
     "nuxt",
@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "type": "module",
   "exports": {
