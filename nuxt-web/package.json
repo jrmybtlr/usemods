@@ -36,6 +36,6 @@
     "@vueuse/core": "^14.4.0",
     "@vueuse/nuxt": "^14.4.0",
     "nuxt-shiki": "^0.3.2",
-    "vite-plugin-useclassy": "^3.2.0"
+    "vite-plugin-useclassy": "^4.0.0"
   }
 }
