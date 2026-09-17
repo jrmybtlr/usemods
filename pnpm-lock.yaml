@@ -67,8 +67,8 @@ importers:
         specifier: ^0.3.2
         version: 0.3.2(magicast@0.5.3)
       vite-plugin-useclassy:
-        specifier: ^3.2.0
-        version: 3.2.0(react@19.2.8)(vite@8.2.1(@types/node@26.5.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.1)(yaml@2.9.1))
+        specifier: ^4.0.0
+        version: 4.0.0(react@19.2.8)(vite@8.2.1(@types/node@26.5.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.1)(yaml@2.9.1))
     devDependencies:
       '@iconify-json/fa6-brands':
         specifier: ^1.2.6
@@ -5023,13 +5023,16 @@ packages:
       '@nuxt/kit':
         optional: true
 
-  vite-plugin-useclassy@3.2.0:
-    resolution: {integrity: sha512-9QxKE3/oWX8fBONeN7JdTOi/DYSjl0/0xSo+dBVihhGNNeKZfuy6RSCwMwWHAVL6eGWSYxlHaH5fEbZDEysZPg==}
+  vite-plugin-useclassy@4.0.0:
+    resolution: {integrity: sha512-KiHwif/8Q3rXq5ZTvfaBx8jCZ7+EsLUBxnGw2g3QxeKDSGqd8hOwM1onwNekPViE2AtoFCllpD9+++BiehQOZw==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   vite-plugin-vue-tracer@1.4.0:
     resolution: {integrity: sha512-0tQCjCqZWVSK6UeRW9S4ABbf47lKQ68zvrT2FNvZmiL+alDydCVyH/T3Jlfbdc3T3C2Iuyyl5aVsMbF8IQIoxA==}
@@ -9843,7 +9846,8 @@ snapshots:
       defu: 6.1.7
       destr: 2.0.5
 
-  react@19.2.8: {}
+  react@19.2.8:
+    optional: true
 
   readable-stream@2.3.8:
     dependencies:
@@ -10753,10 +10757,11 @@ snapshots:
     optionalDependencies:
       '@nuxt/kit': 4.5.2(magic-string@1.2.0)(magicast@0.5.3)(rolldown@1.2.4)(unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.2.4)(rollup@4.63.2)(vite@8.2.1(@types/node@26.5.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.1)(yaml@2.9.1)))
 
-  vite-plugin-useclassy@3.2.0(react@19.2.8)(vite@8.2.1(@types/node@26.5.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.1)(yaml@2.9.1)):
+  vite-plugin-useclassy@4.0.0(react@19.2.8)(vite@8.2.1(@types/node@26.5.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.1)(yaml@2.9.1)):
     dependencies:
-      react: 19.2.8
       vite: 8.2.1(@types/node@26.5.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.1)(yaml@2.9.1)
+    optionalDependencies:
+      react: 19.2.8
 
   vite-plugin-vue-tracer@1.4.0(vite@8.2.1(@types/node@26.5.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.46.1)(yaml@2.9.1))(vue@3.5.41(typescript@5.9.3)):
     dependencies:
