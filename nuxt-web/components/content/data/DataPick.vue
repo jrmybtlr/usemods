@@ -26,6 +26,8 @@
 </template>
 
 <script setup lang="ts">
+import { dataPick } from 'usemods'
+
 const key = ref('name')
 const value = {
   name: 'John',

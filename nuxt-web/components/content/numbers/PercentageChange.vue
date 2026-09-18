@@ -18,6 +18,8 @@
 </template>
 
 <script setup lang="ts">
+import { percentageChange } from 'usemods'
+
 const from = ref(100)
 const to = ref(150)
 </script>

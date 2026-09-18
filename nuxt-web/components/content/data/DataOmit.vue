@@ -26,6 +26,8 @@
 </template>
 
 <script setup lang="ts">
+import { dataOmit } from 'usemods'
+
 const key = ref('age')
 const value = {
   name: 'John',

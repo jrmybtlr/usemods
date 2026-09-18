@@ -20,6 +20,8 @@
 </template>
 
 <script lang="ts" setup>
+import { once } from 'usemods'
+
 const clicks = ref(0)
 const executions = ref(0)
 

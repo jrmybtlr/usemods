@@ -19,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatPhone } from 'usemods'
+
 const phone = ref('5551234567')
 const pattern = ref('')
 </script>

@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+import { mask } from 'usemods'
+
 const text = ref('4111111111111111')
 const visibleStart = ref(0)
 const visibleEnd = ref(4)

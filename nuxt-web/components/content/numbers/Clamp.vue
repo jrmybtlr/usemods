@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+import { clamp } from 'usemods'
+
 const value = ref(15)
 const min = ref(0)
 const max = ref(10)

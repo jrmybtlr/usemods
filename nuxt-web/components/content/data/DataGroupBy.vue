@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import { dataGroupBy } from 'usemods'
+
 const property = ref('type')
 const value = [
   { name: 'Apple', type: 'fruit', color: 'red' },

@@ -31,6 +31,8 @@
 </template>
 
 <script setup lang="ts">
+import { truncate } from 'usemods'
+
 const text = ref('The quick brown fox jumps over the lazy dog')
 const length = ref(20)
 const position = ref<'end' | 'start' | 'middle'>('end')
