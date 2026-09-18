@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://usemods.com/</loc>
-    <lastmod>2026-09-18T17:16:36.573Z</lastmod>
+    <lastmod>2026-09-18T20:24:15.804Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -20,13 +20,13 @@
   </url>
   <url>
     <loc>https://usemods.com/docs/formatters</loc>
-    <lastmod>2026-09-18T17:15:18.696Z</lastmod>
+    <lastmod>2026-09-18T20:24:05.812Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/formatters.md</loc>
-    <lastmod>2026-09-18T17:15:18.696Z</lastmod>
+    <lastmod>2026-09-18T20:24:05.812Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -44,13 +44,13 @@
   </url>
   <url>
     <loc>https://usemods.com/docs/modifiers</loc>
-    <lastmod>2026-09-18T17:15:18.692Z</lastmod>
+    <lastmod>2026-09-18T20:24:06.156Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/modifiers.md</loc>
-    <lastmod>2026-09-18T17:15:18.692Z</lastmod>
+    <lastmod>2026-09-18T20:24:06.156Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -68,25 +68,25 @@
   </url>
   <url>
     <loc>https://usemods.com/docs/actions</loc>
-    <lastmod>2026-09-18T17:15:18.700Z</lastmod>
+    <lastmod>2026-09-18T20:24:07.520Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/actions.md</loc>
-    <lastmod>2026-09-18T17:15:18.700Z</lastmod>
+    <lastmod>2026-09-18T20:24:07.520Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/numbers</loc>
-    <lastmod>2026-09-18T17:15:18.688Z</lastmod>
+    <lastmod>2026-09-18T20:24:05.800Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/numbers.md</loc>
-    <lastmod>2026-09-18T17:15:18.688Z</lastmod>
+    <lastmod>2026-09-18T20:24:05.800Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -152,31 +152,31 @@
   </url>
   <url>
     <loc>https://usemods.com/llms.txt</loc>
-    <lastmod>2026-09-18T17:16:36.573Z</lastmod>
+    <lastmod>2026-09-18T20:24:15.804Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://usemods.com/llms-full.txt</loc>
-    <lastmod>2026-09-18T17:16:36.573Z</lastmod>
+    <lastmod>2026-09-18T20:24:15.804Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/docs/all.md</loc>
-    <lastmod>2026-09-18T17:16:36.573Z</lastmod>
+    <lastmod>2026-09-18T20:24:15.804Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://usemods.com/intro/introduction.md</loc>
-    <lastmod>2026-09-18T17:16:36.573Z</lastmod>
+    <lastmod>2026-09-18T20:24:15.804Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://usemods.com/intro/installation.md</loc>
-    <lastmod>2026-09-18T17:16:36.573Z</lastmod>
+    <lastmod>2026-09-18T20:24:15.804Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

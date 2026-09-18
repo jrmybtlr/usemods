@@ -135,7 +135,7 @@
 
     <PageFunction
       name="clamp"
-      description="Clamps a number between a minimum and maximum value. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/min"
+      description="Clamps a number between a minimum and maximum value."
       params='[{"name":"value","type":"number"},{"name":"min","type":"number"},{"name":"max","type":"number"}]'
     >
       <Clamp />

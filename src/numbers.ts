@@ -192,7 +192,6 @@ export function skewness(numbers: number[]): number {
 
 /**
  * Clamps a number between a minimum and maximum value.
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/min
  */
 export function clamp(value: number, min: number, max: number): number {
   const lower = Math.min(min, max)

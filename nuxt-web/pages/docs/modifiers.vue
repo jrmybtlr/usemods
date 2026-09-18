@@ -193,7 +193,7 @@
 
     <PageFunction
       name="truncate"
-      description="Truncate a string to a maximum length with an optional omission marker. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice"
+      description="Truncates a string to a maximum length with an optional omission marker."
       params='[{"name":"text","type":"string"},{"name":"length","type":"number"},{"name":"options?","type":"{\n    position?: &#39;end&#39; | &#39;start&#39; | &#39;middle&#39;\n    omission?: string\n  }"}]'
     >
       <Truncate />
@@ -201,7 +201,7 @@
 
     <PageFunction
       name="mask"
-      description="Mask a string, keeping a configurable number of characters visible."
+      description="Masks a string while keeping a configurable number of characters visible."
       params='[{"name":"text","type":"string"},{"name":"options?","type":"{\n    visibleStart?: number\n    visibleEnd?: number\n    maskChar?: string\n  }"}]'
     >
       <Mask />

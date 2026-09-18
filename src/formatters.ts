@@ -558,8 +558,8 @@ export function formatTextWrap(
 }
 
 /**
- * Format a phone number using a digit pattern (`#` for each digit).
- * Without a pattern, applies common US formatting for 10 or 11 digit numbers.
+ * Format a phone number into a readable string
+ * @info Use `pattern` with `#` for each digit, or omit for common US formats
  */
 export function formatPhone(
   phone: string | number,

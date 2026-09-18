@@ -326,8 +326,7 @@ export function unescapeHtml(text: string): string {
 }
 
 /**
- * Truncate a string to a maximum length with an optional omission marker.
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice
+ * Truncates a string to a maximum length with an optional omission marker.
  */
 export function truncate(
   text: string,
@@ -361,7 +360,7 @@ export function truncate(
 }
 
 /**
- * Mask a string, keeping a configurable number of characters visible.
+ * Masks a string while keeping a configurable number of characters visible.
  */
 export function mask(
   text: string,

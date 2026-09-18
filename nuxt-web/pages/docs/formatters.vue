@@ -161,7 +161,8 @@
 
     <PageFunction
       name="formatPhone"
-      description="Format a phone number using a digit pattern (`#` for each digit). Without a pattern, applies common US formatting for 10 or 11 digit numbers."
+      description="Format a phone number into a readable string"
+      info="Use `pattern` with `#` for each digit, or omit for common US formats"
       params='[{"name":"phone","type":"string | number"},{"name":"options?","type":"{\n    pattern?: string\n  }"}]'
     >
       <FormatPhone />

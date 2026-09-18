@@ -278,7 +278,7 @@ export function focusTrap(
 }
 
 /**
- * Creates a function that runs only once and returns the first result on later calls.
+ * Creates a function that only runs once and returns the first result on later calls.
  */
 export function once<T extends (...args: unknown[]) => unknown>(
   fn: T): ((...args: Parameters<T>) => ReturnType<T>) & { reset: () => void } {
