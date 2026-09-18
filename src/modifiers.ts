@@ -324,3 +324,68 @@ export function escapeHtml(text: string): string {
 export function unescapeHtml(text: string): string {
   return text.replaceAll('&lt;', '<').replaceAll('&gt;', '>')
 }
+
+/**
+ * Truncates a string to a maximum length with an optional omission marker.
+ */
+export function truncate(
+  text: string,
+  length: number,
+  options?: {
+    position?: 'end' | 'start' | 'middle'
+    omission?: string
+  },
+): string {
+  if (!text) return ''
+  if (length <= 0) return options?.omission ?? '…'
+  if (text.length <= length) return text
+
+  const omission = options?.omission ?? '…'
+  const position = options?.position ?? 'end'
+  const available = Math.max(0, length - omission.length)
+
+  if (available === 0) return omission.slice(0, length)
+
+  if (position === 'start') {
+    return `${omission}${text.slice(text.length - available)}`
+  }
+
+  if (position === 'middle') {
+    const startLength = Math.ceil(available / 2)
+    const endLength = Math.floor(available / 2)
+    return `${text.slice(0, startLength)}${omission}${text.slice(text.length - endLength)}`
+  }
+
+  return `${text.slice(0, available)}${omission}`
+}
+
+/**
+ * Masks a string while keeping a configurable number of characters visible.
+ */
+export function mask(
+  text: string,
+  options?: {
+    visibleStart?: number
+    visibleEnd?: number
+    maskChar?: string
+  },
+): string {
+  if (!text) return ''
+
+  const normalizeCount = (value: number | undefined, fallback: number): number => {
+    const count = Math.trunc(value ?? fallback)
+    return Number.isFinite(count) ? Math.max(0, count) : 0
+  }
+
+  const visibleStart = normalizeCount(options?.visibleStart, 0)
+  const visibleEnd = normalizeCount(options?.visibleEnd, 4)
+  const maskChar = options?.maskChar ?? '•'
+
+  if (visibleStart + visibleEnd >= text.length) return text
+
+  const start = text.slice(0, visibleStart)
+  const end = visibleEnd > 0 ? text.slice(-visibleEnd) : ''
+  const maskedLength = text.length - visibleStart - visibleEnd
+
+  return `${start}${maskChar.repeat(maskedLength)}${end}`
+}
