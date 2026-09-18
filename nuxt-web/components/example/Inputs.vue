@@ -1,7 +1,9 @@
 <template>
   <div
     v-bind="passthroughAttrs"
-    :class="rootClass">
+    :class="rootClass"
+    class="bg-white"
+    class:dark="bg-white/[3%]">
     <slot />
   </div>
 </template>

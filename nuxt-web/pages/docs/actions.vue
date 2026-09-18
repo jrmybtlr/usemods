@@ -15,7 +15,7 @@
 
     <PageFunction
       name="throttle"
-      description="Throttles a function to ensure it only runs once per delay"
+      description="Throttles a function to ensure it only runs once per delay interval"
       params='[]'
     >
       <Throttle />

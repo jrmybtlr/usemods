@@ -7,7 +7,7 @@
 
     <PageFunction
       name="formatNumber"
-      description="Format numbers into neat and formatted strings for people"
+      description="Resolve short/long display options to a single `display` value. Formatter aliases: `unitDisplay` (all) and `labels` (duration only)."
       params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    locale?: string\n  }"}]'
     >
       <FormatNumber />
@@ -40,7 +40,7 @@
     <PageFunction
       name="formatUnit"
       description="Format a number into a your unit of choice"
-      params='[{"name":"number","type":"number"},{"name":"options","type":"{\n    unit: string\n    decimals?: number\n    display?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options","type":"{\n    unit: string\n    decimals?: number\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
     >
       <FormatUnit />
     </PageFunction>
@@ -56,7 +56,7 @@
     <PageFunction
       name="formatDurationLabels"
       description="Format time into a human-readable string"
-      params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    display?: &#39;short&#39; | &#39;long&#39;\n    round?: boolean\n    decimals?: number\n    locale?: string\n  }"}]'
+      params='[{"name":"seconds","type":"number"},{"name":"options?","type":"{\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    /** @deprecated Use `display` */\n    labels?: DisplayLength\n    round?: boolean\n    decimals?: number\n    locale?: string\n  }"}]'
     >
       <FormatDurationLabels />
     </PageFunction>
@@ -72,7 +72,7 @@
     <PageFunction
       name="formatFileSize"
       description="Format and auto calculate file size into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
     >
       <FormatFileSize />
     </PageFunction>
@@ -80,7 +80,7 @@
     <PageFunction
       name="formatLength"
       description="Format and auto calculate length into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
     >
       <FormatLength />
     </PageFunction>
@@ -88,7 +88,7 @@
     <PageFunction
       name="formatTemperature"
       description="Format and auto calculate temperature into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: &#39;short&#39; | &#39;long&#39;\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
     >
       <FormatTemperature />
     </PageFunction>
@@ -128,7 +128,7 @@
 
     <PageFunction
       name="formatList"
-      description="Create a locale-aware list string from an array, object, or string with an optional limit and conjunction"
+      description="Create a locale-aware list string from an array, object, or string with an optional limit and conjunction. Uses Intl.ListFormat for full lists; truncation (`limit` / &quot;N more&quot;) stays custom. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat"
       params='[{"name":"items","type":"string | object | string[]"},{"name":"options?","type":"{\n    limit?: number\n    conjunction?: string\n    locale?: string\n  }"}]'
     >
       <FormatList />

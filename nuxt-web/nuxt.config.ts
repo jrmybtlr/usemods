@@ -185,6 +185,7 @@ export default defineNuxtConfig({
         'heroicons:arrow-up',
         'heroicons:hashtag',
         'heroicons:information-circle-solid',
+        'heroicons:magnifying-glass',
         'lucide:terminal',
         'logos:nuxt-icon',
         'logos:nextjs-icon',

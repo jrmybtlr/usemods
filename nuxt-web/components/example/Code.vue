@@ -1,8 +1,7 @@
 <template>
   <div
-    class="flex items-center justify-between gap-6 overflow-hidden bg-white px-5 py-4"
-    class:max-md="flex-col"
-    class:dark="bg-white/[3%]">
+    class="flex items-center justify-between gap-6 overflow-hidden px-5 py-4"
+    class:max-md="flex-col">
     <div
       class="flex items-center gap-3"
       class:max-md="text-center">

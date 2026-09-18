@@ -72,7 +72,30 @@
 
       <!-- Actions -->
       <div class="flex items-center justify-end gap-2">
-        <ThemeSwitch />
+        <button
+          type="button"
+          aria-label="Search documentation"
+          class="flex h-8 items-center gap-2 rounded-lg border border-gray-200 px-2 text-sm text-zinc-500 transition-colors"
+          class:dark="border-white/8 text-zinc-400 hover:text-white"
+          class:hover="border-indigo-300 text-indigo-600"
+          @click="open">
+          <Icon
+            name="heroicons:magnifying-glass"
+            class="size-4" />
+          <span
+            class="hidden text-zinc-500"
+            class:dark="text-zinc-600"
+            class:md="inline">
+            Search
+          </span>
+          <kbd
+            class="hidden rounded bg-zinc-100 px-1 py-px text-[10px] text-zinc-400"
+            class:md="inline"
+            class:dark="bg-white/10">
+            {{ shortcutLabel }}
+          </kbd>
+        </button>
+        <!-- <ThemeSwitch /> -->
         <Github />
       </div>
     </div>
@@ -90,4 +113,13 @@ interface Link {
 
 const introLinks = inject('intro-links') as Link[] | undefined
 const docLinks = inject('doc-links') as Link[] | undefined
+
+const { open } = useCommandPalette()
+
+const shortcutLabel = computed(() => {
+  if (import.meta.client && /Mac|iPhone|iPad/.test(navigator.userAgent)) {
+    return '⌘K'
+  }
+  return 'Ctrl K'
+})
 </script>

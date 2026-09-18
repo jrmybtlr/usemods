@@ -18,7 +18,7 @@
       name="checkPasswordStrength"
       description="Check the strength of a password against a given policy."
       info="Don't forget to use our Password Generator in the Generators section"
-      params='[{"name":"text","type":"string"},{"name":"options","type":"{ length?: number, uppercase?: number, numbers?: number, number?: number, symbols?: number, special?: number } = {}"}]'
+      params='[{"name":"text","type":"string"},{"name":"options","type":"{\n  length?: number\n  uppercase?: number\n  numbers?: number\n  number?: number\n  symbols?: number\n  special?: number\n} = {}"}]'
     >
       <CheckPasswordStrength />
     </PageFunction>

@@ -1,7 +1,6 @@
 <template>
   <div
-    class="flex items-center justify-between gap-6 overflow-hidden bg-white px-5 py-4"
-    class:dark="bg-white/[3%]">
+    class="flex items-center justify-between gap-6 overflow-hidden px-5 py-4">
     <div class="flex items-start gap-3">
       <div
         class="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-indigo-50"

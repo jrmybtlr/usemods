@@ -7,7 +7,7 @@
 
     <PageFunction
       name="timeFrom"
-      description="Show how long ago or how far away a date is, like &quot;Now&quot;, &quot;1 minute ago&quot;, or &quot;in 4 months&quot;. Use style &quot;long&quot; for &quot;10 days ago&quot;, &quot;short&quot; for &quot;10d ago&quot;. Other locales use Intl.RelativeTimeFormat."
+      description="Calendar Y/M/D via Intl so local and timeZone-aware callers share one path. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts"
       params='[{"name":"date","type":"DateInput"},{"name":"options?","type":"TimeFromOptions"}]'
     >
       <TimeFrom />
@@ -15,7 +15,7 @@
 
     <PageFunction
       name="timeDifference"
-      description="Measure the gap between two dates. With unit set to &quot;auto&quot;, you get a breakdown like &quot;2 days 5 hr&quot;. Pick a single unit like &quot;days&quot; to get something like &quot;6212 days&quot;."
+      description="Format a duration segment with Intl unit style (locale-aware pluralization). https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat"
       params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options?","type":"TimeDifferenceOptions"}]'
     >
       <TimeDifference />
@@ -23,7 +23,7 @@
 
     <PageFunction
       name="combineDates"
-      description="Include times on multi-day ranges. Same-day different times always show times."
+      description=""
       params='[{"name":"from","type":"DateInput"},{"name":"to","type":"DateInput"},{"name":"options","type":"CombinedDatesOptions = { locale: &#39;en-US&#39;, display: &#39;long&#39; }"}]'
     >
       <CombineDates />

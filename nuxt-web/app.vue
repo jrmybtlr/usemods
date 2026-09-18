@@ -3,6 +3,7 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <CommandPalette />
 </template>
 
 <script setup lang="ts">

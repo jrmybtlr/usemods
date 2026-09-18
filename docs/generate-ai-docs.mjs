@@ -12,6 +12,8 @@ const nuxtWebPath = resolve(root, 'nuxt-web')
 const srcPath = resolve(root, 'src')
 
 const metadataPattern = /\/\/\s+(title|description|lead):\s+([^\r\n]*)/g
+const functionPattern = /\/\*\*[\s\S]*?\*\/\s*(export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\([\s\S]*?\)\s*:\s*([\w<>,[\]\s|]+(?:\{[\s\S]*?})?)?)/gms
+const jsdocPattern = /\/\*\*([\s\S]*?)\*\//g
 const files = ['formatters', 'dates', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
 
 function stripFrontmatter(content) {
@@ -22,6 +24,14 @@ function escapeForDoubleQuotedString(value) {
   return value
     .replace(/\\/g, '\\\\')
     .replace(/"/g, '\\"')
+}
+
+function extractJsdocDescription(jsdoc) {
+  return jsdoc
+    .replace(/\/\*\*|\*\/|\*/g, '')
+    .replace(/@\w+.*$/gm, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 /**
@@ -98,6 +108,93 @@ ${docLinksString}
   await fsPromises.mkdir(join(nuxtWebPath, 'utils'), { recursive: true })
   await fsPromises.writeFile(join(nuxtWebPath, 'utils', 'navigation.ts'), navigationContent)
   console.log('Generated utils/navigation.ts')
+}
+
+/**
+ * search-index.ts powers the site command palette (⌘K).
+ * Gitignored like navigation.ts — regenerated on predev/prebuild.
+ */
+async function generateSearchIndex() {
+  /** @type {Array<{ type: string, title: string, module?: string, description: string, path: string }>} */
+  const items = [
+    {
+      type: 'page',
+      title: 'Introduction',
+      description: 'UseMods is a mighty set of missing functions for your frontend, framework and SSR applications.',
+      path: '/intro/introduction',
+    },
+    {
+      type: 'page',
+      title: 'Installation',
+      description: 'Running and loving mods',
+      path: '/intro/installation',
+    },
+  ]
+
+  const docModules = files.filter(file => file !== 'tailwind')
+
+  for (const file of docModules) {
+    const content = await fsPromises.readFile(join(srcPath, `${file}.ts`), 'utf8')
+    const metadata = Object.fromEntries([...content.matchAll(metadataPattern)].map(match => [match[1], match[2]]))
+    const moduleTitle = metadata.title || file
+
+    items.push({
+      type: 'page',
+      title: moduleTitle,
+      module: file,
+      description: metadata.description || metadata.lead || '',
+      path: `/docs/${file}`,
+    })
+
+    const functions = [...content.matchAll(functionPattern)]
+    for (const match of functions) {
+      const [full, , functionName] = match
+      // functionPattern may span prior non-exported JSDoc blocks; use the last
+      // JSDoc immediately before `export function`.
+      const jsdocBlocks = [...full.matchAll(jsdocPattern)]
+      const description = jsdocBlocks.length > 0
+        ? extractJsdocDescription(jsdocBlocks.at(-1)[0])
+        : ''
+
+      items.push({
+        type: 'function',
+        title: functionName,
+        module: moduleTitle,
+        description,
+        path: `/docs/${file}#${functionName.toLowerCase()}`,
+      })
+    }
+  }
+
+  const itemsString = items.map((item) => {
+    const parts = [
+      `    type: "${item.type}",`,
+      `    title: "${escapeForDoubleQuotedString(item.title)}",`,
+    ]
+    if (item.module) {
+      parts.push(`    module: "${escapeForDoubleQuotedString(item.module)}",`)
+    }
+    parts.push(`    description: "${escapeForDoubleQuotedString(item.description)}",`)
+    parts.push(`    path: "${item.path}",`)
+    return `  {\n${parts.join('\n')}\n  }`
+  }).join(',\n')
+
+  const searchIndexContent = `export interface SearchItem {
+  type: "page" | "function";
+  title: string;
+  module?: string;
+  description: string;
+  path: string;
+}
+
+export const searchIndex: SearchItem[] = [
+${itemsString}
+];
+`
+
+  await fsPromises.mkdir(join(nuxtWebPath, 'utils'), { recursive: true })
+  await fsPromises.writeFile(join(nuxtWebPath, 'utils', 'search-index.ts'), searchIndexContent)
+  console.log(`Generated utils/search-index.ts (${items.length} items)`)
 }
 
 async function generatePublicAiDocs() {
@@ -248,8 +345,9 @@ async function generateSitemap() {
 }
 
 export async function generateAiDiscoveryAssets() {
-  // Website build requires navigation.ts (gitignored generated file)
+  // Website build requires navigation.ts / search-index.ts (gitignored generated files)
   await generateNavigation()
+  await generateSearchIndex()
   const allMarkdownContent = await generatePublicAiDocs()
   await generateLLMsTxt()
   await generateLLMsFullTxt(allMarkdownContent)
