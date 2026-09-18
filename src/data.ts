@@ -95,7 +95,7 @@ export function dataWithout<T extends object | string[] | number[]>(
 /**
  * Group an array of objects by a property.
  */
-export function dataGroupBy<T extends Record<string, unknown>>(
+export function dataGroupBy<T extends object>(
   items: T[],
   property: string,
 ): Record<string, T[]> {
@@ -105,7 +105,7 @@ export function dataGroupBy<T extends Record<string, unknown>>(
   }
 
   return items.reduce((acc, item) => {
-    const key = String(item?.[property] ?? '')
+    const key = String((item as Record<string, unknown>)[property] ?? '')
     if (!acc[key]) {
       acc[key] = []
     }

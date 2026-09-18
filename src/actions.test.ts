@@ -715,4 +715,11 @@ describe('once', () => {
     expect(runOnce('b')).toBe('b')
     expect(fn).toHaveBeenCalledTimes(2)
   })
+
+  test('accepts narrowly typed callbacks', () => {
+    const runOnce = mod.once((value: number) => value * 2)
+
+    expect(runOnce(21)).toBe(42)
+    expect(runOnce(100)).toBe(42)
+  })
 })

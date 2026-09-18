@@ -372,8 +372,13 @@ export function mask(
 ): string {
   if (!text) return ''
 
-  const visibleStart = Math.max(0, options?.visibleStart ?? 0)
-  const visibleEnd = Math.max(0, options?.visibleEnd ?? 4)
+  const normalizeCount = (value: number | undefined, fallback: number): number => {
+    const count = Math.trunc(value ?? fallback)
+    return Number.isFinite(count) ? Math.max(0, count) : 0
+  }
+
+  const visibleStart = normalizeCount(options?.visibleStart, 0)
+  const visibleEnd = normalizeCount(options?.visibleEnd, 4)
   const maskChar = options?.maskChar ?? '•'
 
   if (visibleStart + visibleEnd >= text.length) return text

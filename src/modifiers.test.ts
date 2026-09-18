@@ -273,4 +273,6 @@ test('mask', () => {
   expect(mod.mask('secret', { visibleEnd: 0, maskChar: '*' })).toBe('******')
   expect(mod.mask('ab', { visibleEnd: 4 })).toBe('ab')
   expect(mod.mask('')).toBe('')
+  expect(mod.mask('4111111111111111', { visibleStart: 2.7, visibleEnd: 3.2 })).toBe('41•••••••••••111')
+  expect(mod.mask('4111111111111111', { visibleStart: Number.NaN, visibleEnd: -2 })).toBe('••••••••••••••••')
 })

@@ -148,6 +148,20 @@ test('dataGroupBy', () => {
   })
 
   expect(mod.dataGroupBy([], 'age')).toStrictEqual({})
+
+  interface Person { name: string, role: string }
+  const people: Person[] = [
+    { name: 'Ada', role: 'admin' },
+    { name: 'Bob', role: 'user' },
+    { name: 'Cia', role: 'admin' },
+  ]
+  expect(mod.dataGroupBy(people, 'role')).toStrictEqual({
+    admin: [
+      { name: 'Ada', role: 'admin' },
+      { name: 'Cia', role: 'admin' },
+    ],
+    user: [{ name: 'Bob', role: 'user' }],
+  })
 })
 
 test('dataPick', () => {
