@@ -159,6 +159,14 @@
       <FormatTextWrap />
     </PageFunction>
 
+    <PageFunction
+      name="formatPhone"
+      description="Format a phone number using a digit pattern (`#` for each digit). Without a pattern, applies common US formatting for 10 or 11 digit numbers."
+      params='[{"name":"phone","type":"string | number"},{"name":"options?","type":"{\n    pattern?: string\n  }"}]'
+    >
+      <FormatPhone />
+    </PageFunction>
+
   </DocsLayout>
 </template>
 
@@ -178,6 +186,7 @@ import FormatNumber from '~/components/content/formatters/FormatNumber.vue'
 import FormatNumberToWords from '~/components/content/formatters/FormatNumberToWords.vue'
 import FormatParagraphs from '~/components/content/formatters/FormatParagraphs.vue'
 import FormatPercentage from '~/components/content/formatters/FormatPercentage.vue'
+import FormatPhone from '~/components/content/formatters/FormatPhone.vue'
 import FormatSentenceCase from '~/components/content/formatters/formatSentenceCase.vue'
 import FormatTemperature from '~/components/content/formatters/FormatTemperature.vue'
 import FormatTextWrap from '~/components/content/formatters/FormatTextWrap.vue'
@@ -186,7 +195,7 @@ import FormatUnit from '~/components/content/formatters/FormatUnit.vue'
 import FormatUnixTime from '~/components/content/formatters/FormatUnixTime.vue'
 import FormatValuation from '~/components/content/formatters/FormatValuation.vue'
 
-const toc = ["formatNumber","formatCurrency","formatValuation","formatCompactNumber","formatUnit","formatPercentage","formatDurationLabels","formatDurationNumbers","formatFileSize","formatLength","formatTemperature","formatNumberToWords","formatParagraphs","formatInitials","formatUnixTime","formatList","formatTitle","formatSentenceCase","formatTextWrap"]
+const toc = ["formatNumber","formatCurrency","formatValuation","formatCompactNumber","formatUnit","formatPercentage","formatDurationLabels","formatDurationNumbers","formatFileSize","formatLength","formatTemperature","formatNumberToWords","formatParagraphs","formatInitials","formatUnixTime","formatList","formatTitle","formatSentenceCase","formatTextWrap","formatPhone"]
 const pageId = 'formatters'
 
 provide('toc', toc)

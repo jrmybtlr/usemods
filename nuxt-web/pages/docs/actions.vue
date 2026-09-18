@@ -94,6 +94,14 @@
       <FocusTrap />
     </PageFunction>
 
+    <PageFunction
+      name="once"
+      description="Creates a function that runs only once and returns the first result on later calls."
+      params='[]'
+    >
+      <Once />
+    </PageFunction>
+
   </DocsLayout>
 </template>
 
@@ -106,6 +114,7 @@ import Debounce from '~/components/content/actions/Debounce.vue'
 import FocusOnInvalid from '~/components/content/actions/FocusOnInvalid.vue'
 import FocusOnNth from '~/components/content/actions/FocusOnNth.vue'
 import FocusTrap from '~/components/content/actions/FocusTrap.vue'
+import Once from '~/components/content/actions/Once.vue'
 import ResetForm from '~/components/content/actions/ResetForm.vue'
 import ScrollToAnchor from '~/components/content/actions/ScrollToAnchor.vue'
 import Throttle from '~/components/content/actions/Throttle.vue'
@@ -113,7 +122,7 @@ import ToggleBodyScroll from '~/components/content/actions/ToggleBodyScroll.vue'
 import ToggleElementScroll from '~/components/content/actions/ToggleElementScroll.vue'
 import ToggleFullScreen from '~/components/content/actions/ToggleFullScreen.vue'
 
-const toc = ["debounce","throttle","scrollToAnchor","toggleBodyScroll","toggleElementScroll","copyToClipboard","toggleFullScreen","resetForm","focusOnInvalid","focusOnNth","focusTrap"]
+const toc = ["debounce","throttle","scrollToAnchor","toggleBodyScroll","toggleElementScroll","copyToClipboard","toggleFullScreen","resetForm","focusOnInvalid","focusOnNth","focusTrap","once"]
 const pageId = 'actions'
 
 provide('toc', toc)

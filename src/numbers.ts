@@ -189,3 +189,24 @@ export function skewness(numbers: number[]): number {
   const sumCubedDeviations = numbers.reduce((acc, num) => acc + (num - meanValue) ** 3, 0)
   return (n / ((n - 1) * (n - 2))) * (sumCubedDeviations / (stdDev ** 3))
 }
+
+/**
+ * Clamps a number between a minimum and maximum value.
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/min
+ */
+export function clamp(value: number, min: number, max: number): number {
+  const lower = Math.min(min, max)
+  const upper = Math.max(min, max)
+  return Math.min(Math.max(value, lower), upper)
+}
+
+/**
+ * Returns the percentage change from one number to another.
+ */
+export function percentageChange(from: number, to: number): number {
+  if (from === 0) {
+    console.log('[MODS] percentageChange from is 0.')
+    return NaN
+  }
+  return ((to - from) / Math.abs(from)) * 100
+}

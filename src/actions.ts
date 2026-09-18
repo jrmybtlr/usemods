@@ -276,3 +276,27 @@ export function focusTrap(
     }
   })
 }
+
+/**
+ * Creates a function that runs only once and returns the first result on later calls.
+ */
+export function once<T extends (...args: unknown[]) => unknown>(
+  fn: T): ((...args: Parameters<T>) => ReturnType<T>) & { reset: () => void } {
+  let called = false
+  let result: ReturnType<T>
+
+  function wrapped(this: ThisParameterType<T>, ...args: Parameters<T>): ReturnType<T> {
+    if (!called) {
+      called = true
+      result = fn.apply(this, args) as ReturnType<T>
+    }
+    return result
+  }
+
+  wrapped.reset = () => {
+    called = false
+    result = undefined as ReturnType<T>
+  }
+
+  return wrapped
+}

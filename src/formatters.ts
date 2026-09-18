@@ -556,3 +556,40 @@ export function formatTextWrap(
   if (space !== -1) return `${text.slice(0, space)}&nbsp;${text.slice(space + 1)}`
   return text
 }
+
+/**
+ * Format a phone number using a digit pattern (`#` for each digit).
+ * Without a pattern, applies common US formatting for 10 or 11 digit numbers.
+ */
+export function formatPhone(
+  phone: string | number,
+  options?: {
+    pattern?: string
+  },
+): string {
+  const digits = String(phone ?? '').replace(/\D/g, '')
+  if (!digits) return ''
+
+  const pattern = options?.pattern
+  if (pattern) {
+    let index = 0
+    const formatted = [...pattern].map((char) => {
+      if (char !== '#') return char
+      const digit = digits.at(index) ?? ''
+      index += 1
+      return digit
+    }).join('')
+
+    return formatted.replace(/#/g, '').trim()
+  }
+
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
+  }
+
+  if (digits.length === 11 && digits.startsWith('1')) {
+    return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`
+  }
+
+  return digits
+}

@@ -126,3 +126,39 @@ test('dataWithout', () => {
   // Empty Items
   expect(mod.dataWithout([], [])).toStrictEqual([])
 })
+
+test('dataGroupBy', () => {
+  expect(mod.dataGroupBy(arrayExample, 'age')).toStrictEqual({
+    25: [{ name: 'John', age: 25 }],
+    30: [{ name: 'Jane', age: 30 }],
+    2: [{ name: 'Jimmy', age: 2 }],
+    20: [{ name: 'Jake', age: 20 }],
+  })
+
+  expect(mod.dataGroupBy([
+    { type: 'fruit', name: 'apple' },
+    { type: 'veg', name: 'carrot' },
+    { type: 'fruit', name: 'banana' },
+  ], 'type')).toStrictEqual({
+    fruit: [
+      { type: 'fruit', name: 'apple' },
+      { type: 'fruit', name: 'banana' },
+    ],
+    veg: [{ type: 'veg', name: 'carrot' }],
+  })
+
+  expect(mod.dataGroupBy([], 'age')).toStrictEqual({})
+})
+
+test('dataPick', () => {
+  expect(mod.dataPick(objectExample, ['name', 'age'])).toStrictEqual({ name: 'John', age: 25 })
+  expect(mod.dataPick(objectExample, 'country')).toStrictEqual({ country: 'USA' })
+  expect(mod.dataPick(objectExample, ['missing', 'name'])).toStrictEqual({ name: 'John' })
+  expect(mod.dataPick(objectExample, [])).toStrictEqual({})
+})
+
+test('dataOmit', () => {
+  expect(mod.dataOmit(objectExample, ['name', 'country'])).toStrictEqual({ age: 25 })
+  expect(mod.dataOmit(objectExample, 'age')).toStrictEqual({ name: 'John', country: 'USA' })
+  expect(mod.dataOmit(objectExample, [])).toStrictEqual(objectExample)
+})
