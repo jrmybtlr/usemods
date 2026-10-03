@@ -204,6 +204,17 @@ test('formatTextWrap', () => {
   expect(mod.formatTextWrap('')).toBe('')
 })
 
+test('formatPhone', () => {
+  expect(mod.formatPhone('5551234567')).toBe('(555) 123-4567')
+  expect(mod.formatPhone('(555) 123-4567')).toBe('(555) 123-4567')
+  expect(mod.formatPhone('15551234567')).toBe('+1 (555) 123-4567')
+  expect(mod.formatPhone('5551234567', { pattern: '###-###-####' })).toBe('555-123-4567')
+  expect(mod.formatPhone('+61 412 345 678', { pattern: '+## ### ### ###' })).toBe('+61 412 345 678')
+  expect(mod.formatPhone('12345')).toBe('12345')
+  expect(mod.formatPhone('')).toBe('')
+  expect(mod.formatPhone(5551234567)).toBe('(555) 123-4567')
+})
+
 test('formatFileSize', () => {
   expect(mod.formatFileSize(1024)).toBe('1 kB')
   expect(mod.formatFileSize(1024, { inputUnit: 'byte' })).toBe('1 kB')

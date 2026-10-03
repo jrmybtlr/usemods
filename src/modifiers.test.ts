@@ -256,3 +256,23 @@ test('kebabCase', () => {
 test('titleCase', () => {
   expect(mod.titleCase('hello world')).toBe('Hello World')
 })
+
+test('truncate', () => {
+  expect(mod.truncate('Hello world', 20)).toBe('Hello world')
+  expect(mod.truncate('Hello world', 8)).toBe('Hello w…')
+  expect(mod.truncate('Hello world', 8, { omission: '...' })).toBe('Hello...')
+  expect(mod.truncate('Hello world', 8, { position: 'start' })).toBe('…o world')
+  expect(mod.truncate('Hello world', 8, { position: 'middle' })).toBe('Hell…rld')
+  expect(mod.truncate('', 5)).toBe('')
+  expect(mod.truncate('Hello', 0)).toBe('…')
+})
+
+test('mask', () => {
+  expect(mod.mask('4111111111111111')).toBe('••••••••••••1111')
+  expect(mod.mask('4111111111111111', { visibleStart: 4, visibleEnd: 4 })).toBe('4111••••••••1111')
+  expect(mod.mask('secret', { visibleEnd: 0, maskChar: '*' })).toBe('******')
+  expect(mod.mask('ab', { visibleEnd: 4 })).toBe('ab')
+  expect(mod.mask('')).toBe('')
+  expect(mod.mask('4111111111111111', { visibleStart: 2.7, visibleEnd: 3.2 })).toBe('41•••••••••••111')
+  expect(mod.mask('4111111111111111', { visibleStart: Number.NaN, visibleEnd: -2 })).toBe('••••••••••••••••')
+})
