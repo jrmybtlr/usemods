@@ -279,6 +279,7 @@ export function focusTrap(
 
 /**
  * Creates a function that only runs once and returns the first result on later calls.
+ * @info Call `reset()` on the wrapped function to allow it to run again
  */
 export function once<T extends (...args: never[]) => unknown>(
   fn: T): ((...args: Parameters<T>) => ReturnType<T>) & { reset: () => void } {

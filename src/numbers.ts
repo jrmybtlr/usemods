@@ -192,6 +192,7 @@ export function skewness(numbers: number[]): number {
 
 /**
  * Clamps a number between a minimum and maximum value.
+ * @info Bounds are normalized, so the order of min and max does not matter
  */
 export function clamp(value: number, min: number, max: number): number {
   const lower = Math.min(min, max)

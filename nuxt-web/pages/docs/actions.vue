@@ -97,6 +97,7 @@
     <PageFunction
       name="once"
       description="Creates a function that only runs once and returns the first result on later calls."
+      info="Call `reset()` on the wrapped function to allow it to run again"
       params='[]'
     >
       <Once />

@@ -243,6 +243,35 @@ throttledScroll.cancel()
 
 ---
 
+### `once<T extends (...args: never[]) => unknown>(fn: T): ((...args: Parameters<T>) => ReturnType<T>) & { reset: () => void }`
+
+Creates a function that only runs once and returns the first result on later calls.
+
+**Parameters:**
+- `fn` (T): The function to run once
+
+**Returns:** Wrapped function that caches the first result on later calls
+
+**Note:** Call `reset()` on the wrapped function to allow it to run again
+
+**Example:**
+```typescript
+import { once } from 'usemods'
+
+const initialize = once(() => {
+  console.log('Runs a single time')
+  return 'done'
+})
+
+initialize() // 'done' (runs and logs)
+initialize() // 'done' (cached, no log)
+
+initialize.reset()
+initialize() // 'done' (runs and logs again)
+```
+
+---
+
 ## Usage Examples
 
 ### Complete Form Handling Example
@@ -315,5 +344,6 @@ searchInput.addEventListener('input', (e) => {
 - All functions that interact with the DOM require a browser environment
 - Functions return Promises for better async/await support
 - The `debounce` and `throttle` functions include a `cancel()` method to cancel pending executions
+- `once` exposes a `reset()` method to allow the wrapped function to run again
 - `focusTrap` automatically handles Tab and Shift+Tab key navigation
 - `scrollToAnchor` includes a small delay (180ms) to ensure smooth scrolling

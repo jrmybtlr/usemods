@@ -461,6 +461,56 @@ unescapeHtml('&lt;script&gt;') // '<script>'
 
 ---
 
+### `truncate(text: string, length: number, options?: { position?: 'end' | 'start' | 'middle', omission?: string }): string`
+
+Truncates a string to a maximum length with an optional omission marker.
+
+**Parameters:**
+- `text` (string): The string to truncate
+- `length` (number): Maximum length of the result, counted in characters
+- `options` (object, optional):
+  - `position` ('end' | 'start' | 'middle', optional): Where to cut. Defaults to `'end'`
+  - `omission` (string, optional): Marker placed in the truncated spot. Defaults to `'…'`
+
+**Returns:** Truncated string (the original is returned when it already fits)
+
+**Example:**
+```typescript
+import { truncate } from 'usemods'
+
+truncate('Hello world', 20) // 'Hello world'
+truncate('Hello world', 8) // 'Hello w…'
+truncate('Hello world', 8, { omission: '...' }) // 'Hello...'
+truncate('Hello world', 8, { position: 'start' }) // '…o world'
+truncate('Hello world', 8, { position: 'middle' }) // 'Hell…rld'
+```
+
+---
+
+### `mask(text: string, options?: { visibleStart?: number, visibleEnd?: number, maskChar?: string }): string`
+
+Masks a string while keeping a configurable number of characters visible.
+
+**Parameters:**
+- `text` (string): The string to mask
+- `options` (object, optional):
+  - `visibleStart` (number, optional): Characters left visible at the start. Defaults to `0`
+  - `visibleEnd` (number, optional): Characters left visible at the end. Defaults to `4`
+  - `maskChar` (string, optional): Character used for the hidden part. Defaults to `'•'`
+
+**Returns:** Masked string (the original is returned when everything would be visible)
+
+**Example:**
+```typescript
+import { mask } from 'usemods'
+
+mask('4111111111111111') // '••••••••••••1111'
+mask('4111111111111111', { visibleStart: 4, visibleEnd: 4 }) // '4111••••••••1111'
+mask('secret', { visibleEnd: 0, maskChar: '*' }) // '******'
+```
+
+---
+
 ## Usage Examples
 
 ### URL Manipulation
@@ -531,4 +581,5 @@ const singular = singularize(plural) // 'child'
 - `stripHtml` decodes HTML entities automatically
 - Case conversion functions handle hyphens, spaces, and underscores
 - `slugify` removes special characters and converts to lowercase with hyphens
+- `truncate` and `mask` count characters by code point, so emoji are never split
 - All functions preserve the original string if no changes are needed

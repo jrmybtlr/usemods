@@ -136,6 +136,7 @@
     <PageFunction
       name="clamp"
       description="Clamps a number between a minimum and maximum value."
+      info="Bounds are normalized, so the order of min and max does not matter"
       params='[{"name":"value","type":"number"},{"name":"min","type":"number"},{"name":"max","type":"number"}]'
     >
       <Clamp />

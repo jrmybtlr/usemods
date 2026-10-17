@@ -573,14 +573,26 @@ export function formatPhone(
   const pattern = options?.pattern
   if (pattern) {
     let index = 0
-    const formatted = [...pattern].map((char) => {
-      if (char !== '#') return char
-      const digit = digits.at(index) ?? ''
-      index += 1
-      return digit
-    }).join('')
+    let formatted = ''
+    let lastFilled = 0
 
-    return formatted.replace(/#/g, '').trim()
+    for (const char of pattern) {
+      if (char !== '#') {
+        formatted += char
+        continue
+      }
+
+      const digit = digits.at(index)
+      index += 1
+      if (digit !== undefined) {
+        formatted += digit
+        lastFilled = formatted.length
+      }
+    }
+
+    // Cut back to the last filled digit so partial numbers don't render
+    // dangling separators (e.g. `+1 (123) -`).
+    return lastFilled > 0 ? formatted.slice(0, lastFilled) : formatted.trim()
   }
 
   if (digits.length === 10) {

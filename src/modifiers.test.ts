@@ -264,7 +264,12 @@ test('truncate', () => {
   expect(mod.truncate('Hello world', 8, { position: 'start' })).toBe('…o world')
   expect(mod.truncate('Hello world', 8, { position: 'middle' })).toBe('Hell…rld')
   expect(mod.truncate('', 5)).toBe('')
-  expect(mod.truncate('Hello', 0)).toBe('…')
+  expect(mod.truncate('Hello', 0)).toBe('')
+  expect(mod.truncate('Hello', -5)).toBe('')
+  expect(mod.truncate('Hello', 2, { omission: '...' })).toBe('..')
+  // Code points are not split
+  expect(mod.truncate('👋👋👋', 2)).toBe('👋…')
+  expect(mod.truncate('👋👋👋👋', 3, { position: 'middle' })).toBe('👋…👋')
 })
 
 test('mask', () => {
@@ -275,4 +280,8 @@ test('mask', () => {
   expect(mod.mask('')).toBe('')
   expect(mod.mask('4111111111111111', { visibleStart: 2.7, visibleEnd: 3.2 })).toBe('41•••••••••••111')
   expect(mod.mask('4111111111111111', { visibleStart: Number.NaN, visibleEnd: -2 })).toBe('••••••••••••••••')
+  // An empty maskChar falls back to the default instead of removing characters
+  expect(mod.mask('secret', { maskChar: '' })).toBe('••cret')
+  // Code points are not split
+  expect(mod.mask('👋👋👋', { visibleEnd: 1 })).toBe('••👋')
 })

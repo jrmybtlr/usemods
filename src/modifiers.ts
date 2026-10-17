@@ -336,27 +336,30 @@ export function truncate(
     omission?: string
   },
 ): string {
-  if (!text) return ''
-  if (length <= 0) return options?.omission ?? '…'
-  if (text.length <= length) return text
+  if (!text || length <= 0) return ''
+
+  // Count code points so surrogate pairs (emoji) are never split.
+  const characters = [...text]
+  if (characters.length <= length) return text
 
   const omission = options?.omission ?? '…'
+  const omissionCharacters = [...omission]
   const position = options?.position ?? 'end'
-  const available = Math.max(0, length - omission.length)
+  const available = Math.max(0, length - omissionCharacters.length)
 
-  if (available === 0) return omission.slice(0, length)
+  if (available === 0) return omissionCharacters.slice(0, length).join('')
 
   if (position === 'start') {
-    return `${omission}${text.slice(text.length - available)}`
+    return `${omission}${characters.slice(characters.length - available).join('')}`
   }
 
   if (position === 'middle') {
     const startLength = Math.ceil(available / 2)
     const endLength = Math.floor(available / 2)
-    return `${text.slice(0, startLength)}${omission}${text.slice(text.length - endLength)}`
+    return `${characters.slice(0, startLength).join('')}${omission}${characters.slice(characters.length - endLength).join('')}`
   }
 
-  return `${text.slice(0, available)}${omission}`
+  return `${characters.slice(0, available).join('')}${omission}`
 }
 
 /**
@@ -379,13 +382,16 @@ export function mask(
 
   const visibleStart = normalizeCount(options?.visibleStart, 0)
   const visibleEnd = normalizeCount(options?.visibleEnd, 4)
-  const maskChar = options?.maskChar ?? '•'
+  // Fall back to the default so an empty maskChar can't silently remove characters.
+  const maskChar = options?.maskChar || '•'
 
-  if (visibleStart + visibleEnd >= text.length) return text
+  // Count code points so surrogate pairs (emoji) are never split.
+  const characters = [...text]
+  if (visibleStart + visibleEnd >= characters.length) return text
 
-  const start = text.slice(0, visibleStart)
-  const end = visibleEnd > 0 ? text.slice(-visibleEnd) : ''
-  const maskedLength = text.length - visibleStart - visibleEnd
+  const start = characters.slice(0, visibleStart).join('')
+  const end = visibleEnd > 0 ? characters.slice(-visibleEnd).join('') : ''
+  const maskedLength = characters.length - visibleStart - visibleEnd
 
   return `${start}${maskChar.repeat(maskedLength)}${end}`
 }

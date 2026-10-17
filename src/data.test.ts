@@ -162,6 +162,22 @@ test('dataGroupBy', () => {
     ],
     user: [{ name: 'Bob', role: 'user' }],
   })
+
+  // Prototype-like property values must not break grouping or pollute the result
+  const special = [
+    { label: '__proto__', value: 1 },
+    { label: 'constructor', value: 2 },
+    { label: '__proto__', value: 3 },
+  ]
+  const grouped = mod.dataGroupBy(special, 'label')
+  expect(Object.hasOwn(grouped, '__proto__')).toBe(true)
+  expect(grouped['__proto__']).toStrictEqual([
+    { label: '__proto__', value: 1 },
+    { label: '__proto__', value: 3 },
+  ])
+  expect(grouped['constructor']).toStrictEqual([
+    { label: 'constructor', value: 2 },
+  ])
 })
 
 test('dataPick', () => {
@@ -169,10 +185,20 @@ test('dataPick', () => {
   expect(mod.dataPick(objectExample, 'country')).toStrictEqual({ country: 'USA' })
   expect(mod.dataPick(objectExample, ['missing', 'name'])).toStrictEqual({ name: 'John' })
   expect(mod.dataPick(objectExample, [])).toStrictEqual({})
+  // Inherited properties are not picked
+  expect(mod.dataPick(objectExample, ['toString', 'constructor', 'name'])).toStrictEqual({ name: 'John' })
+
+  const withProtoKey = Object.fromEntries([['__proto__', 'value'], ['name', 'John']])
+  const picked = mod.dataPick(withProtoKey, '__proto__')
+  expect(Object.hasOwn(picked, '__proto__')).toBe(true)
+  expect(picked['__proto__']).toBe('value')
 })
 
 test('dataOmit', () => {
   expect(mod.dataOmit(objectExample, ['name', 'country'])).toStrictEqual({ age: 25 })
   expect(mod.dataOmit(objectExample, 'age')).toStrictEqual({ name: 'John', country: 'USA' })
   expect(mod.dataOmit(objectExample, [])).toStrictEqual(objectExample)
+
+  const withProtoKey = Object.fromEntries([['__proto__', 'value'], ['name', 'John']])
+  expect(mod.dataOmit(withProtoKey, '__proto__')).toStrictEqual({ name: 'John' })
 })

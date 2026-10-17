@@ -104,14 +104,22 @@ export function dataGroupBy<T extends object>(
     return {}
   }
 
-  return items.reduce((acc, item) => {
+  // Use a Map so keys like `__proto__` or `constructor` can't collide with
+  // Object.prototype during grouping.
+  const groups = new Map<string, T[]>()
+
+  for (const item of items) {
     const key = String((item as Record<string, unknown>)[property] ?? '')
-    if (!acc[key]) {
-      acc[key] = []
+    const group = groups.get(key)
+    if (group) {
+      group.push(item)
     }
-    acc[key].push(item)
-    return acc
-  }, {} as Record<string, T[]>)
+    else {
+      groups.set(key, [item])
+    }
+  }
+
+  return Object.fromEntries(groups)
 }
 
 /**
@@ -127,12 +135,11 @@ export function dataPick<T extends object>(
   }
 
   const keys = Array.isArray(properties) ? properties : [properties]
-  return keys.reduce((acc, key) => {
-    if (key in obj) {
-      ;(acc as Record<string, unknown>)[key] = (obj as Record<string, unknown>)[key]
-    }
-    return acc
-  }, {} as Partial<T>)
+  return Object.fromEntries(
+    keys
+      .filter(key => Object.hasOwn(obj, key))
+      .map(key => [key, (obj as Record<string, unknown>)[key]]),
+  ) as Partial<T>
 }
 
 /**
