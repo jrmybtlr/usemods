@@ -39,6 +39,23 @@ describe('index exports', () => {
     expect(typeof mod.dataFlatten).toBe('function')
     expect(typeof mod.dataReverse).toBe('function')
     expect(typeof mod.dataSortBy).toBe('function')
+    expect(typeof mod.dataGroupBy).toBe('function')
+    expect(typeof mod.dataPick).toBe('function')
+    expect(typeof mod.dataOmit).toBe('function')
+
+    // Numbers
+    expect(typeof mod.clamp).toBe('function')
+    expect(typeof mod.percentageChange).toBe('function')
+
+    // Actions
+    expect(typeof mod.once).toBe('function')
+
+    // Modifiers
+    expect(typeof mod.truncate).toBe('function')
+    expect(typeof mod.mask).toBe('function')
+
+    // Formatters
+    expect(typeof mod.formatPhone).toBe('function')
 
     // Validators
     expect(typeof mod.isEmail).toBe('function')
