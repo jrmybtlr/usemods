@@ -121,3 +121,20 @@ test('skewness', () => {
   expect(mod.skewness([42])).toBeNaN()
   expect(mod.skewness([])).toBeNaN()
 })
+
+test('clamp', () => {
+  expect(mod.clamp(5, 0, 10)).toBe(5)
+  expect(mod.clamp(-1, 0, 10)).toBe(0)
+  expect(mod.clamp(15, 0, 10)).toBe(10)
+  expect(mod.clamp(5, 10, 0)).toBe(5)
+  expect(mod.clamp(0, 0, 0)).toBe(0)
+})
+
+test('percentageChange', () => {
+  expect(mod.percentageChange(100, 150)).toBe(50)
+  expect(mod.percentageChange(100, 50)).toBe(-50)
+  expect(mod.percentageChange(80, 100)).toBe(25)
+  expect(mod.percentageChange(-100, -50)).toBe(50)
+  expect(mod.percentageChange(0, 10)).toBeNaN()
+  expect(mod.percentageChange(0, 0)).toBeNaN()
+})

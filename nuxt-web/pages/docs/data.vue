@@ -45,6 +45,30 @@
       <DataWithout />
     </PageFunction>
 
+    <PageFunction
+      name="dataGroupBy"
+      description="Group an array of objects by a property."
+      params='[]'
+    >
+      <DataGroupBy />
+    </PageFunction>
+
+    <PageFunction
+      name="dataPick"
+      description="Pick specific properties from an object."
+      params='[]'
+    >
+      <DataPick />
+    </PageFunction>
+
+    <PageFunction
+      name="dataOmit"
+      description="Omit specific properties from an object."
+      params='[]'
+    >
+      <DataOmit />
+    </PageFunction>
+
   </DocsLayout>
 </template>
 
@@ -53,12 +77,15 @@ import DocsLayout from '~/components/DocsLayout.vue'
 import PageTitle from '~/components/content/PageTitle.vue'
 import PageFunction from '~/components/content/PageFunction.vue'
 import DataFlatten from '~/components/content/data/DataFlatten.vue'
+import DataGroupBy from '~/components/content/data/DataGroupBy.vue'
+import DataOmit from '~/components/content/data/DataOmit.vue'
+import DataPick from '~/components/content/data/DataPick.vue'
 import DataRemoveDuplicates from '~/components/content/data/DataRemoveDuplicates.vue'
 import DataReverse from '~/components/content/data/DataReverse.vue'
 import DataSortBy from '~/components/content/data/DataSortBy.vue'
 import DataWithout from '~/components/content/data/DataWithout.vue'
 
-const toc = ["dataSortBy","dataReverse","dataRemoveDuplicates","dataFlatten","dataWithout"]
+const toc = ["dataSortBy","dataReverse","dataRemoveDuplicates","dataFlatten","dataWithout","dataGroupBy","dataPick","dataOmit"]
 const pageId = 'data'
 
 provide('toc', toc)

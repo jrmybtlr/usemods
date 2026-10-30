@@ -556,3 +556,52 @@ export function formatTextWrap(
   if (space !== -1) return `${text.slice(0, space)}&nbsp;${text.slice(space + 1)}`
   return text
 }
+
+/**
+ * Format a phone number into a readable string
+ * @info Use `pattern` with `#` for each digit, or omit for common US formats
+ */
+export function formatPhone(
+  phone: string | number,
+  options?: {
+    pattern?: string
+  },
+): string {
+  const digits = String(phone ?? '').replace(/\D/g, '')
+  if (!digits) return ''
+
+  const pattern = options?.pattern
+  if (pattern) {
+    let index = 0
+    let formatted = ''
+    let lastFilled = 0
+
+    for (const char of pattern) {
+      if (char !== '#') {
+        formatted += char
+        continue
+      }
+
+      const digit = digits.at(index)
+      index += 1
+      if (digit !== undefined) {
+        formatted += digit
+        lastFilled = formatted.length
+      }
+    }
+
+    // Cut back to the last filled digit so partial numbers don't render
+    // dangling separators (e.g. `+1 (123) -`).
+    return lastFilled > 0 ? formatted.slice(0, lastFilled) : formatted.trim()
+  }
+
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
+  }
+
+  if (digits.length === 11 && digits.startsWith('1')) {
+    return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`
+  }
+
+  return digits
+}

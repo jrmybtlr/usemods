@@ -126,3 +126,79 @@ test('dataWithout', () => {
   // Empty Items
   expect(mod.dataWithout([], [])).toStrictEqual([])
 })
+
+test('dataGroupBy', () => {
+  expect(mod.dataGroupBy(arrayExample, 'age')).toStrictEqual({
+    25: [{ name: 'John', age: 25 }],
+    30: [{ name: 'Jane', age: 30 }],
+    2: [{ name: 'Jimmy', age: 2 }],
+    20: [{ name: 'Jake', age: 20 }],
+  })
+
+  expect(mod.dataGroupBy([
+    { type: 'fruit', name: 'apple' },
+    { type: 'veg', name: 'carrot' },
+    { type: 'fruit', name: 'banana' },
+  ], 'type')).toStrictEqual({
+    fruit: [
+      { type: 'fruit', name: 'apple' },
+      { type: 'fruit', name: 'banana' },
+    ],
+    veg: [{ type: 'veg', name: 'carrot' }],
+  })
+
+  expect(mod.dataGroupBy([], 'age')).toStrictEqual({})
+
+  interface Person { name: string, role: string }
+  const people: Person[] = [
+    { name: 'Ada', role: 'admin' },
+    { name: 'Bob', role: 'user' },
+    { name: 'Cia', role: 'admin' },
+  ]
+  expect(mod.dataGroupBy(people, 'role')).toStrictEqual({
+    admin: [
+      { name: 'Ada', role: 'admin' },
+      { name: 'Cia', role: 'admin' },
+    ],
+    user: [{ name: 'Bob', role: 'user' }],
+  })
+
+  // Prototype-like property values must not break grouping or pollute the result
+  const special = [
+    { label: '__proto__', value: 1 },
+    { label: 'constructor', value: 2 },
+    { label: '__proto__', value: 3 },
+  ]
+  const grouped = mod.dataGroupBy(special, 'label')
+  expect(Object.hasOwn(grouped, '__proto__')).toBe(true)
+  expect(grouped['__proto__']).toStrictEqual([
+    { label: '__proto__', value: 1 },
+    { label: '__proto__', value: 3 },
+  ])
+  expect(grouped['constructor']).toStrictEqual([
+    { label: 'constructor', value: 2 },
+  ])
+})
+
+test('dataPick', () => {
+  expect(mod.dataPick(objectExample, ['name', 'age'])).toStrictEqual({ name: 'John', age: 25 })
+  expect(mod.dataPick(objectExample, 'country')).toStrictEqual({ country: 'USA' })
+  expect(mod.dataPick(objectExample, ['missing', 'name'])).toStrictEqual({ name: 'John' })
+  expect(mod.dataPick(objectExample, [])).toStrictEqual({})
+  // Inherited properties are not picked
+  expect(mod.dataPick(objectExample, ['toString', 'constructor', 'name'])).toStrictEqual({ name: 'John' })
+
+  const withProtoKey = Object.fromEntries([['__proto__', 'value'], ['name', 'John']])
+  const picked = mod.dataPick(withProtoKey, '__proto__')
+  expect(Object.hasOwn(picked, '__proto__')).toBe(true)
+  expect(picked['__proto__']).toBe('value')
+})
+
+test('dataOmit', () => {
+  expect(mod.dataOmit(objectExample, ['name', 'country'])).toStrictEqual({ age: 25 })
+  expect(mod.dataOmit(objectExample, 'age')).toStrictEqual({ name: 'John', country: 'USA' })
+  expect(mod.dataOmit(objectExample, [])).toStrictEqual(objectExample)
+
+  const withProtoKey = Object.fromEntries([['__proto__', 'value'], ['name', 'John']])
+  expect(mod.dataOmit(withProtoKey, '__proto__')).toStrictEqual({ name: 'John' })
+})

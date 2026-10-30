@@ -133,6 +133,23 @@
       <Skewness />
     </PageFunction>
 
+    <PageFunction
+      name="clamp"
+      description="Clamps a number between a minimum and maximum value."
+      info="Bounds are normalized, so the order of min and max does not matter"
+      params='[{"name":"value","type":"number"},{"name":"min","type":"number"},{"name":"max","type":"number"}]'
+    >
+      <Clamp />
+    </PageFunction>
+
+    <PageFunction
+      name="percentageChange"
+      description="Returns the percentage change from one number to another."
+      params='[{"name":"from","type":"number"},{"name":"to","type":"number"}]'
+    >
+      <PercentageChange />
+    </PageFunction>
+
   </DocsLayout>
 </template>
 
@@ -143,6 +160,7 @@ import PageFunction from '~/components/content/PageFunction.vue'
 import AddMargin from '~/components/content/numbers/AddMargin.vue'
 import AddMarkup from '~/components/content/numbers/AddMarkup.vue'
 import Average from '~/components/content/numbers/Average.vue'
+import Clamp from '~/components/content/numbers/Clamp.vue'
 import Margin from '~/components/content/numbers/Margin.vue'
 import Max from '~/components/content/numbers/Max.vue'
 import Mean from '~/components/content/numbers/Mean.vue'
@@ -150,6 +168,7 @@ import Median from '~/components/content/numbers/Median.vue'
 import Min from '~/components/content/numbers/Min.vue'
 import MinMax from '~/components/content/numbers/MinMax.vue'
 import Mode from '~/components/content/numbers/Mode.vue'
+import PercentageChange from '~/components/content/numbers/PercentageChange.vue'
 import Range from '~/components/content/numbers/Range.vue'
 import Skewness from '~/components/content/numbers/Skewness.vue'
 import StandardDeviation from '~/components/content/numbers/StandardDeviation.vue'
@@ -157,7 +176,7 @@ import SubtractMargin from '~/components/content/numbers/SubtractMargin.vue'
 import SubtractMarkup from '~/components/content/numbers/SubtractMarkup.vue'
 import Sum from '~/components/content/numbers/Sum.vue'
 
-const toc = ["sum","mean","average","margin","addMargin","subtractMargin","addMarkup","subtractMarkup","median","mode","min","max","minMax","range","standardDeviation","skewness"]
+const toc = ["sum","mean","average","margin","addMargin","subtractMargin","addMarkup","subtractMarkup","median","mode","min","max","minMax","range","standardDeviation","skewness","clamp","percentageChange"]
 const pageId = 'numbers'
 
 provide('toc', toc)

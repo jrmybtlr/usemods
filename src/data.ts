@@ -92,49 +92,70 @@ export function dataWithout<T extends object | string[] | number[]>(
   }
 }
 
-//
+/**
+ * Group an array of objects by a property.
+ */
+export function dataGroupBy<T extends object>(
+  items: T[],
+  property: string,
+): Record<string, T[]> {
+  if (!Array.isArray(items)) {
+    console.warn('[MODS] Warning: dataGroupBy() expects an array as the first argument.')
+    return {}
+  }
 
-// /**
-//  * Group an array of objects by a property.
-//  */
-// export function dataGroupBy(items: object[] | string[] | number[], property: string): { [key: string]: object[] | string[] | number[] } {
-//   if (!Array.isArray(items)) {
-//     console.warn('[MODS] Warning: dataGroupBy() expects an array as the first argument.')
-//     return {}
-//   }
+  // Use a Map so keys like `__proto__` or `constructor` can't collide with
+  // Object.prototype during grouping.
+  const groups = new Map<string, T[]>()
 
-//   return items.reduce((acc, item) => {
-//     const key = item[property]
-//     if (!acc[key]) {
-//       acc[key] = []
-//     }
-//     acc[key].push(item)
-//     return acc
-//   }, {} as { [key: string]: object[] | string[] | number[] })
-// }
+  for (const item of items) {
+    const key = String((item as Record<string, unknown>)[property] ?? '')
+    const group = groups.get(key)
+    if (group) {
+      group.push(item)
+    }
+    else {
+      groups.set(key, [item])
+    }
+  }
 
-// /**
-//  * Merge multiple objects or arrays into one.
-//  */
-// export function dataMerge(...items: (object | any[])[]): object | any[] {
-//   if (items.every(isObject)) {
-//     return Object.assign({}, ...items)
-//   } else if (items.every(Array.isArray)) {
-//     return items.flat()
-//   } else {
-//     console.warn('[MODS] Warning: dataMerge() expects either all objects or all arrays as arguments.')
-//     return items
-//   }
-// }
+  return Object.fromEntries(groups)
+}
 
-// /**
-//  * Pick specific properties from an object.
-//  */
-// export function dataPick(obj: object, properties: string[]): object {
-//   return properties.reduce((acc, key) => {
-//     if (key in obj) {
-//       acc[key] = obj[key]
-//     }
-//     return acc
-//   }, {} as { [key: string]: any })
-// }
+/**
+ * Pick specific properties from an object.
+ */
+export function dataPick<T extends object>(
+  obj: T,
+  properties: string | string[],
+): Partial<T> {
+  if (!isObject(obj)) {
+    console.warn('[MODS] Warning: dataPick() expects an object as the first argument.')
+    return {}
+  }
+
+  const keys = Array.isArray(properties) ? properties : [properties]
+  return Object.fromEntries(
+    keys
+      .filter(key => Object.hasOwn(obj, key))
+      .map(key => [key, (obj as Record<string, unknown>)[key]]),
+  ) as Partial<T>
+}
+
+/**
+ * Omit specific properties from an object.
+ */
+export function dataOmit<T extends object>(
+  obj: T,
+  properties: string | string[],
+): Partial<T> {
+  if (!isObject(obj)) {
+    console.warn('[MODS] Warning: dataOmit() expects an object as the first argument.')
+    return {}
+  }
+
+  const keys = new Set(Array.isArray(properties) ? properties : [properties])
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !keys.has(key)),
+  ) as Partial<T>
+}

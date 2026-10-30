@@ -693,3 +693,33 @@ describe('throttle', () => {
     vi.useRealTimers()
   })
 })
+
+describe('once', () => {
+  test('runs the function only once and caches the result', () => {
+    const fn = vi.fn((value: unknown) => `result-${value}`)
+    const runOnce = mod.once(fn)
+
+    expect(runOnce(1)).toBe('result-1')
+    expect(runOnce(2)).toBe('result-1')
+    expect(runOnce(3)).toBe('result-1')
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(fn).toHaveBeenCalledWith(1)
+  })
+
+  test('reset allows the function to run again', () => {
+    const fn = vi.fn((value: unknown) => value)
+    const runOnce = mod.once(fn)
+
+    expect(runOnce('a')).toBe('a')
+    runOnce.reset()
+    expect(runOnce('b')).toBe('b')
+    expect(fn).toHaveBeenCalledTimes(2)
+  })
+
+  test('accepts narrowly typed callbacks', () => {
+    const runOnce = mod.once((value: number) => value * 2)
+
+    expect(runOnce(21)).toBe(42)
+    expect(runOnce(100)).toBe(42)
+  })
+})

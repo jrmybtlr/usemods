@@ -153,6 +153,82 @@ dataWithout(obj, ['b', 'd']) // { a: 1, c: 3 }
 
 ---
 
+### `dataGroupBy<T extends object>(items: T[], property: string): Record<string, T[]>`
+
+Group an array of objects by a property.
+
+**Parameters:**
+- `items` (T[]): The array of objects to group
+- `property` (string): Property name to group by
+
+**Returns:** Object with one key per unique property value, each holding the matching items
+
+**Example:**
+```typescript
+import { dataGroupBy } from 'usemods'
+
+const items = [
+  { name: 'Apple', type: 'fruit' },
+  { name: 'Carrot', type: 'veg' },
+  { name: 'Banana', type: 'fruit' }
+]
+
+dataGroupBy(items, 'type')
+// {
+//   fruit: [
+//     { name: 'Apple', type: 'fruit' },
+//     { name: 'Banana', type: 'fruit' }
+//   ],
+//   veg: [{ name: 'Carrot', type: 'veg' }]
+// }
+```
+
+---
+
+### `dataPick<T extends object>(obj: T, properties: string | string[]): Partial<T>`
+
+Pick specific properties from an object.
+
+**Parameters:**
+- `obj` (object): The object to pick from
+- `properties` (string | string[]): Property name(s) to keep
+
+**Returns:** New object containing only the picked properties (missing keys are ignored)
+
+**Example:**
+```typescript
+import { dataPick } from 'usemods'
+
+const user = { name: 'John', age: 25, country: 'USA' }
+
+dataPick(user, ['name', 'age']) // { name: 'John', age: 25 }
+dataPick(user, 'country') // { country: 'USA' }
+```
+
+---
+
+### `dataOmit<T extends object>(obj: T, properties: string | string[]): Partial<T>`
+
+Omit specific properties from an object.
+
+**Parameters:**
+- `obj` (object): The object to omit from
+- `properties` (string | string[]): Property name(s) to remove
+
+**Returns:** New object without the omitted properties
+
+**Example:**
+```typescript
+import { dataOmit } from 'usemods'
+
+const user = { name: 'John', age: 25, country: 'USA' }
+
+dataOmit(user, 'age') // { name: 'John', country: 'USA' }
+dataOmit(user, ['name', 'country']) // { age: 25 }
+```
+
+---
+
 ## Usage Examples
 
 ### Sorting and Filtering Data
@@ -233,4 +309,5 @@ const sortedTags = dataSortBy(allTags)
 - Functions work with both arrays and objects where applicable
 - `dataFlatten` for objects creates dot-notation keys for nested properties
 - `dataSortBy` uses native JavaScript comparison, so strings are sorted alphabetically and numbers numerically
+- `dataGroupBy`, `dataPick`, and `dataOmit` only consider own properties, so prototype keys like `constructor` are never leaked
 - Empty arrays/objects return as-is without warnings (except `dataReverse` which warns on empty input)

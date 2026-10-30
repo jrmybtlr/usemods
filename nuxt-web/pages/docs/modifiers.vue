@@ -191,6 +191,22 @@
       <UnescapeHtml />
     </PageFunction>
 
+    <PageFunction
+      name="truncate"
+      description="Truncates a string to a maximum length with an optional omission marker."
+      params='[{"name":"text","type":"string"},{"name":"length","type":"number"},{"name":"options?","type":"{\n    position?: &#39;end&#39; | &#39;start&#39; | &#39;middle&#39;\n    omission?: string\n  }"}]'
+    >
+      <Truncate />
+    </PageFunction>
+
+    <PageFunction
+      name="mask"
+      description="Masks a string while keeping a configurable number of characters visible."
+      params='[{"name":"text","type":"string"},{"name":"options?","type":"{\n    visibleStart?: number\n    visibleEnd?: number\n    maskChar?: string\n  }"}]'
+    >
+      <Mask />
+    </PageFunction>
+
   </DocsLayout>
 </template>
 
@@ -204,6 +220,7 @@ import EndWith from '~/components/content/modifiers/EndWith.vue'
 import EndWithout from '~/components/content/modifiers/EndWithout.vue'
 import EscapeHtml from '~/components/content/modifiers/EscapeHtml.vue'
 import KebabCase from '~/components/content/modifiers/KebabCase.vue'
+import Mask from '~/components/content/modifiers/Mask.vue'
 import Ordinalize from '~/components/content/modifiers/Ordinalize.vue'
 import PascalCase from '~/components/content/modifiers/PascalCase.vue'
 import Pluralize from '~/components/content/modifiers/Pluralize.vue'
@@ -220,9 +237,10 @@ import StripSymbols from '~/components/content/modifiers/StripSymbols.vue'
 import StripWhitespace from '~/components/content/modifiers/StripWhitespace.vue'
 import SurroundWith from '~/components/content/modifiers/surroundWith.vue'
 import TitleCase from '~/components/content/modifiers/TitleCase.vue'
+import Truncate from '~/components/content/modifiers/Truncate.vue'
 import UnescapeHtml from '~/components/content/modifiers/UnescapeHtml.vue'
 
-const toc = ["startWith","startWithout","endWith","endWithout","surroundWith","pluralize","singularize","ordinalize","stripHtml","stripWhitespace","stripNumbers","stripPunctuation","stripSymbols","stripEmojis","slugify","deslugify","camelCase","pascalCase","snakeCase","kebabCase","titleCase","escapeHtml","unescapeHtml"]
+const toc = ["startWith","startWithout","endWith","endWithout","surroundWith","pluralize","singularize","ordinalize","stripHtml","stripWhitespace","stripNumbers","stripPunctuation","stripSymbols","stripEmojis","slugify","deslugify","camelCase","pascalCase","snakeCase","kebabCase","titleCase","escapeHtml","unescapeHtml","truncate","mask"]
 const pageId = 'modifiers'
 
 provide('toc', toc)
