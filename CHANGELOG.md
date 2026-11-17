@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.19.0
+
+[compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.18.0...v1.19.0)
+
+### 🚀 Enhancements
+
+- Add data, string, number, and action utility helpers ([#248](https://github.com/LittleFoxCompany/usemods/pull/248))
+  - `dataGroupBy`, `dataPick`, `dataOmit`, `truncate`, `mask`, `formatPhone`, `clamp`, `percentageChange`, `once`
+
+### ❤️ Contributors
+
+- Jeremy Butler ([@jrmybtlr](https://github.com/jrmybtlr))
+
 ## v1.18.0
 
 [compare changes](https://github.com/LittleFoxCompany/usemods/compare/v1.17.0...v1.18.0)
@@ -40,7 +53,7 @@
 
 ### ❤️ Contributors
 
-- Jeremy Butler <jeremy.butler@laravel.com>
+- Jeremy Butler ([@jrmybtlr](https://github.com/jrmybtlr))
 
 ## v1.15.2
 
@@ -70,7 +83,7 @@
 
 ### ❤️ Contributors
 
-- Jeremy Butler <jeremy.butler@laravel.com>
+- Jeremy Butler ([@jrmybtlr](https://github.com/jrmybtlr))
 - Cursor Agent ([@cursoragent](https://github.com/cursoragent))
 
 ## v1.15.1
@@ -100,7 +113,7 @@
 
 ### ❤️ Contributors
 
-- Jeremy Butler <jeremy.butler@laravel.com>
+- Jeremy Butler ([@jrmybtlr](https://github.com/jrmybtlr))
 - Cursor Agent ([@cursoragent](https://github.com/cursoragent))
 
 ## v1.15.0
@@ -278,7 +291,7 @@
 
 ### ❤️ Contributors
 
-- Jeremy Butler <jeremy.butler@laravel.com>
+- Jeremy Butler ([@jrmybtlr](https://github.com/jrmybtlr))
 
 ## v1.8.3
 
@@ -292,7 +305,7 @@
 
 ### ❤️ Contributors
 
-- Jeremy Butler <jeremy.butler@laravel.com>
+- Jeremy Butler ([@jrmybtlr](https://github.com/jrmybtlr))
 
 ## v1.8.2
 
@@ -305,7 +318,7 @@
 
 ### ❤️ Contributors
 
-- Jeremy Butler <jeremy.butler@laravel.com>
+- Jeremy Butler ([@jrmybtlr](https://github.com/jrmybtlr))
 
 ## v1.8.1
 
