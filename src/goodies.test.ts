@@ -70,3 +70,15 @@ test('countBy', () => {
   expect(mod.countBy('Hello world. This is a test.', { by: 'character' })).toBe(28)
   expect(mod.countBy('Hello world. This is a test. World wide.', { by: 'unique', searchFor: 'world' })).toBe(2)
 })
+
+test('countBy uses graphemes and word segments', () => {
+  expect(mod.countBy('👍🏽ab')).toBe(3)
+  expect(mod.countBy('Hello,   world!', { by: 'word' })).toBe(2)
+  expect(mod.countBy('One. Two? Three!', { by: 'sentence' })).toBe(3)
+})
+
+test('HTML helpers escape their input', () => {
+  expect(mod.splitByWords('<b>')).toBe('<span class="sentence sentence-1"><span class="word word-1">&lt;b&gt;</span></span>')
+  expect(mod.animateText('"', { splitBy: 'character' })).toContain('aria-label="&quot;"')
+  expect(mod.animateText('👍🏽')).toContain('aria-label="👍🏽"')
+})

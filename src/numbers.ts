@@ -14,7 +14,7 @@ export function sum(numbers: number[]): number {
  */
 export function mean(numbers: number[]): number {
   if (numbers.length === 0) {
-    console.log('[MODS] mean array is empty.')
+    console.warn('[MODS] mean array is empty.')
     return 0
   }
   return sum(numbers) / numbers.length
@@ -53,7 +53,7 @@ export function subtractMargin(number: number, percentage: number): number {
  */
 export function addMarkup(number: number, percentage: number): number {
   if (number === 0) {
-    console.log('[MODS] addMarkup number is 0.')
+    console.warn('[MODS] addMarkup number is 0.')
     return 0
   }
   return Math.round(number * (1 + percentage / 100) * 100) / 100
@@ -64,7 +64,7 @@ export function addMarkup(number: number, percentage: number): number {
  */
 export function subtractMarkup(number: number, percentage: number): number {
   if (number === 0) {
-    console.log('[MODS] subtractMarkup number is 0.')
+    console.warn('[MODS] subtractMarkup number is 0.')
     return 0
   }
   return Math.round((number / (1 + percentage / 100)) * 100) / 100
@@ -77,7 +77,8 @@ export function median(numbers: number[]): number {
   if (numbers.length === 0) return 0
   const sorted = numbers.toSorted((a, b) => a - b)
   const middle = Math.floor(sorted.length / 2)
-  return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle]
+  const upper = sorted[middle]!
+  return sorted.length % 2 === 0 ? (sorted[middle - 1]! + upper) / 2 : upper
 }
 
 /**
@@ -101,8 +102,8 @@ export function mode(numbers: number[]): number[] | null {
   if (maxFrequency === 1) return null
 
   const modes = [...frequencyMap.entries()]
-    .filter(([_, freq]) => freq === maxFrequency)
-    .map(([num, _]) => num)
+    .filter(([, freq]) => freq === maxFrequency)
+    .map(([num]) => num)
 
   return modes
 }
@@ -112,7 +113,7 @@ export function mode(numbers: number[]): number[] | null {
  */
 export function min(numbers: number[]): number {
   if (numbers.length === 0) {
-    console.log('[MODS] min array is empty.')
+    console.warn('[MODS] min array is empty.')
     return 0
   }
   // Use reduce for large arrays to avoid stack overflow with spread operator
@@ -126,7 +127,7 @@ export function min(numbers: number[]): number {
  */
 export function max(numbers: number[]): number {
   if (numbers.length === 0) {
-    console.log('[MODS] max array is empty.')
+    console.warn('[MODS] max array is empty.')
     return 0
   }
   // Use reduce for large arrays to avoid stack overflow with spread operator
@@ -140,7 +141,7 @@ export function max(numbers: number[]): number {
  */
 export function minMax(numbers: number[]): [number, number] {
   if (numbers.length === 0) {
-    console.log('[MODS] minMax array is empty.')
+    console.warn('[MODS] minMax array is empty.')
     return [0, 0]
   }
   return [min(numbers), max(numbers)]
@@ -151,7 +152,7 @@ export function minMax(numbers: number[]): [number, number] {
  */
 export function range(numbers: number[]): number {
   if (numbers.length === 0) {
-    console.log('[MODS] range array is empty.')
+    console.warn('[MODS] range array is empty.')
     return NaN
   }
   return max(numbers) - min(numbers)
@@ -162,14 +163,14 @@ export function range(numbers: number[]): number {
  */
 export function standardDeviation(numbers: number[], options?: { method: 'sample' | 'population' }): number {
   if (numbers.length === 0) {
-    console.log('[MODS] standardDeviation array is empty.')
+    console.warn('[MODS] standardDeviation array is empty.')
     return NaN
   }
   options ??= { method: 'population' }
   const meanValue = mean(numbers)
   const n = options.method === 'sample' ? numbers.length - 1 : numbers.length
-  const sum = numbers.reduce((acc, num) => acc + (num - meanValue) ** 2, 0)
-  return Math.sqrt(sum / n)
+  const sumOfSquares = numbers.reduce((acc, num) => acc + (num - meanValue) ** 2, 0)
+  return Math.sqrt(sumOfSquares / n)
 }
 
 /**
@@ -178,7 +179,7 @@ export function standardDeviation(numbers: number[], options?: { method: 'sample
 export function skewness(numbers: number[]): number {
   const n = numbers.length
   if (n < 3) {
-    console.log('[MODS] skewness requires at least 3 numbers.')
+    console.warn('[MODS] skewness requires at least 3 numbers.')
     return NaN
   }
 
@@ -205,7 +206,7 @@ export function clamp(value: number, min: number, max: number): number {
  */
 export function percentageChange(from: number, to: number): number {
   if (from === 0) {
-    console.log('[MODS] percentageChange from is 0.')
+    console.warn('[MODS] percentageChange from is 0.')
     return NaN
   }
   return ((to - from) / Math.abs(from)) * 100

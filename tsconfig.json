@@ -11,12 +11,17 @@
     "noUnusedLocals": true,
     "useDefineForClassFields": true,
     "noImplicitAny": true,
-    "allowJs": true,
     "noEmit": true,
     "outDir": "dist",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node"],
+    // The library must run without Node globals; files that touch `process` declare it locally
+    "types": [],
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "verbatimModuleSyntax": true,
+    "isolatedDeclarations": true
   },
   "exclude": ["src/**/*.test.ts", "node_modules", "dist", "nuxt-web", "nuxt-module", "rollup.config.js", ],
   "include": ["src/**/*"]

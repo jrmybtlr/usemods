@@ -10,7 +10,7 @@ The Data module provides utilities for manipulating arrays and objects. These fu
 
 ## Functions
 
-### `dataSortBy(items: object | string[] | number[], options?: { property?: string, order?: 'asc' | 'desc' }): object | string[] | number[]`
+### `dataSortBy<T extends object>(items: T, options?: { property?: keyof Item, order?: 'asc' | 'desc' }): T`
 
 Sort an array or object by a property.
 
@@ -43,7 +43,7 @@ dataSortBy(users, { property: 'name', order: 'desc' }) // Sorted by name descend
 
 ---
 
-### `dataReverse<T extends object | string[] | number[]>(items: T): T`
+### `dataReverse<T extends object>(items: T): T`
 
 Reverse an array or object.
 
@@ -89,7 +89,7 @@ dataRemoveDuplicates(arr1, arr2, arr3) // [1, 2, 3, 4, 5, 6, 7, 8]
 
 ---
 
-### `dataFlatten<T extends object | string[] | number[]>(items: T): T`
+### `dataFlatten<T extends object>(items: T): T`
 
 Flatten an array of arrays or an object of objects into a single array or object.
 
@@ -126,7 +126,7 @@ dataFlatten(nestedObj)
 
 ---
 
-### `dataWithout<T extends object | string[] | number[]>(items: T, properties: string | number | string[] | number[]): T`
+### `dataWithout<T extends object>(items: T, properties: string | number | readonly (string | number)[]): T`
 
 Returns an array without a property or properties.
 
@@ -153,7 +153,7 @@ dataWithout(obj, ['b', 'd']) // { a: 1, c: 3 }
 
 ---
 
-### `dataGroupBy<T extends object>(items: T[], property: string): Record<string, T[]>`
+### `dataGroupBy<T extends object>(items: readonly T[], property: keyof T): Record<string, T[]>`
 
 Group an array of objects by a property.
 
@@ -185,7 +185,7 @@ dataGroupBy(items, 'type')
 
 ---
 
-### `dataPick<T extends object>(obj: T, properties: string | string[]): Partial<T>`
+### `dataPick<T extends object, K extends keyof T>(obj: T, properties: K | readonly K[]): Pick<T, K>`
 
 Pick specific properties from an object.
 
@@ -207,7 +207,7 @@ dataPick(user, 'country') // { country: 'USA' }
 
 ---
 
-### `dataOmit<T extends object>(obj: T, properties: string | string[]): Partial<T>`
+### `dataOmit<T extends object, K extends keyof T>(obj: T, properties: K | readonly K[]): Omit<T, K>`
 
 Omit specific properties from an object.
 

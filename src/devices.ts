@@ -2,6 +2,19 @@
 // description: Client-side detections user's machines.
 // lead: Nice device you got there!
 
+// Minimal typing for Node's `process`, so the library doesn't rely on @types/node.
+// Always guard access: `process` doesn't exist in browsers unless a bundler defines it.
+declare const process: {
+  env: Record<string, string | undefined>
+  versions?: Record<string, string | undefined> | null
+}
+
+export interface UserDevice {
+  os: string
+  browser: string
+  device: string
+}
+
 /**
  * Check if you're a server-side user.
  */
@@ -16,7 +29,7 @@ export function isServerSide(): boolean {
 /**
  * Detects the user's device based on the user agent string and returns the information as an object.
  */
-export function detectUserDevice(userAgent?: string): object | string {
+export function detectUserDevice(userAgent?: string): UserDevice | 'server' {
   if (isServerSide() && !userAgent) return 'server'
   const result = (userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : '')).toLowerCase()
   return {
@@ -32,7 +45,9 @@ export function detectUserDevice(userAgent?: string): object | string {
 export function addDeviceClasses(userAgent?: string): void {
   if (isServerSide() && !userAgent) return
 
-  const { os, browser, device } = detectUserDevice(userAgent) as { os: string, browser: string, device: string }
+  const detected = detectUserDevice(userAgent)
+  if (detected === 'server') return
+  const { os, browser, device } = detected
 
   const classes = [os, browser, device]
     .map(value => value?.toLowerCase())
@@ -202,7 +217,7 @@ export function isDesktop(userAgent?: string): boolean {
  */
 export function isPortrait(win?: { innerWidth: number, innerHeight: number }): boolean {
   if (!win && isServerSide()) return false
-  const w = win || (typeof globalThis !== 'undefined' && globalThis.window ? globalThis.window : window)
+  const w = win ?? window
   return w.innerHeight > w.innerWidth
 }
 
@@ -212,7 +227,7 @@ export function isPortrait(win?: { innerWidth: number, innerHeight: number }): b
  */
 export function isLandscape(win?: { innerWidth: number, innerHeight: number }): boolean {
   if (!win && isServerSide()) return false
-  const w = win || (typeof globalThis !== 'undefined' && globalThis.window ? globalThis.window : window)
+  const w = win ?? window
   return w.innerWidth > w.innerHeight
 }
 
@@ -238,5 +253,12 @@ export function isHuman(userAgent?: string): boolean {
  * Check if you're a developer by checking the environment variable
  */
 export function isDeveloper(): boolean {
-  return process.env.NODE_ENV === 'development'
+  // Keep the literal `process.env.NODE_ENV` so bundlers can statically replace it;
+  // without a bundler in the browser, `process` is undefined and we return false.
+  try {
+    return process.env.NODE_ENV === 'development'
+  }
+  catch {
+    return false
+  }
 }

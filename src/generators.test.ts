@@ -183,3 +183,31 @@ test('decodeShortUuid', () => {
   const decodedUuid = mod.decodeShortUuid(shortUuid)
   expect(decodedUuid).toBe(uuid)
 })
+
+test('generateNumber stays within safe integer range', () => {
+  expect(mod.generateNumber(15).toString()).toHaveLength(15)
+  expect(mod.generateNumber(16)).toBe(0)
+})
+
+test('generateNumberBetween handles non-integer bounds', () => {
+  for (let i = 0; i < 50; i++) {
+    const value = mod.generateNumberBetween(1.5, 3.5)
+    expect([2, 3]).toContain(value)
+  }
+})
+
+test('generateShortUuid rejects non-hex input', () => {
+  expect(() => mod.generateShortUuid('zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz')).toThrow()
+})
+
+test('generateShortId is always the requested length', () => {
+  expect(mod.generateShortId(30)).toHaveLength(30)
+  expect(mod.generateShortId(30)).toMatch(/^[0-9A-Z]{30}$/)
+})
+
+test('generatePassword warns when requirements exceed length', () => {
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+  expect(mod.generatePassword({ length: 4, uppercase: 3, numbers: 3 })).toHaveLength(6)
+  expect(warn).toHaveBeenCalled()
+  warn.mockRestore()
+})

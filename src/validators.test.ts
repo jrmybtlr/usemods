@@ -48,6 +48,11 @@ test('isUrl', () => {
   expect(mod.isUrl('usemods.com')).toBe(false)
   expect(mod.isUrl('com.usemods')).toBe(false)
   expect(mod.isUrl('usemods')).toBe(false)
+  expect(mod.isUrl('http://localhost:3000/path')).toBe(true)
+  expect(mod.isUrl('//usemods.com/docs')).toBe(true)
+  expect(mod.isUrl('javascript:alert(1)')).toBe(false)
+  expect(mod.isUrl('mailto:hello@usemods.com')).toBe(false)
+  expect(mod.isUrl('https://usemods .com')).toBe(false)
 })
 
 test('isUuid', () => {
@@ -80,6 +85,9 @@ test('isEmpty', () => {
   expect(mod.isEmpty('hello')).toBe(false)
   expect(mod.isEmpty([1])).toBe(false)
   expect(mod.isEmpty({ key: 'value' })).toBe(false)
+  expect(mod.isEmpty(new Map())).toBe(true)
+  expect(mod.isEmpty(new Map([[1, 1]]))).toBe(false)
+  expect(mod.isEmpty(new Set([1]))).toBe(false)
 })
 
 test('isAlphabetic', () => {
@@ -87,6 +95,7 @@ test('isAlphabetic', () => {
   expect(mod.isAlphabetic('hello123')).toBe(false)
   expect(mod.isAlphabetic(123)).toBe(false)
   expect(mod.isAlphabetic(['a', 'b', 'c'])).toBe(false)
+  expect(mod.isAlphabetic(['abc'])).toBe(false)
 })
 
 test('isAlphanumeric', () => {
@@ -276,4 +285,28 @@ test('isLatitude', () => {
 test('isLongitude', () => {
   expect(mod.isLongitude('-98.765432')).toBe(true)
   expect(mod.isLongitude('hello')).toBe(false)
+})
+
+test('validator edge cases', () => {
+  expect(mod.isPrime(2.5)).toBe(false)
+  expect(mod.isPrime(7)).toBe(true)
+  expect(mod.isPort(1.5)).toBe(false)
+  expect(mod.isPort(8080)).toBe(true)
+  expect(mod.isAlphanumeric(['abc1'])).toBe(false)
+  expect(mod.isTime(['12:30'])).toBe(false)
+  expect(mod.isObject(Object.create(null))).toBe(true)
+  expect(mod.isObject(new Date())).toBe(false)
+  expect(mod.isObject([])).toBe(false)
+})
+
+test('validators narrow types', () => {
+  const value: unknown = 42
+  if (mod.isNumber(value)) {
+    const narrowed: number = value
+    expect(narrowed).toBe(42)
+  }
+  const obj: unknown = { a: 1 }
+  if (mod.isObject(obj)) {
+    expect(obj.a).toBe(1)
+  }
 })

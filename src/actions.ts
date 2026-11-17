@@ -6,7 +6,7 @@
  * Runs a function only if there are no new calls during the delay
  */
 export function debounce<T extends (
-  ...args: unknown[]) => unknown>(
+  ...args: never[]) => unknown>(
   fn: T,
   delay: number,
   { leading = false, trailing = true }:
@@ -46,12 +46,14 @@ export function debounce<T extends (
  * Throttles a function to ensure it only runs once per delay interval
  */
 export function throttle<T extends (
-  ...args: unknown[]) => void>(
+  ...args: never[]) => unknown>(
   fn: T,
   delay: number,
 ): ((...args: Parameters<T>) => void) & { cancel: () => void } {
   let lastRun = 0
   let timeout: ReturnType<typeof setTimeout> | null = null
+  // Most recent call within the wait window, run as the trailing call
+  let pendingCall: (() => void) | null = null
 
   const throttledFn = function (this: ThisParameterType<T>, ...args: Parameters<T>) {
     const now = performance.now()
@@ -62,14 +64,21 @@ export function throttle<T extends (
         clearTimeout(timeout)
         timeout = null
       }
+      pendingCall = null
       lastRun = now
       fn.apply(this, args)
+      return
     }
-    else if (!timeout) {
+
+    // Trailing call always uses the most recent arguments and context
+    pendingCall = () => fn.apply(this, args)
+    if (!timeout) {
       timeout = setTimeout(() => {
         lastRun = performance.now()
         timeout = null
-        fn.apply(this, args)
+        const call = pendingCall
+        pendingCall = null
+        call?.()
       }, remaining)
     }
   }
@@ -80,6 +89,7 @@ export function throttle<T extends (
       clearTimeout(timeout)
       timeout = null
     }
+    pendingCall = null
     lastRun = 0
   }
 
@@ -94,10 +104,11 @@ export async function scrollToAnchor(
 ): Promise<void> {
   await new Promise<void>(resolve => setTimeout(resolve, 180))
 
-  const element = document.querySelector(`#${id}`)
+  // getElementById handles ids that aren't valid CSS selectors (e.g. starting with a digit)
+  const element = document.getElementById(id)
   if (!element) {
     console.warn(`[MODS] Element with id '${id}' not found.`)
-    throw `Element with id '${id}' not found.`
+    throw new Error(`[MODS] Element with id '${id}' not found.`)
   }
 
   element.scrollIntoView({
@@ -199,7 +210,7 @@ export async function resetForm(
 export async function focusOnInvalid(
   container: HTMLElement,
 ): Promise<void> {
-  const input = container.querySelector('input:invalid, select:invalid, textarea:invalid') as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  const input = container.querySelector<HTMLElement>('input:invalid, select:invalid, textarea:invalid')
   if (input) {
     input.focus()
     input.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -214,25 +225,21 @@ export async function focusOnNth(
   index: number = 0,
 ): Promise<void> {
   const elements = Array.from(
-    container.querySelectorAll('input, textarea, select'),
-  ) as HTMLElement[]
+    container.querySelectorAll<HTMLElement>('input, textarea, select'),
+  )
 
   if (elements.length === 0) {
     throw new Error('[MODS] No focusable elements found in container.')
   }
 
-  const numericIndex = Number(index)
-  if (Number.isNaN(numericIndex)) {
-    throw new Error(`Invalid index: ${index}. Index must be a number.`)
+  if (!Number.isInteger(index)) {
+    throw new Error(`[MODS] Invalid index: ${index}. Index must be an integer.`)
   }
 
   // Only treat -1 as "last"; do not pass other negatives to .at() (would change API semantics)
-  const element = numericIndex === -1 ? elements.at(-1) : elements[numericIndex]
+  const element = index === -1 ? elements.at(-1) : elements[index]
   if (!element) {
-    throw new Error(`Element at index ${index} is out of bounds.`)
-  }
-  if (!element.focus) {
-    throw new Error('[MODS] Failed to focus on the element.')
+    throw new Error(`[MODS] Element at index ${index} is out of bounds.`)
   }
 
   try {
@@ -246,19 +253,20 @@ export async function focusOnNth(
 
 /**
  * Sets up a keyboard trap within an HTML element, allowing the focus to cycle between the first and last focusable elements when the Tab key is pressed.
+ * @info Returns a cleanup function that removes the trap
  */
 export function focusTrap(
   container: HTMLElement,
-): void {
+): () => void {
   const focusableElements = Array.from(
-    container.querySelectorAll('a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'),
-  ) as HTMLElement[]
+    container.querySelectorAll<HTMLElement>('a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'),
+  )
   const firstFocusableElement = focusableElements.at(0)
   const lastFocusableElement = focusableElements.at(-1)
 
-  if (!firstFocusableElement || !lastFocusableElement) return
+  if (!firstFocusableElement || !lastFocusableElement) return () => {}
 
-  container.addEventListener('keydown', (event) => {
+  const onKeydown = (event: KeyboardEvent): void => {
     const isTabPressed = event.key === 'Tab'
     if (!isTabPressed) return
 
@@ -274,7 +282,10 @@ export function focusTrap(
         event.preventDefault()
       }
     }
-  })
+  }
+
+  container.addEventListener('keydown', onKeydown)
+  return () => container.removeEventListener('keydown', onKeydown)
 }
 
 /**

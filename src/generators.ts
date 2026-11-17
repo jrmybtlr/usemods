@@ -2,33 +2,59 @@
 // description: A collection of magical functions that conjure data out of thin air.
 // lead: Conjure data out of thin air
 
-import { isServerSide } from './devices'
+// Minimal typing for Node's `process`, so the library doesn't rely on @types/node
+declare const process: {
+  hrtime?: { bigint?: () => bigint }
+}
+
+// Native base64/hex helpers (ES2026). Typed locally so we don't depend on newer TS libs.
+type Base64Alphabet = 'base64' | 'base64url'
+type NativeBytes = Uint8Array & {
+  toBase64?: (options?: { alphabet?: Base64Alphabet, omitPadding?: boolean }) => string
+  toHex?: () => string
+}
+const NativeUint8Array = Uint8Array as typeof Uint8Array & {
+  fromHex?: (hex: string) => NativeBytes
+  fromBase64?: (base64: string, options?: { alphabet?: Base64Alphabet }) => NativeBytes
+}
+
+// Unbiased random integer in [0, range) using rejection sampling over 53 random bits.
+function secureRandomBelow(range: number): number {
+  const limit = 2 ** 53 - (2 ** 53 % range)
+  const bytes = new Uint8Array(7)
+  let value: number
+  do {
+    getSecureRandomValues(bytes)
+    // 5 bits from the first byte + 48 bits from the rest = 53 bits
+    value = bytes.subarray(1).reduce((acc, byte) => acc * 256 + byte, (bytes[0] ?? 0) & 0x1f)
+  } while (value >= limit)
+  return value % range
+}
 
 /**
  * Generate a random number
+ * @info Supports up to 15 digits, the largest length that stays within Number.MAX_SAFE_INTEGER
  */
 export function generateNumber(length: number): number {
-  if (!Number.isInteger(length) || length <= 0) {
-    console.warn('[MODS] Warning: length must be a positive integer')
+  if (!Number.isInteger(length) || length <= 0 || length > 15) {
+    console.warn('[MODS] Warning: length must be an integer between 1 and 15')
     return 0
   }
   const min = 10 ** (length - 1)
-  const range = 9 * min
-  const value = getSecureRandomValues(new Uint8Array(6))
-    .reduce((acc, byte) => acc * 256 + byte, 0) % range
-  return min + value
+  return min + secureRandomBelow(9 * min)
 }
 
 /**
  * Generate a random number within an inclusive range.
  */
 export function generateNumberBetween(from: number, to: number): number {
-  const min = Math.min(from, to)
-  const max = Math.max(from, to)
-  const range = max - min + 1
-  const value = getSecureRandomValues(new Uint8Array(6))
-    .reduce((acc, byte) => acc * 256 + byte, 0) % range
-  return min + value
+  const min = Math.ceil(Math.min(from, to))
+  const max = Math.floor(Math.max(from, to))
+  if (max < min) {
+    console.warn('[MODS] Warning: generateNumberBetween() range contains no integers')
+    return min
+  }
+  return min + secureRandomBelow(max - min + 1)
 }
 
 /**
@@ -45,8 +71,8 @@ export function generateUuid4(): string {
   getSecureRandomValues(bytes)
 
   // Set version 4 (random)
-  bytes[6] = (bytes[6] & 0x0f) | 0x40
-  bytes[8] = (bytes[8] & 0x3f) | 0x80
+  bytes[6] = (bytes[6]! & 0x0f) | 0x40
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80
 
   const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0'))
 
@@ -54,7 +80,7 @@ export function generateUuid4(): string {
   return `${hex.slice(0, 4).join('')}-${hex.slice(4, 6).join('')}-${hex.slice(6, 8).join('')}-${hex.slice(8, 10).join('')}-${hex.slice(10).join('')}`
 }
 
-export const generateUuid = generateUuid4
+export const generateUuid: typeof generateUuid4 = generateUuid4
 
 /**
  * Generate a Version 7 UUID encoding a Unix timestamp in the first 6 bytes and filling the rest with random bytes.
@@ -77,7 +103,7 @@ export function generateUuid7(): string {
   const timestampBytes = new Uint8Array(buffer)
 
   // Set version 7 (UUIDv7) in the timestamp (binary 01110000 in the high nibble of byte 6).
-  timestampBytes[6] = (timestampBytes[6] & 0x0f) | 0x70
+  timestampBytes[6] = (timestampBytes[6]! & 0x0f) | 0x70
 
   // Create an array for the full UUID (16 bytes total).
   const uuidBytes = new Uint8Array(16)
@@ -87,7 +113,7 @@ export function generateUuid7(): string {
   getSecureRandomValues(uuidBytes.subarray(8))
 
   // Set the variant for UUIDv7.
-  uuidBytes[8] = (uuidBytes[8] & 0x3f) | 0x80
+  uuidBytes[8] = (uuidBytes[8]! & 0x3f) | 0x80
 
   // Convert the UUID bytes to a hexadecimal string.
   const hex = Array.from(uuidBytes, b => b.toString(16).padStart(2, '0'))
@@ -114,7 +140,7 @@ export function decodeUuid7(uuid: string): string {
   }
 
   // Check if it's a UUIDv7 by examining version bits
-  const version = (parseInt(hex[12], 16) & 0xf)
+  const version = Number.parseInt(hex.charAt(12), 16)
   if (version !== 7) {
     throw new Error('[MODS] Invalid UUID7: version is not v7.')
   }
@@ -136,43 +162,49 @@ export function decodeUuid7(uuid: string): string {
  * Encodes a standard UUID (with dashes) into a URL-safe Base64 variant
  */
 export function generateShortUuid(uuid: string): string {
-  // Remove dashes and validate length
+  // Remove dashes and validate
   const hex = uuid.replaceAll('-', '')
-  if (hex.length !== 32) {
-    throw new Error(`Invalid UUID: expected 32 hex chars, got length=${hex.length}.`)
+  if (!/^[0-9a-f]{32}$/i.test(hex)) {
+    throw new Error(`[MODS] Invalid UUID: expected 32 hex characters, got '${uuid}'.`)
   }
 
-  // Convert each pair of hex digits to a byte (16 bytes total)
-  const pairs = hex.match(/.{2}/g)!
-  const bytes = pairs.map(pair => parseInt(pair, 16))
+  // Native path: Uint8Array.fromHex + toBase64 (ES2026)
+  const nativeBytes = NativeUint8Array.fromHex?.(hex)
+  if (nativeBytes?.toBase64) {
+    return nativeBytes.toBase64({ alphabet: 'base64url', omitPadding: true })
+  }
 
-  // Convert bytes to binary string, then to Base64URL
-  const binary = String.fromCharCode(...bytes)
-  const base64 = btoa(binary)
+  // Fallback: hex → bytes → binary string → Base64URL
+  const bytes = Array.from({ length: 16 }, (_, i) => Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16))
+  return btoa(String.fromCharCode(...bytes))
     .replaceAll('+', '-')
     .replaceAll('/', '_')
     .replace(/=+$/, '')
-  return base64
 }
 
 /**
  * Decodes a short URL-safe Base64-encoded string back into a standard UUID
  */
 export function decodeShortUuid(shortUuid: string): string {
-  // Convert URL-safe chars back to normal Base64 and pad with '='
-  const unpadded = shortUuid.replaceAll('-', '+').replaceAll('_', '/')
-  const base64 = unpadded.padEnd(unpadded.length + (4 - unpadded.length % 4) % 4, '=')
+  let hex: string
 
-  // Decode Base64 → binary string
-  const binary = atob(base64)
-  if (binary.length !== 16) {
-    throw new Error(`[MODS] Decoded data must be 16 bytes; got length=${binary.length}.`)
+  // Native path: Uint8Array.fromBase64 + toHex (ES2026)
+  const nativeBytes = NativeUint8Array.fromBase64?.(shortUuid, { alphabet: 'base64url' })
+  if (nativeBytes?.toHex) {
+    if (nativeBytes.length !== 16) {
+      throw new Error(`[MODS] Decoded data must be 16 bytes; got length=${nativeBytes.length}.`)
+    }
+    hex = nativeBytes.toHex()
   }
-
-  // Convert each byte to two hex digits
-  const hex = Array.from(binary)
-    .map(char => char.charCodeAt(0).toString(16).padStart(2, '0'))
-    .join('')
+  else {
+    // Fallback: convert URL-safe chars back to normal Base64 and pad with '='
+    const unpadded = shortUuid.replaceAll('-', '+').replaceAll('_', '/')
+    const binary = atob(unpadded.padEnd(Math.ceil(unpadded.length / 4) * 4, '='))
+    if (binary.length !== 16) {
+      throw new Error(`[MODS] Decoded data must be 16 bytes; got length=${binary.length}.`)
+    }
+    hex = Array.from(binary, char => char.charCodeAt(0).toString(16).padStart(2, '0')).join('')
+  }
 
   // Insert dashes (8-4-4-4-12)
   return [
@@ -188,8 +220,10 @@ export function decodeShortUuid(shortUuid: string): string {
  * Generate a unique short ID based on the current timestamp
  */
 export function generateShortId(length: number = 19): string {
-  const timestampPart = Math.floor(Date.now()).toString().toUpperCase()
-  const randomPart = Math.random().toString(36).slice(2).toUpperCase()
+  const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const timestampPart = Date.now().toString()
+  const randomLength = Math.max(0, length - timestampPart.length)
+  const randomPart = Array.from({ length: randomLength }, () => alphabet.charAt(generateRandomIndex(alphabet.length))).join('')
   return (timestampPart + randomPart).slice(0, length)
 }
 
@@ -216,22 +250,27 @@ export function generatePassword(options: { length?: number, uppercase?: number,
   if (numbers > 0) chars += numberChars
   if (symbols > 0) chars += symbolChars
 
+  const required = uppercase + numbers + symbols
+  if (required > length) {
+    console.warn(`[MODS] generatePassword: ${required} required characters exceed length ${length}; the password will be ${required} characters long.`)
+  }
+
   // Collect guaranteed characters using cryptographic random
   const guaranteed: string[] = [
-    ...Array.from({ length: uppercase }, () => upperChars[generateRandomIndex(upperChars.length)]),
-    ...Array.from({ length: numbers }, () => numberChars[generateRandomIndex(numberChars.length)]),
-    ...Array.from({ length: symbols }, () => symbolChars[generateRandomIndex(symbolChars.length)]),
+    ...Array.from({ length: uppercase }, () => upperChars.charAt(generateRandomIndex(upperChars.length))),
+    ...Array.from({ length: numbers }, () => numberChars.charAt(generateRandomIndex(numberChars.length))),
+    ...Array.from({ length: symbols }, () => symbolChars.charAt(generateRandomIndex(symbolChars.length))),
   ]
 
   // Fill the rest with random characters from the pool
   while (guaranteed.length < length) {
-    guaranteed.push(chars[generateRandomIndex(chars.length)])
+    guaranteed.push(chars.charAt(generateRandomIndex(chars.length)))
   }
 
   // Shuffle the password using Fisher-Yates with cryptographic random
   for (let i = guaranteed.length - 1; i > 0; i--) {
     const j = generateRandomIndex(i + 1)
-    ;[guaranteed[i], guaranteed[j]] = [guaranteed[j], guaranteed[i]]
+    ;[guaranteed[i], guaranteed[j]] = [guaranteed[j]!, guaranteed[i]!]
   }
 
   return guaranteed.join('')
@@ -241,8 +280,8 @@ export function generatePassword(options: { length?: number, uppercase?: number,
  * Random number generator using cryptographic methods to avoid random().
  */
 export function generateRandomIndex(max: number): number {
-  if (max <= 0 || max > 256) {
-    console.warn('[MODS] Max generateRandomIndex must be between 1 and 255')
+  if (!Number.isInteger(max) || max <= 0 || max > 256) {
+    console.warn('[MODS] Max generateRandomIndex must be an integer between 1 and 256')
     return 0
   }
 
@@ -289,7 +328,7 @@ export function generateLoremIpsum(count: number = 5, options?: { format: 'words
  * @info Node.js times generated are in nanoseconds, browser-based falls back to converting performance.now to microseconds.
  */
 export function generateHighResolutionTime(): bigint {
-  if (typeof process !== 'undefined' && process.hrtime && typeof process.hrtime.bigint === 'function') {
+  if (typeof process !== 'undefined' && typeof process.hrtime?.bigint === 'function') {
     return process.hrtime.bigint()
   }
   else if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -304,11 +343,9 @@ export function generateHighResolutionTime(): bigint {
 /**
   * Returns an array filled with cryptographic random bytes.
 */
-export function getSecureRandomValues(buffer: Uint8Array): Uint8Array {
-  if (!isServerSide() && window.crypto?.getRandomValues) {
-    return window.crypto.getRandomValues(buffer)
-  }
-  else if (globalThis.crypto?.getRandomValues) {
+export function getSecureRandomValues<T extends Uint8Array>(buffer: T): T {
+  // globalThis.crypto covers browsers, workers, Deno, Bun and Node 19+
+  if (typeof globalThis.crypto?.getRandomValues === 'function') {
     return globalThis.crypto.getRandomValues(buffer)
   }
   else {

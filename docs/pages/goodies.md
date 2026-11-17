@@ -32,7 +32,7 @@ const wrapped = splitByWords(text)
 
 ---
 
-### `checkPasswordStrength(text: string, options?: { length?: number, uppercase?: number, numbers?: number, symbols?: number }): object`
+### `checkPasswordStrength(text: string, options?: { length?: number, uppercase?: number, numbers?: number, symbols?: number }): PasswordStrength`
 
 Check the strength of a password against a given policy.
 
@@ -138,9 +138,9 @@ import { countBy } from 'usemods'
 
 const text = 'Hello world. How are you? Fine, thanks.'
 
-countBy(text) // 42 (characters)
+countBy(text) // 39 (characters, counted as graphemes so emoji count once)
 countBy(text, { by: 'word' }) // 7 (words)
-countBy(text, { by: 'sentence' }) // 2 (sentences)
+countBy(text, { by: 'sentence' }) // 3 (sentences)
 countBy(text, { by: 'paragraph' }) // 1 (paragraph)
 
 // Count occurrences of a string

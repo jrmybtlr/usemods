@@ -8,7 +8,7 @@
     <PageFunction
       name="dataSortBy"
       description="Sort an array or object by a property."
-      params='[{"name":"items","type":"object | string[] | number[]"},{"name":"options?","type":"{ property?: string, order?: &#39;asc&#39; | &#39;desc&#39; }"}]'
+      params='[{"name":"items","type":"T"},{"name":"options?","type":"{ property?: Extract<keyof ItemOf<T>, string>, order?: &#39;asc&#39; | &#39;desc&#39; }"}]'
     >
       <DataSortBy />
     </PageFunction>
@@ -16,7 +16,7 @@
     <PageFunction
       name="dataReverse"
       description="Reverse an array or object."
-      params='[]'
+      params='[{"name":"items","type":"T"}]'
     >
       <DataReverse />
     </PageFunction>
@@ -24,7 +24,7 @@
     <PageFunction
       name="dataRemoveDuplicates"
       description="Returns single unique values within an array or object"
-      params='[]'
+      params='[{"name":"...arrays","type":"T[][]"}]'
     >
       <DataRemoveDuplicates />
     </PageFunction>
@@ -32,7 +32,7 @@
     <PageFunction
       name="dataFlatten"
       description="Flatten an array of arrays or an object of objects into a single array or object. That was hard to say."
-      params='[]'
+      params='[{"name":"items","type":"T"}]'
     >
       <DataFlatten />
     </PageFunction>
@@ -40,7 +40,7 @@
     <PageFunction
       name="dataWithout"
       description="Returns an array without a property or properties."
-      params='[]'
+      params='[{"name":"items","type":"T"},{"name":"properties","type":"string | number | readonly (string | number)[]"}]'
     >
       <DataWithout />
     </PageFunction>
@@ -48,7 +48,7 @@
     <PageFunction
       name="dataGroupBy"
       description="Group an array of objects by a property."
-      params='[]'
+      params='[{"name":"items","type":"readonly T[]"},{"name":"property","type":"keyof T"}]'
     >
       <DataGroupBy />
     </PageFunction>
@@ -56,7 +56,7 @@
     <PageFunction
       name="dataPick"
       description="Pick specific properties from an object."
-      params='[]'
+      params='[{"name":"obj","type":"T"},{"name":"properties","type":"K | readonly K[]"}]'
     >
       <DataPick />
     </PageFunction>
@@ -64,7 +64,7 @@
     <PageFunction
       name="dataOmit"
       description="Omit specific properties from an object."
-      params='[]'
+      params='[{"name":"obj","type":"T"},{"name":"properties","type":"K | readonly K[]"}]'
     >
       <DataOmit />
     </PageFunction>

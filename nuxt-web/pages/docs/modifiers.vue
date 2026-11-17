@@ -113,7 +113,7 @@
 
     <PageFunction
       name="stripEmojis"
-      description="Strips emojis from a string (requires ES6 Unicode support) 🦊."
+      description="Strips emojis from a string, including flags, skin tones and ZWJ sequences 🦊."
       params='[{"name":"text","type":"string"}]'
     >
       <StripEmojis />
@@ -178,6 +178,7 @@
     <PageFunction
       name="escapeHtml"
       description="Escape HTML entities in a string."
+      info="Escapes quotes too, so the result is safe inside attribute values"
       params='[{"name":"text","type":"string"}]'
     >
       <EscapeHtml />

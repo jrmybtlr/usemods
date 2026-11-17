@@ -8,6 +8,7 @@ interface MockElement {
   querySelector: ReturnType<typeof vi.fn>
   querySelectorAll: ReturnType<typeof vi.fn>
   addEventListener: ReturnType<typeof vi.fn>
+  removeEventListener: ReturnType<typeof vi.fn>
   classList: {
     contains: ReturnType<typeof vi.fn>
     add: ReturnType<typeof vi.fn>
@@ -20,6 +21,7 @@ interface MockElement {
 }
 
 interface MockDocument {
+  getElementById: ReturnType<typeof vi.fn>
   querySelector: ReturnType<typeof vi.fn>
   querySelectorAll: ReturnType<typeof vi.fn>
   body: MockElement
@@ -47,6 +49,7 @@ const mockElement: MockElement = {
   querySelector: vi.fn(),
   querySelectorAll: vi.fn(),
   addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
   classList: {
     contains: vi.fn(),
     add: vi.fn(),
@@ -59,6 +62,7 @@ const mockElement: MockElement = {
 }
 
 const mockDocument: MockDocument = {
+  getElementById: vi.fn(),
   querySelector: vi.fn(),
   querySelectorAll: vi.fn(),
   body: mockElement,
@@ -99,6 +103,7 @@ beforeEach(() => {
   vi.clearAllMocks()
 
   // Setup default mock implementations
+  mockDocument.getElementById.mockReturnValue(mockElement)
   mockDocument.querySelector.mockReturnValue(mockElement)
   mockDocument.querySelectorAll.mockReturnValue([mockElement])
   mockElement.querySelector.mockReturnValue(mockElement)
@@ -119,7 +124,7 @@ describe('scrollToAnchor', () => {
 
     await vi.runAllTimersAsync()
 
-    expect(mockDocument.querySelector).toHaveBeenCalledWith('#test-id')
+    expect(mockDocument.getElementById).toHaveBeenCalledWith('test-id')
     expect(mockElement.scrollIntoView).toHaveBeenCalledWith({
       behavior: 'smooth',
       block: 'start',
@@ -130,16 +135,16 @@ describe('scrollToAnchor', () => {
   })
 
   test('should reject when element not found', async () => {
-    mockDocument.querySelector.mockReturnValue(null)
+    mockDocument.getElementById.mockReturnValue(null)
 
     const result = mod.scrollToAnchor('nonexistent-id')
 
-    await expect(result).rejects.toBe('Element with id \'nonexistent-id\' not found.')
+    await expect(result).rejects.toThrow('[MODS] Element with id \'nonexistent-id\' not found.')
   })
 
   test('should warn when element not found', async () => {
     const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    mockDocument.querySelector.mockReturnValue(null)
+    mockDocument.getElementById.mockReturnValue(null)
 
     try {
       await mod.scrollToAnchor('nonexistent-id')
@@ -438,6 +443,17 @@ describe('focusTrap', () => {
     expect(container.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function))
   })
 
+  test('should return a cleanup function that removes the trap', () => {
+    const container = { ...mockElement }
+    container.querySelectorAll.mockReturnValue([mockElement, mockElement])
+
+    const cleanup = mod.focusTrap(container as unknown as HTMLElement)
+    const handler = container.addEventListener.mock.calls[0][1]
+    cleanup()
+
+    expect(container.removeEventListener).toHaveBeenCalledWith('keydown', handler)
+  })
+
   test('should handle tab key navigation forward', () => {
     const container = { ...mockElement } as unknown as HTMLElement
     // Use unique mock elements for each focusable item
@@ -652,7 +668,8 @@ describe('throttle', () => {
 
     await vi.runAllTimersAsync()
     expect(fn).toHaveBeenCalledTimes(1)
-    expect(fn).toHaveBeenCalledWith(1)
+    // Trailing call uses the most recent arguments
+    expect(fn).toHaveBeenCalledWith(3)
 
     vi.useRealTimers()
   })
@@ -691,6 +708,17 @@ describe('throttle', () => {
     expect(fn).toHaveBeenCalledTimes(2)
 
     vi.useRealTimers()
+  })
+})
+
+describe('generic typing', () => {
+  test('debounce and throttle accept narrowly typed callbacks', () => {
+    // Type-level check: these would fail to compile with an `unknown[]` constraint
+    const debounced = mod.debounce((value: number) => value * 2, 10)
+    const throttled = mod.throttle((value: string) => value.toUpperCase(), 10)
+    debounced.cancel()
+    throttled.cancel()
+    expect(typeof debounced).toBe('function')
   })
 })
 
