@@ -30,7 +30,7 @@ isEmail('user@domain') // false
 
 ---
 
-### `isNumber(value: unknown): boolean`
+### `isNumber(value: unknown): value is number`
 
 Check if any given value is a valid number.
 
@@ -67,11 +67,12 @@ import { isUrl } from 'usemods'
 isUrl('https://example.com') // true
 isUrl('http://localhost:3000') // true
 isUrl('not-a-url') // false
+isUrl('javascript:alert(1)') // false
 ```
 
 ---
 
-### `isEmpty(value: string | string[] | number[] | object | null | undefined): boolean`
+### `isEmpty(value: string | unknown[] | object | null | undefined): boolean`
 
 Check if any given string, array or object is empty.
 
@@ -94,7 +95,7 @@ isEmpty([1, 2, 3]) // false
 
 ---
 
-### `isUuid(value: unknown): boolean`
+### `isUuid(value: unknown): value is string`
 
 Check if any given value is a valid UUID.
 
@@ -113,7 +114,7 @@ isUuid('invalid-uuid') // false
 
 ---
 
-### `isJson(value: unknown): boolean`
+### `isJson(value: unknown): value is string`
 
 Check if any given value is a valid JSON string.
 
@@ -133,7 +134,7 @@ isJson('plain string') // false
 
 ---
 
-### `isObject(value: unknown): boolean`
+### `isObject(value: unknown): value is Record<string, unknown>`
 
 Check if any given value is an object.
 
@@ -154,7 +155,7 @@ isObject(null) // false
 
 ---
 
-### `isArray(value: string[] | number[]): boolean`
+### `isArray(value: unknown): value is unknown[]`
 
 Check if any given value is an array.
 
@@ -195,7 +196,7 @@ isHex('invalid') // false
 
 ---
 
-### `isAlphabetic(value: unknown): boolean`
+### `isAlphabetic(value: unknown): value is string`
 
 Check if any given value contains only alphabetic characters.
 
@@ -257,7 +258,7 @@ isBoolean(1) // false
 
 ---
 
-### `isUndefined(value: unknown): boolean`
+### `isUndefined(value: unknown): value is undefined`
 
 Check if any given value is undefined.
 
@@ -277,7 +278,7 @@ isUndefined('') // false
 
 ---
 
-### `isNull(value: unknown): boolean`
+### `isNull(value: unknown): value is null`
 
 Check if any given value is null.
 
@@ -318,7 +319,7 @@ isDate('invalid') // false
 
 ---
 
-### `isTime(value: unknown): boolean`
+### `isTime(value: unknown): value is string`
 
 Check if any given value is a valid time in HH:mm format.
 
@@ -501,7 +502,7 @@ isPrime(17) // true
 
 ---
 
-### `isInteger(value: unknown): boolean`
+### `isInteger(value: unknown): value is number`
 
 Check if the number is an integer.
 
@@ -521,7 +522,7 @@ isInteger('5') // false
 
 ---
 
-### `isFloat(value: unknown): boolean`
+### `isFloat(value: unknown): value is number`
 
 Check if the number is a float.
 

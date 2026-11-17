@@ -15,9 +15,9 @@ The Generators module provides functions for generating random numbers, UUIDs, p
 Generate a random number.
 
 **Parameters:**
-- `length` (number): The number of digits in the generated number
+- `length` (number): The number of digits in the generated number (1–15)
 
-**Returns:** Random number with specified length
+**Returns:** Random number with specified length, or `0` for an invalid length
 
 **Example:**
 ```typescript
@@ -258,7 +258,7 @@ const duration = end - start // Duration in nanoseconds
 
 ---
 
-### `getSecureRandomValues(buffer: Uint8Array): Uint8Array`
+### `getSecureRandomValues<T extends Uint8Array>(buffer: T): T`
 
 Returns an array filled with cryptographic random bytes.
 

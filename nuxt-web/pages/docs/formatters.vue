@@ -7,7 +7,7 @@
 
     <PageFunction
       name="formatNumber"
-      description="Resolve short/long display options to a single `display` value. Formatter aliases: `unitDisplay` (all) and `labels` (duration only)."
+      description="Format numbers into neat and formatted strings for people"
       params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    locale?: string\n  }"}]'
     >
       <FormatNumber />
@@ -40,7 +40,7 @@
     <PageFunction
       name="formatUnit"
       description="Format a number into a your unit of choice"
-      params='[{"name":"number","type":"number"},{"name":"options","type":"{\n    unit: string\n    decimals?: number\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options","type":"{\n    unit: string\n    decimals?: number | undefined\n    display?: DisplayLength | undefined\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength | undefined\n    locale?: string | undefined\n  }"}]'
     >
       <FormatUnit />
     </PageFunction>
@@ -72,7 +72,7 @@
     <PageFunction
       name="formatFileSize"
       description="Format and auto calculate file size into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: map.FileSizeUnit\n    outputUnit?: map.FileSizeUnit | &#39;auto&#39;\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
     >
       <FormatFileSize />
     </PageFunction>
@@ -80,7 +80,7 @@
     <PageFunction
       name="formatLength"
       description="Format and auto calculate length into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: map.LengthUnit\n    outputUnit?: map.LengthUnit | &#39;auto&#39;\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
     >
       <FormatLength />
     </PageFunction>
@@ -88,7 +88,7 @@
     <PageFunction
       name="formatTemperature"
       description="Format and auto calculate temperature into human-readable string"
-      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: string\n    outputUnit?: string\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
+      params='[{"name":"number","type":"number"},{"name":"options?","type":"{\n    decimals?: number\n    inputUnit?: TemperatureUnit\n    outputUnit?: TemperatureUnit\n    display?: DisplayLength\n    /** @deprecated Use `display` */\n    unitDisplay?: DisplayLength\n    locale?: string\n  }"}]'
     >
       <FormatTemperature />
     </PageFunction>

@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-const property = ref('name')
+const property = ref<'name' | 'age'>('name')
 const order = ref<'asc' | 'desc'>('asc')
 const value = [
   {

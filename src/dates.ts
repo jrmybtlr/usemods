@@ -20,21 +20,28 @@ type CalendarParts = {
   day: number
 }
 
+const calendarFormatCache = new Map<string, Intl.DateTimeFormat>()
+
 function baseLocale(options?: LocaleTimeZone): string {
   return options?.locale ?? 'en-US'
 }
 
-/**
- * Calendar Y/M/D via Intl so local and timeZone-aware callers share one path.
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
- */
+// Calendar Y/M/D via Intl so local and timeZone-aware callers share one path.
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
 function calendarParts(date: Date, timeZone?: string): CalendarParts {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    timeZone,
-  }).formatToParts(date)
+  // Reuse one formatter per time zone; constructing Intl.DateTimeFormat is relatively expensive
+  const cacheKey = timeZone ?? ''
+  let formatter = calendarFormatCache.get(cacheKey)
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      timeZone,
+    })
+    calendarFormatCache.set(cacheKey, formatter)
+  }
+  const parts = formatter.formatToParts(date)
 
   const year = Number(parts.find(part => part.type === 'year')?.value)
   const month = Number(parts.find(part => part.type === 'month')?.value)
@@ -108,7 +115,7 @@ export function timeFrom(
     { unit: 'second', seconds: 1 },
   ]
 
-  const division = divisions.find(d => absSeconds >= d.seconds) ?? divisions[divisions.length - 1]
+  const division = divisions.find(d => absSeconds >= d.seconds) ?? divisions.at(-1)!
   const value = Math.round(diffSeconds / division.seconds)
 
   // English short historically means compact "3d ago"; RTF's narrow style matches that.
@@ -144,36 +151,15 @@ type NonAutoTimeDifferenceUnit = Exclude<TimeDifferenceUnit, 'auto'>
 
 type TimeDifferenceStyle = NonNullable<TimeDifferenceOptions['style']>
 
-function secondsPerDifferenceUnit(unit: NonAutoTimeDifferenceUnit): number {
-  switch (unit) {
-    case 'seconds':
-      return 1
-    case 'minutes':
-      return 60
-    case 'hours':
-      return 60 * 60
-    case 'days':
-      return 60 * 60 * 24
-  }
-}
+const differenceUnits = {
+  seconds: { seconds: 1, kind: 'second' },
+  minutes: { seconds: 60, kind: 'minute' },
+  hours: { seconds: 60 * 60, kind: 'hour' },
+  days: { seconds: 60 * 60 * 24, kind: 'day' },
+} as const satisfies Record<NonAutoTimeDifferenceUnit, { seconds: number, kind: DurationKind }>
 
-function durationKindForDifferenceUnit(unit: NonAutoTimeDifferenceUnit): DurationKind {
-  switch (unit) {
-    case 'seconds':
-      return 'second'
-    case 'minutes':
-      return 'minute'
-    case 'hours':
-      return 'hour'
-    case 'days':
-      return 'day'
-  }
-}
-
-/**
- * Format a duration segment with Intl unit style (locale-aware pluralization).
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
- */
+// Format a duration segment with Intl unit style (locale-aware pluralization).
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
 function formatDurationUnit(
   locale: string,
   value: number,
@@ -219,10 +205,8 @@ export function timeDifference(
   }
 
   if (unit !== 'auto') {
-    const seconds = absMs / 1000
-    const divisor = secondsPerDifferenceUnit(unit)
-    const value = roundValue(seconds / divisor)
-    const kind = durationKindForDifferenceUnit(unit)
+    const { seconds: divisor, kind } = differenceUnits[unit]
+    const value = roundValue(absMs / 1000 / divisor)
     return formatDurationUnit(locale, value, kind, 'long')
   }
 
@@ -271,7 +255,7 @@ export type CombinedDatesOptions = {
   /** @deprecated Use `display` */
   format?: CombinedDatesFormat
   timeZone?: string
-  /** Include times on multi-day ranges. Same-day different times always show times. */
+  // Include times on multi-day ranges. Same-day different times always show times.
   showTime?: boolean
 }
 
@@ -284,10 +268,9 @@ export function combineDates(
   to: DateInput,
   options: CombinedDatesOptions = { locale: 'en-US', display: 'long' },
 ): string {
-  const fromDate = new Date(from ?? Date.now())
-  const toDate = new Date(to ?? Date.now())
-
-  if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime())) return ''
+  const fromDate = parseDate(from)
+  const toDate = parseDate(to)
+  if (!fromDate || !toDate) return ''
 
   const fromComponents = calendarParts(fromDate, options.timeZone)
   const toComponents = calendarParts(toDate, options.timeZone)
@@ -340,7 +323,7 @@ export function combineDates(
 }
 
 /** @deprecated Use {@link combineDates} instead */
-export const formatCombinedDates = combineDates
+export const formatCombinedDates: typeof combineDates = combineDates
 
 /**
  * Check if a date is today

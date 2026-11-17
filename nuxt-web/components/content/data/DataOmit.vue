@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { dataOmit } from 'usemods'
 
-const key = ref('age')
+const key = ref<'name' | 'age' | 'country'>('age')
 const value = {
   name: 'John',
   age: 25,

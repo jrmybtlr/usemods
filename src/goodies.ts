@@ -3,6 +3,30 @@
 // lead: A growing pile of treats.
 
 import { formatDurationLabels } from './formatters'
+import { escapeHtml } from './modifiers'
+
+export interface PasswordStrength {
+  score: 0 | 1 | 2 | 3 | 4
+  label: string
+}
+
+type SegmentGranularity = 'grapheme' | 'word' | 'sentence'
+const segmenters = new Map<SegmentGranularity, Intl.Segmenter>()
+
+// Split text into user-perceived characters, words or sentences with Intl.Segmenter.
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter
+function segment(text: string, granularity: SegmentGranularity): Intl.SegmentData[] {
+  let segmenter = segmenters.get(granularity)
+  if (!segmenter) {
+    segmenter = new Intl.Segmenter(undefined, { granularity })
+    segmenters.set(granularity, segmenter)
+  }
+  return [...segmenter.segment(text)]
+}
+
+function countWords(text: string): number {
+  return segment(text, 'word').filter(part => part.isWordLike).length
+}
 
 /**
  * Wraps each word, sentence or paragraph in a string with a tag.
@@ -27,7 +51,7 @@ export function splitByWords(text: string): string {
       .split(' ')
       .map((word) => {
         wordIndex++
-        return `<span class="word word-${wordIndex}">${word}</span>`
+        return `<span class="word word-${wordIndex}">${escapeHtml(word)}</span>`
       })
       .join(' ')
 
@@ -48,7 +72,7 @@ export function checkPasswordStrength(text: string, options: {
   number?: number
   symbols?: number
   special?: number
-} = {}): object {
+} = {}): PasswordStrength {
   if (!text) {
     console.warn('[MODS] Warning: No password to check')
     return { score: 0, label: 'Very Weak' }
@@ -106,7 +130,7 @@ export function mergeFields(
 
   return text.replace(pattern, (match, key) => {
     if (Object.hasOwn(fields, key)) {
-      return fields[key].toString()
+      return String(fields[key])
     }
     else {
       console.warn(`[MODS] Warning: Field "${key}" not found in object`)
@@ -114,7 +138,6 @@ export function mergeFields(
     }
   })
 }
-
 
 /**
  * Returns the reading time of a string in Hours, Minutes, and Seconds.
@@ -127,8 +150,7 @@ export function readingTime(
     console.warn('[MODS] Warning: No text to read')
     return '0 minutes'
   }
-  const words = text.split(' ').filter(word => word.trim() !== '').length
-  const minutes = Math.ceil(words / wordsPerMinute)
+  const minutes = Math.ceil(countWords(text) / wordsPerMinute)
   return formatDurationLabels(minutes * 60)
 }
 
@@ -174,10 +196,11 @@ export function countBy(
     return paragraphs.filter(p => p.trim().length > 0).length
   }
 
-  const delimiter = by === 'word' ? ' ' : by === 'sentence' ? '. ' : ''
-  const elements = text.split(delimiter)
+  if (by === 'word') return countWords(text)
+  if (by === 'sentence') return segment(text, 'sentence').filter(part => part.segment.trim() !== '').length
 
-  return elements.length
+  // Count graphemes so emoji and combined characters count as one
+  return segment(text, 'grapheme').length
 }
 
 /**
@@ -198,8 +221,10 @@ export function animateText(
   const validUnits = ['ms', 's']
   if (!validUnits.includes(unit)) throw new Error(`[MODS] Invalid animation unit: ${unit}`)
 
-  const delimiter = splitBy === 'word' ? ' ' : ''
-  const elements = text.split(delimiter)
+  // Split characters by grapheme so emoji and accented letters aren't broken apart
+  const elements = splitBy === 'word'
+    ? text.split(' ')
+    : segment(text, 'grapheme').map(part => part.segment)
 
   const result = elements.map((element, index) => {
     const delay = `${index * time}${unit}`
@@ -209,13 +234,13 @@ export function animateText(
       return '<span class="space" style="white-space: pre;"> </span>'
     }
     else {
+      const safeElement = escapeHtml(element)
       return `<span style="display: inline-block; position: relative; overflow: clip; margin-right: -0.5rem; margin-left: -0.5rem; padding-right: 0.5rem; padding-left: 0.5rem;">
-                <span class="ghost" style="visibility: hidden;" aria-hidden="true">${element}</span>
-                <span class="translate ${cssClass}" style="${translateStyle}" aria-label="${element}">${element}</span>
+                <span class="ghost" style="visibility: hidden;" aria-hidden="true">${safeElement}</span>
+                <span class="translate ${escapeHtml(cssClass)}" style="${translateStyle}" aria-label="${safeElement}">${safeElement}</span>
               </span>`
     }
   })
 
   return splitBy === 'word' ? result.join(' ') : result.join('')
 }
-

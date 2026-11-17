@@ -201,7 +201,7 @@ formatDurationNumbers(125) // '00:02:05'
 
 ---
 
-### `formatFileSize(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, display?: 'short' | 'long', locale?: string }): string`
+### `formatFileSize(number: number, options?: { decimals?: number, inputUnit?: FileSizeUnit, outputUnit?: FileSizeUnit | 'auto', display?: 'short' | 'long', locale?: string }): string`
 
 Format and auto calculate file size into human-readable string.
 
@@ -228,7 +228,7 @@ formatFileSize(1024, { inputUnit: 'kilobyte' }) // '1 MB'
 
 ---
 
-### `formatLength(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, display?: 'short' | 'long', locale?: string }): string`
+### `formatLength(number: number, options?: { decimals?: number, inputUnit?: LengthUnit, outputUnit?: LengthUnit | 'auto', display?: 'short' | 'long', locale?: string }): string`
 
 Format and auto calculate length into human-readable string.
 
@@ -254,7 +254,7 @@ formatLength(1, { inputUnit: 'meter', outputUnit: 'centimeter' }) // '100 cm'
 
 ---
 
-### `formatTemperature(number: number, options?: { decimals?: number, inputUnit?: string, outputUnit?: string, display?: 'short' | 'long', locale?: string }): string`
+### `formatTemperature(number: number, options?: { decimals?: number, inputUnit?: 'celsius' | 'fahrenheit' | 'auto', outputUnit?: 'celsius' | 'fahrenheit' | 'auto', display?: 'short' | 'long', locale?: string }): string`
 
 Format and auto calculate temperature into human-readable string.
 

@@ -17,7 +17,7 @@ Smoothly scrolls to the element with the specified ID without scuffing up your U
 **Parameters:**
 - `id` (string): The ID of the element to scroll to (without the `#` prefix)
 
-**Returns:** Promise that resolves when scrolling is complete
+**Returns:** Promise that resolves when scrolling is complete. Rejects with an `Error` if no element has that ID
 
 **Example:**
 ```typescript
@@ -168,26 +168,29 @@ await focusOnNth(form, -1) // Focus last element
 
 ---
 
-### `focusTrap(container: HTMLElement): void`
+### `focusTrap(container: HTMLElement): () => void`
 
 Sets up a keyboard trap within an HTML element, allowing the focus to cycle between the first and last focusable elements when the Tab key is pressed.
 
 **Parameters:**
 - `container` (HTMLElement): The container element to trap focus within
 
-**Returns:** void
+**Returns:** A cleanup function that removes the trap
 
 **Example:**
 ```typescript
 import { focusTrap } from 'usemods'
 
 const modal = document.querySelector('.modal')
-focusTrap(modal)
+const releaseTrap = focusTrap(modal)
+
+// Later, when the modal closes
+releaseTrap()
 ```
 
 ---
 
-### `debounce<T extends (...args: unknown[]) => unknown>(fn: T, delay: number, options?: { leading?: boolean, trailing?: boolean }): ((...args: Parameters<T>) => void) & { cancel: () => void }`
+### `debounce<T extends (...args: never[]) => unknown>(fn: T, delay: number, options?: { leading?: boolean, trailing?: boolean }): ((...args: Parameters<T>) => void) & { cancel: () => void }`
 
 Runs a function only if there are no new calls during the delay.
 
@@ -217,7 +220,7 @@ debouncedSearch.cancel()
 
 ---
 
-### `throttle<T extends (...args: unknown[]) => void>(fn: T, delay: number): ((...args: Parameters<T>) => void) & { cancel: () => void }`
+### `throttle<T extends (...args: never[]) => unknown>(fn: T, delay: number): ((...args: Parameters<T>) => void) & { cancel: () => void }`
 
 Throttles a function to ensure it only runs once per delay interval.
 
@@ -225,7 +228,7 @@ Throttles a function to ensure it only runs once per delay interval.
 - `fn` (T): The function to throttle
 - `delay` (number): Minimum interval between runs in milliseconds
 
-**Returns:** Throttled function with a `cancel()` method
+**Returns:** Throttled function with a `cancel()` method. Calls made during the wait run once at the end, with the most recent arguments
 
 **Example:**
 ```typescript

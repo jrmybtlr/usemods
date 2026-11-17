@@ -1,4 +1,7 @@
-export const currencySymbols = new Map([
+// Exported as Readonly* types so consumers can't mutate library-wide lookup tables.
+
+/** Locale → ISO 4217 currency code */
+export const currencySymbols: ReadonlyMap<string, string> = new Map([
   ['en-US', 'USD'], ['en-GB', 'GBP'], ['en-AU', 'AUD'], ['en-CA', 'CAD'], ['en-NZ', 'NZD'],
   ['en-ZA', 'ZAR'], ['de-DE', 'EUR'], ['fr-FR', 'EUR'], ['es-ES', 'EUR'], ['it-IT', 'EUR'],
   ['pt-PT', 'EUR'], ['nl-NL', 'EUR'], ['fi-FI', 'EUR'], ['da-DK', 'DKK'], ['sv-SE', 'SEK'],
@@ -9,13 +12,13 @@ export const currencySymbols = new Map([
   ['kn-IN', 'INR'], ['ml-IN', 'INR'],
 ])
 
-export const configLocales = new Set([
+export const configLocales: ReadonlySet<string> = new Set([
   'en-US', 'en-GB', 'en-CA', 'en-AU', 'fr-FR', 'es-ES', 'de-DE', 'it-IT', 'ja-JP', 'ko-KR',
   'zh-CN', 'zh-TW', 'pt-PT', 'pt-BR', 'ru-RU', 'nl-NL', 'da-DK', 'sv-SE', 'nb-NO', 'fi-FI',
   'pl-PL', 'tr-TR', 'ar-SA', 'he-IL', 'id-ID', 'ms-MY', 'th-TH', 'vi-VN',
 ])
 
-export const configUnits = new Set([
+export const configUnits: ReadonlySet<string> = new Set([
   // Area
   'acre', 'hectare',
   // Digital Storage
@@ -34,13 +37,13 @@ export const configUnits = new Set([
   'degree', 'percent',
 ])
 
-export const unchangingPlurals = new Set([
+export const unchangingPlurals: ReadonlySet<string> = new Set([
   'sheep', 'fish', 'deer', 'hay', 'moose', 'series', 'species', 'aircraft', 'bison', 'buffalo',
   'cod', 'elk', 'halibut', 'hovercraft', 'lego', 'mackerel', 'salmon', 'spacecraft', 'swine',
   'trout', 'tuna',
 ])
 
-export const irregularPlurals = new Map([
+export const irregularPlurals: ReadonlyMap<string, string> = new Map([
   ['addendum', 'addenda'], ['agendum', 'agenda'], ['alumnus', 'alumni'], ['analysis', 'analyses'],
   ['anathema', 'anathemata'], ['antenna', 'antennae'], ['appendix', 'appendices'], ['axis', 'axes'],
   ['bacterium', 'bacteria'], ['basis', 'bases'], ['bureau', 'bureaux'], ['cactus', 'cacti'],
@@ -59,17 +62,26 @@ export const irregularPlurals = new Map([
   ['thesis', 'theses'], ['tooth', 'teeth'], ['vertex', 'vertices'], ['woman', 'women'],
 ])
 
-export const numberUnderTwenty = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
-export const numberTens = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
-export const numberScales = ['', ' thousand', ' million', ' billion', ' trillion', ' quadrillion', ' quintillion']
+export const numberUnderTwenty: readonly string[] = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
+export const numberTens: readonly string[] = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
+export const numberScales: readonly string[] = ['', ' thousand', ' million', ' billion', ' trillion', ' quadrillion', ' quintillion']
 
-export const formatTitleExceptions = new Set([
+export const formatTitleExceptions: ReadonlySet<string> = new Set([
   'a', 'an', 'to', 'the', 'for', 'and', 'nor', 'but', 'or', 'yet', 'so', 'in', 'is', 'it', 'than', 'on', 'at', 'with',
   'under', 'above', 'from', 'of', 'although', 'because', 'since', 'unless',
 ])
 
+export type FileSizeUnit = 'byte' | 'kilobyte' | 'megabyte' | 'gigabyte' | 'terabyte' | 'petabyte'
+export type LengthUnit = 'millimeter' | 'centimeter' | 'meter' | 'kilometer' | 'inch' | 'foot' | 'yard' | 'mile'
+export type VolumeUnit = 'milliliter' | 'liter' | 'cup' | 'tablespoon' | 'teaspoon'
+export type WeightUnit = 'gram' | 'kilogram' | 'ounce' | 'pound' | 'stone'
+export interface UnitConversion {
+  value: number
+  system: 'metric' | 'imperial'
+}
+
 // File Size Conversion
-export const bytesInUnit = new Map([
+export const bytesInUnit: ReadonlyMap<FileSizeUnit, number> = new Map<FileSizeUnit, number>([
   ['byte', 1],
   ['kilobyte', 1024],
   ['megabyte', 1024 ** 2],
@@ -79,7 +91,7 @@ export const bytesInUnit = new Map([
 ])
 
 // Length Conversion
-export const lengthUnitConversions = new Map([
+export const lengthUnitConversions: ReadonlyMap<LengthUnit, UnitConversion> = new Map<LengthUnit, UnitConversion>([
   ['millimeter', { value: 1, system: 'metric' }],
   ['centimeter', { value: 10, system: 'metric' }],
   ['meter', { value: 1000, system: 'metric' }],
@@ -91,7 +103,7 @@ export const lengthUnitConversions = new Map([
 ])
 
 // Volume Conversion
-export const volumeUnitConversions = new Map([
+export const volumeUnitConversions: ReadonlyMap<VolumeUnit, UnitConversion> = new Map<VolumeUnit, UnitConversion>([
   ['milliliter', { value: 1, system: 'metric' }],
   ['liter', { value: 1000, system: 'metric' }],
   ['cup', { value: 236.588, system: 'imperial' }],
@@ -99,7 +111,7 @@ export const volumeUnitConversions = new Map([
   ['teaspoon', { value: 4.92892, system: 'imperial' }],
 ])
 
-export const weightUnitConversions = new Map([
+export const weightUnitConversions: ReadonlyMap<WeightUnit, UnitConversion> = new Map<WeightUnit, UnitConversion>([
   ['gram', { value: 1, system: 'metric' }],
   ['kilogram', { value: 1000, system: 'metric' }],
   ['ounce', { value: 28.3495, system: 'imperial' }],

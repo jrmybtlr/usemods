@@ -307,6 +307,7 @@ import { slugify } from 'usemods'
 
 slugify('Hello World!') // 'hello-world'
 slugify('My Awesome Post 2024') // 'my-awesome-post-2024'
+slugify('Café Déjà vu') // 'cafe-deja-vu'
 ```
 
 ---
@@ -438,7 +439,7 @@ Escape HTML entities in a string.
 ```typescript
 import { escapeHtml } from 'usemods'
 
-escapeHtml('<script>alert("xss")</script>') // '&lt;script&gt;alert("xss")&lt;/script&gt;'
+escapeHtml('<script>alert("xss")</script>') // '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;'
 ```
 
 ---
@@ -457,6 +458,7 @@ Unescape HTML entities in a string.
 import { unescapeHtml } from 'usemods'
 
 unescapeHtml('&lt;script&gt;') // '<script>'
+unescapeHtml(escapeHtml('a & "b"')) // 'a & "b"'
 ```
 
 ---

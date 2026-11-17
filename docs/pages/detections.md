@@ -137,7 +137,7 @@ document.addEventListener('visibilitychange', () => {
 
 ---
 
-### `detectColorScheme(): string | null`
+### `detectColorScheme(): 'dark' | 'light' | null`
 
 Detect the current color scheme (Light or Dark).
 
@@ -174,7 +174,7 @@ const timezone = detectUserTimezone()
 
 ---
 
-### `detectBreakpoint(): string | null`
+### `detectBreakpoint(): Breakpoint | null`
 
 Detect the current breakpoint based on Tailwind CSS breakpoints.
 
@@ -206,7 +206,7 @@ window.addEventListener('resize', () => {
 
 ---
 
-### `detectContainerBreakpoint(element: HTMLElement): string | null`
+### `detectContainerBreakpoint(element: HTMLElement): ContainerBreakpoint | null`
 
 Detect any container breakpoint based on Tailwind CSS breakpoints.
 
@@ -241,7 +241,7 @@ const breakpoint = detectContainerBreakpoint(container)
 
 ---
 
-### `detectNetworkStatus(): string | null`
+### `detectNetworkStatus(): 'Online' | 'Offline' | null`
 
 Detect the current network status of the user (Online or Offline).
 

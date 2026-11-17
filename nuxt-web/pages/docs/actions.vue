@@ -8,7 +8,7 @@
     <PageFunction
       name="debounce"
       description="Runs a function only if there are no new calls during the delay"
-      params='[]'
+      params='[{"name":"fn","type":"T"},{"name":"delay","type":"number"},{"name":"{ leading = false, trailing = true }","type":"{ leading?: boolean, trailing?: boolean } = {}"}]'
     >
       <Debounce />
     </PageFunction>
@@ -16,7 +16,7 @@
     <PageFunction
       name="throttle"
       description="Throttles a function to ensure it only runs once per delay interval"
-      params='[]'
+      params='[{"name":"fn","type":"T"},{"name":"delay","type":"number"}]'
     >
       <Throttle />
     </PageFunction>
@@ -89,6 +89,7 @@
     <PageFunction
       name="focusTrap"
       description="Sets up a keyboard trap within an HTML element, allowing the focus to cycle between the first and last focusable elements when the Tab key is pressed."
+      info="Returns a cleanup function that removes the trap"
       params='[{"name":"container","type":"HTMLElement"}]'
     >
       <FocusTrap />
@@ -98,7 +99,7 @@
       name="once"
       description="Creates a function that only runs once and returns the first result on later calls."
       info="Call `reset()` on the wrapped function to allow it to run again"
-      params='[]'
+      params='[{"name":"fn","type":"T"}]'
     >
       <Once />
     </PageFunction>

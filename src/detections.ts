@@ -2,6 +2,9 @@
 // description: Client-side detections for various user and browser information. Perfect for personalisation, analytics or debugging weird and wonderful bugs. You will need to add listeners for reactivity (or use usemods-nuxt composables).
 // lead: Listen to your clients
 
+export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+export type ContainerBreakpoint = '@xs' | '@sm' | '@md' | '@lg' | '@xl' | '@2xl' | '@3xl' | '@4xl' | '@5xl' | '@6xl' | '@7xl'
+
 /**
  * Detect the current scroll position of the window
  */
@@ -74,7 +77,7 @@ export function detectActiveBrowser(): boolean {
 /**
  * Detect the current color scheme (Light or Dark)
  */
-export function detectColorScheme(): string | null {
+export function detectColorScheme(): 'dark' | 'light' | null {
   if (typeof window === 'undefined') return null
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
@@ -91,7 +94,7 @@ export function detectUserTimezone(): string | null {
  * Detect the current breakpoint based on Tailwind CSS breakpoints
  * @info Add a listener to the window resize event to detect changes
  */
-export function detectBreakpoint(): string | null {
+export function detectBreakpoint(): Breakpoint | null {
   if (typeof window === 'undefined') return null
   const width = window.innerWidth
   if (width < 640) return 'xs'
@@ -106,10 +109,10 @@ export function detectBreakpoint(): string | null {
  * Detect any container breakpoint based on Tailwind CSS breakpoints
   * @info Add a listener to the window resize event to detect changes
  */
-export function detectContainerBreakpoint(element: HTMLElement): string | null {
+export function detectContainerBreakpoint(element: HTMLElement): ContainerBreakpoint | null {
   if (typeof window === 'undefined') return null
   if (!element || !(element instanceof HTMLElement)) {
-    console.log('element is not an instance of HTMLElement')
+    console.warn('[MODS] detectContainerBreakpoint() expects an HTMLElement')
     return null
   }
 
@@ -125,14 +128,13 @@ export function detectContainerBreakpoint(element: HTMLElement): string | null {
   if (width < 896) return '@4xl'
   if (width < 1024) return '@5xl'
   if (width < 1152) return '@6xl'
-  if (width < 1280) return '@7xl'
   return '@7xl'
 }
 
 /**
  * Detect the current network status of the user (Online or Offline)
  */
-export function detectNetworkStatus(): string | null {
+export function detectNetworkStatus(): 'Online' | 'Offline' | null {
   if (typeof window === 'undefined') return null
   return navigator.onLine ? 'Online' : 'Offline'
 }
@@ -157,7 +159,7 @@ export function detectUrlPath(format: 'array' | 'string' = 'array'): string[] | 
 /**
  * Returns a value from the URL by name
  */
-export function detectUrlParams(format: 'string' | 'object' = 'string'): ({ [key: string]: string }[] | string) | null {
+export function detectUrlParams(format: 'string' | 'object' = 'string'): Record<string, string>[] | string | null {
   if (typeof window === 'undefined') return null
   const searchParams = new URLSearchParams(window.location.search)
   if (format === 'string') return searchParams.toString()

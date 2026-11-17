@@ -14,7 +14,7 @@ export function isEmail(value: string): boolean {
 /**
  * Check if any given value is a valid number.
  */
-export function isNumber(value: unknown): boolean {
+export function isNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value)
 }
 
@@ -22,28 +22,31 @@ export function isNumber(value: unknown): boolean {
  * Check if any given value is a valid URL.
  */
 export function isUrl(value: string): boolean {
-  const regex
-    = /^(?:\w+:)?\/\/([^\s.]+\.\S{2,}|localhost[:?\d]*(?:[^:?\d]\S*)?)$/
-  return regex.test(value)
+  // Require an explicit `scheme://` (or protocol-relative `//`) so values like `mailto:` or `javascript:` are rejected
+  if (typeof value !== 'string' || /\s/.test(value) || !/^(?:[a-z][\w+.-]*:)?\/\//i.test(value)) return false
+
+  const base = value.startsWith('//') ? 'https://localhost' : undefined
+  if (!URL.canParse(value, base)) return false
+
+  const { hostname } = new URL(value, base)
+  return hostname === 'localhost' || (hostname.includes('.') && !hostname.endsWith('.'))
 }
 
 /**
  * Check if any given string, array or object is empty.
  */
-export function isEmpty(value: string | string[] | number[] | object | null | undefined): boolean {
-  return (
-    value === null
-    || value === undefined
-    || (typeof value === 'string' && value === '')
-    || (Array.isArray(value) && value.length === 0)
-    || (typeof value === 'object' && Object.keys(value).length === 0)
-  )
+export function isEmpty(value: string | unknown[] | object | null | undefined): boolean {
+  if (value === null || value === undefined) return true
+  if (typeof value === 'string' || Array.isArray(value)) return value.length === 0
+  if (value instanceof Map || value instanceof Set) return value.size === 0
+  if (typeof value === 'object') return Object.keys(value).length === 0
+  return false
 }
 
 /**
  * Check if any given value is a valid UUID.
  */
-export function isUuid(value: unknown): boolean {
+export function isUuid(value: unknown): value is string {
   if (typeof value !== 'string') return false
   const regex = /^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i
   return regex.test(value)
@@ -52,14 +55,13 @@ export function isUuid(value: unknown): boolean {
 /**
  * Check if any given value is a valid JSON string.
  */
-export function isJson(value: unknown): boolean {
+export function isJson(value: unknown): value is string {
   if (typeof value !== 'string') return false
   try {
     JSON.parse(value)
     return true
   }
-  catch (error) {
-    console.warn('[MODS] isJson Error:', error)
+  catch {
     return false
   }
 }
@@ -67,14 +69,17 @@ export function isJson(value: unknown): boolean {
 /**
  * Check if any given value is an object.
  */
-export function isObject(value: unknown): boolean {
-  return value !== null && typeof value === 'object' && value.constructor === Object
+export function isObject(value: unknown): value is Record<string, unknown> {
+  if (value === null || typeof value !== 'object') return false
+  // Plain objects only: `{}` literals and `Object.create(null)`
+  const prototype = Object.getPrototypeOf(value)
+  return prototype === Object.prototype || prototype === null
 }
 
 /**
  * Check if any given value is an array.
  */
-export function isArray(value: string[] | number[]): boolean {
+export function isArray(value: unknown): value is unknown[] {
   return Array.isArray(value)
 }
 
@@ -89,17 +94,16 @@ export function isHex(value: string): boolean {
 /**
  * Check if any given value contains only alphabetic characters.
  */
-export function isAlphabetic(value: unknown): boolean {
-  const regex = /^[a-zA-Z]+$/
-  return regex.test(value as string)
+export function isAlphabetic(value: unknown): value is string {
+  return typeof value === 'string' && /^[a-zA-Z]+$/.test(value)
 }
 
 /**
  * Check if any given value contains only alphanumeric characters.
  */
 export function isAlphanumeric(value: unknown): boolean {
-  const regex = /^[a-zA-Z0-9]+$/
-  return regex.test(value as string)
+  if (typeof value !== 'string' && typeof value !== 'number') return false
+  return /^[a-zA-Z0-9]+$/.test(String(value))
 }
 
 /**
@@ -112,14 +116,14 @@ export function isBoolean(value: unknown): boolean {
 /**
  * Check if any given value is undefined.
  */
-export function isUndefined(value: unknown): boolean {
+export function isUndefined(value: unknown): value is undefined {
   return value === undefined
 }
 
 /**
  * Check if any given value is null.
  */
-export function isNull(value: unknown): boolean {
+export function isNull(value: unknown): value is null {
   return value === null
 }
 
@@ -147,9 +151,9 @@ export function isDate(value: unknown): boolean {
 /**
  * Check if any given value is a valid time in HH:mm format.
  */
-export function isTime(value: unknown): boolean {
+export function isTime(value: unknown): value is string {
   const regex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9](?:\.\d{1,3})?)?$/
-  return regex.test(value as string)
+  return typeof value === 'string' && regex.test(value)
 }
 
 /**
@@ -205,6 +209,7 @@ export function isOver9000(value: number): boolean {
  * Check if the number is a prime number.
  */
 export function isPrime(value: number): boolean {
+  if (!Number.isInteger(value)) return false
   const boundary = Math.floor(Math.sqrt(value))
   for (let i = 2; i <= boundary; i++) {
     if (value % i === 0) return false
@@ -215,14 +220,14 @@ export function isPrime(value: number): boolean {
 /**
  * Check if the number is an integer.
  */
-export function isInteger(value: unknown): boolean {
+export function isInteger(value: unknown): value is number {
   return Number.isInteger(value)
 }
 
 /**
  * Check if the number is a float.
  */
-export function isFloat(value: unknown): boolean {
+export function isFloat(value: unknown): value is number {
   if (typeof value !== 'number') return false
   return !isInteger(value)
 }
@@ -293,7 +298,7 @@ export function isIpAddress(value: string): boolean {
  * Check if any given value is a valid port number.
  */
 export function isPort(value: number): boolean {
-  return value > 0 && value <= 65535
+  return Number.isInteger(value) && value > 0 && value <= 65535
 }
 
 /**

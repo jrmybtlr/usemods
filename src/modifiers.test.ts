@@ -285,3 +285,20 @@ test('mask', () => {
   // Code points are not split
   expect(mod.mask('👋👋👋', { visibleEnd: 1 })).toBe('••👋')
 })
+
+test('modifier edge cases', () => {
+  expect(mod.stripHtml('&#128512; &#x1F98A;')).toBe('😀 🦊')
+  expect(mod.stripHtml('&#99999999;')).toBe('&#99999999;')
+  expect(mod.stripEmojis('hi 🫠 ⭐️ 🇬🇧 👍🏽 👨‍👩‍👧 ☀')).toBe('hi      ')
+  expect(mod.slugify('Café Déjà vu')).toBe('cafe-deja-vu')
+  expect(mod.escapeHtml('" onload=\'x\'')).toBe('&quot; onload=&#39;x&#39;')
+  expect(mod.unescapeHtml(mod.escapeHtml('<a href="x">&lt;</a>'))).toBe('<a href="x">&lt;</a>')
+  expect(mod.ordinalize(11)).toBe('11th')
+  expect(mod.ordinalize(12)).toBe('12th')
+  expect(mod.ordinalize(13)).toBe('13th')
+  expect(mod.ordinalize(21)).toBe('21st')
+  expect(mod.ordinalize(112)).toBe('112th')
+  expect(mod.ordinalize(1003)).toBe('1003rd')
+  expect(mod.singularize('children')).toBe('child')
+  expect(mod.pluralize('campus', 2)).toBe('campuses')
+})

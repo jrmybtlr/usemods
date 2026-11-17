@@ -4,6 +4,86 @@
 
 import * as map from './maps'
 
+// Rule tables are built once at module load rather than on every call.
+const pluralSuffixRules: ReadonlyArray<readonly [suffix: string, replacement: string]> = [
+  ['ch', 'ches'],
+  ['ss', 'sses'],
+  ['sh', 'shes'],
+  ['x', 'xes'],
+  ['s', 'ses'],
+  ['z', 'zes'],
+  ['o', 'oes'],
+  ['f', 'ves'],
+  ['fe', 'ves'],
+]
+
+const singularSuffixRules: ReadonlyArray<readonly [suffix: string, transform: (value: string) => string]> = [
+  ['ives', value => value.slice(0, -4) + 'ife'],
+  ['ves', value => value.slice(0, -3) + 'f'],
+  ['ies', (value) => {
+    const beforeIes = value.slice(-4, -3)
+    if (!'aeiou'.includes(beforeIes)) {
+      return value.slice(0, -3) + 'y'
+    }
+    return value.slice(0, -2)
+  }],
+  ['ches', value => value.slice(0, -2)],
+  ['shes', value => value.slice(0, -2)],
+  ['xes', value => value.slice(0, -2)],
+  ['oes', value => value.slice(0, -2)],
+  ['ses', value => value.slice(0, -2)],
+  ['es', value => value.slice(0, -1)],
+  ['i', value => value.slice(0, -1) + 'us'],
+  ['a', value => value.slice(0, -1) + 'on'],
+  ['s', value => value.length > 1 ? value.slice(0, -1) : value],
+]
+
+// Reverse lookup for irregular plurals (plural → singular)
+const irregularSingulars: ReadonlyMap<string, string> = new Map(
+  [...map.irregularPlurals].map(([singular, plural]) => [plural, singular]),
+)
+
+const htmlEntities: Readonly<Record<string, string>> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: '\'',
+  nbsp: ' ',
+  copy: '©',
+  reg: '®',
+  trade: '™',
+  deg: '°',
+  pound: '£',
+  euro: '€',
+  cent: '¢',
+  sect: '§',
+  para: '¶',
+  middot: '·',
+  bull: '•',
+  ndash: '–',
+  mdash: '—',
+  lsquo: '\'',
+  rsquo: '\'',
+  ldquo: '"',
+  rdquo: '"',
+}
+
+// Decode a numeric character reference, leaving invalid code points untouched.
+function decodeCodePoint(match: string, codePoint: number): string {
+  return Number.isInteger(codePoint) && codePoint >= 0 && codePoint <= 0x10FFFF
+    ? String.fromCodePoint(codePoint)
+    : match
+}
+
+const ordinalRules = new Intl.PluralRules('en-US', { type: 'ordinal' })
+const ordinalSuffixes: Readonly<Partial<Record<Intl.LDMLPluralRule, string>>> = {
+  one: 'st',
+  two: 'nd',
+  few: 'rd',
+  other: 'th',
+}
+
 /**
  * Adds a prefix to a string if it doesn't already start with the prefix.
  */
@@ -57,27 +137,14 @@ export function pluralize(text: string, count: number): string {
   if (map.unchangingPlurals.has(text)) return text
   if (map.irregularPlurals.has(text)) return map.irregularPlurals.get(text)!
 
-  const suffixRules = new Map<string, string>([
-    ['ch', 'ches'],
-    ['ss', 'sses'],
-    ['sh', 'shes'],
-    ['x', 'xes'],
-    ['s', 'ses'],
-    ['z', 'zes'],
-    ['o', 'oes'],
-    ['us', 'i'],
-    ['f', 'ves'],
-    ['fe', 'ves'],
-  ])
-
   if (text.endsWith('y')) {
     const beforeY = text.slice(-2, -1)
-    if (!['a', 'e', 'i', 'o', 'u'].includes(beforeY)) {
+    if (!'aeiou'.includes(beforeY)) {
       return text.slice(0, -1) + 'ies'
     }
   }
 
-  for (const [suffix, replacement] of suffixRules) {
+  for (const [suffix, replacement] of pluralSuffixRules) {
     if (text.endsWith(suffix)) {
       return text.slice(0, -suffix.length) + replacement
     }
@@ -95,32 +162,10 @@ export function singularize(text: string): string {
 
   if (map.unchangingPlurals.has(text)) return text
 
-  for (const [singular, plural] of map.irregularPlurals) {
-    if (plural === text) return singular
-  }
+  const irregular = irregularSingulars.get(text)
+  if (irregular) return irregular
 
-  const singularRules = new Map<string, (value: string) => string>([
-    ['ives', value => value.slice(0, -4) + 'ife'],
-    ['ves', value => value.slice(0, -3) + 'f'],
-    ['ies', (value) => {
-      const beforeIes = value.slice(-4, -3)
-      if (!['a', 'e', 'i', 'o', 'u'].includes(beforeIes)) {
-        return value.slice(0, -3) + 'y'
-      }
-      return value.slice(0, -2)
-    }],
-    ['ches', value => value.slice(0, -2)],
-    ['shes', value => value.slice(0, -2)],
-    ['xes', value => value.slice(0, -2)],
-    ['oes', value => value.slice(0, -2)],
-    ['ses', value => value.slice(0, -2)],
-    ['es', value => value.slice(0, -1)],
-    ['i', value => value.slice(0, -1) + 'us'],
-    ['a', value => value.slice(0, -1) + 'on'],
-    ['s', value => value.length > 1 ? value.slice(0, -1) : value],
-  ])
-
-  for (const [suffix, transform] of singularRules) {
+  for (const [suffix, transform] of singularSuffixRules) {
     if (text.endsWith(suffix)) {
       return transform(text)
     }
@@ -133,9 +178,8 @@ export function singularize(text: string): string {
  * Converts a number to a string with ordinal suffix.
  */
 export function ordinalize(number: number): string {
-  const suffixes = ['th', 'st', 'nd', 'rd']
-  const remainder = number % 100
-  return number + (suffixes[(remainder - 20) % 10] || suffixes[remainder] || suffixes.at(0) || 'th')
+  // Intl.PluralRules knows the English ordinal categories (1st, 2nd, 3rd, 11th, 112th, …)
+  return `${number}${ordinalSuffixes[ordinalRules.select(number)] ?? 'th'}`
 }
 
 /**
@@ -158,38 +202,11 @@ export function stripHtml(text: string): string {
 
   const decodeEntities = (str: string) => {
     return str
-      // Handle numeric entities
-      .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(code))
-      .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCharCode(parseInt(code, 16)))
+      // Handle numeric entities (fromCodePoint supports astral characters like emoji)
+      .replace(/&#(\d+);/g, (match, code: string) => decodeCodePoint(match, Number(code)))
+      .replace(/&#x([0-9a-f]+);/gi, (match, code: string) => decodeCodePoint(match, Number.parseInt(code, 16)))
       // Handle named entities
-      .replace(/&([^;]+);/g, (match, entity) => {
-        const entities: { [key: string]: string } = {
-          amp: '&',
-          lt: '<',
-          gt: '>',
-          quot: '"',
-          apos: '\'',
-          nbsp: ' ',
-          copy: '©',
-          reg: '®',
-          trade: '™',
-          deg: '°',
-          pound: '£',
-          euro: '€',
-          cent: '¢',
-          sect: '§',
-          para: '¶',
-          middot: '·',
-          bull: '•',
-          ndash: '–',
-          mdash: '—',
-          lsquo: '\'',
-          rsquo: '\'',
-          ldquo: '"',
-          rdquo: '"',
-        }
-        return entities[entity] || match
-      })
+      .replace(/&([^;]+);/g, (match, entity: string) => Object.hasOwn(htmlEntities, entity) ? htmlEntities[entity]! : match)
   }
 
   return decodeEntities(stripTags(text)).trim()
@@ -224,10 +241,13 @@ export function stripSymbols(text: string): string {
 }
 
 /**
- * Strips emojis from a string (requires ES6 Unicode support) 🦊.
+ * Strips emojis from a string, including flags, skin tones and ZWJ sequences 🦊.
  */
 export function stripEmojis(text: string): string {
-  return text.replace(/[\u{1F300}-\u{1F9FF}\u{1FA00}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '')
+  // \p{RGI_Emoji} (regex `v` flag) matches whole emoji sequences; the range keeps
+  // stripping text-style symbols (☀, ✂) the previous implementation removed, and a
+  // trailing variation selector (U+FE0F) is removed with the emoji it modifies.
+  return text.replace(/(?:\p{RGI_Emoji}|[\u{2600}-\u{27BF}])\u{FE0F}?/gv, '')
 }
 
 /**
@@ -235,6 +255,9 @@ export function stripEmojis(text: string): string {
  */
 export function slugify(text: string): string {
   return text
+    // Decompose accented characters and drop the combining marks (é → e)
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '')
     .toLowerCase()
     .replace(/[^\w ]+/g, '')
     .replace(/ +/g, '-')
@@ -313,16 +336,28 @@ export function titleCase(text: string): string {
 
 /**
  * Escape HTML entities in a string.
+ * @info Escapes quotes too, so the result is safe inside attribute values
  */
 export function escapeHtml(text: string): string {
-  return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+  return text
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('\'', '&#39;')
 }
 
 /**
  * Unescape HTML entities in a string.
  */
 export function unescapeHtml(text: string): string {
-  return text.replaceAll('&lt;', '<').replaceAll('&gt;', '>')
+  return text
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#39;', '\'')
+    // Decode `&amp;` last so `&amp;lt;` becomes `&lt;`, not `<`
+    .replaceAll('&amp;', '&')
 }
 
 /**

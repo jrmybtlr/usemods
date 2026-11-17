@@ -29,7 +29,7 @@ if (isServerSide()) {
 
 ---
 
-### `detectUserDevice(userAgent?: string): object | string`
+### `detectUserDevice(userAgent?: string): UserDevice | 'server'`
 
 Detects the user's device based on the user agent string and returns the information as an object.
 

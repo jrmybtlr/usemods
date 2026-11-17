@@ -6,15 +6,35 @@ import * as map from './maps'
 
 type DisplayLength = 'short' | 'long'
 
-/**
- * Resolve short/long display options to a single `display` value.
- * Formatter aliases: `unitDisplay` (all) and `labels` (duration only).
- */
+const numberFormatCache = new Map<string, Intl.NumberFormat>()
+
+// Intl.NumberFormat is relatively expensive to construct, so reuse instances per locale + options.
+function numberFormat(locale: string, options: Intl.NumberFormatOptions): Intl.NumberFormat {
+  const key = `${locale}|${JSON.stringify(options)}`
+  let formatter = numberFormatCache.get(key)
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, options)
+    numberFormatCache.set(key, formatter)
+  }
+  return formatter
+}
+
+// Count the decimal places of a number, including ones hidden by exponent notation (1e-7 → 7).
+function countDecimals(value: number): number {
+  if (!Number.isFinite(value)) return 0
+  const [mantissa = '', exponent = '0'] = Math.abs(value).toString().split('e')
+  const decimals = (mantissa.split('.').at(1) ?? '').length - Number(exponent)
+  // Intl.NumberFormat accepts at most 100 fraction digits
+  return Math.min(100, Math.max(0, decimals))
+}
+
+// Resolve short/long display options to a single `display` value.
+// Formatter aliases: `unitDisplay` (all) and `labels` (duration only).
 function resolveDisplay(
   options: {
-    display?: DisplayLength
-    unitDisplay?: DisplayLength
-    labels?: DisplayLength
+    display?: DisplayLength | undefined
+    unitDisplay?: DisplayLength | undefined
+    labels?: DisplayLength | undefined
   } | undefined,
   fallback: DisplayLength,
 ): DisplayLength {
@@ -34,7 +54,7 @@ export function formatNumber(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.').at(1) || '').length
+  const decimalPlaces = countDecimals(number)
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
   const config: Intl.NumberFormatOptions = {
@@ -43,7 +63,7 @@ export function formatNumber(
     maximumFractionDigits: safeDecimals,
   }
 
-  return new Intl.NumberFormat(options?.locale ?? 'en-US', config).format(number)
+  return numberFormat(options?.locale ?? 'en-US', config).format(number)
 }
 
 /**
@@ -56,7 +76,7 @@ export function formatCurrency(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.').at(1) || '0').padEnd(2, '0').length
+  const decimalPlaces = Math.max(2, countDecimals(number))
   const safeDecimals = Math.min(options?.decimals ?? decimalPlaces, decimalPlaces)
 
   const config: Intl.NumberFormatOptions = {
@@ -67,7 +87,7 @@ export function formatCurrency(
     currency: map.currencySymbols.get(options?.locale ?? 'en-US') ?? 'USD',
   }
 
-  return new Intl.NumberFormat(options?.locale ?? 'en-US', config).format(number)
+  return numberFormat(options?.locale ?? 'en-US', config).format(number)
 }
 
 /**
@@ -94,7 +114,7 @@ export function formatValuation(
     currency: options?.currency ?? map.currencySymbols.get(locale) ?? 'USD',
   }
 
-  return new Intl.NumberFormat(locale, config).format(number)
+  return numberFormat(locale, config).format(number)
 }
 
 /**
@@ -120,7 +140,7 @@ export function formatCompactNumber(
     maximumFractionDigits: safeDecimals,
   }
 
-  return new Intl.NumberFormat(locale, config).format(number)
+  return numberFormat(locale, config).format(number)
 }
 
 /**
@@ -130,14 +150,14 @@ export function formatUnit(
   number: number,
   options: {
     unit: string
-    decimals?: number
-    display?: DisplayLength
+    decimals?: number | undefined
+    display?: DisplayLength | undefined
     /** @deprecated Use `display` */
-    unitDisplay?: DisplayLength
-    locale?: string
+    unitDisplay?: DisplayLength | undefined
+    locale?: string | undefined
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.').at(1) || '').length
+  const decimalPlaces = countDecimals(number)
   const safeDecimals = Math.min(options?.decimals ?? 21, decimalPlaces)
   const display = resolveDisplay(options, 'long')
 
@@ -149,7 +169,7 @@ export function formatUnit(
     maximumFractionDigits: safeDecimals,
   }
 
-  return new Intl.NumberFormat(options.locale ?? 'en-US', config).format(number)
+  return numberFormat(options.locale ?? 'en-US', config).format(number)
 }
 
 /**
@@ -162,19 +182,17 @@ export function formatPercentage(
     locale?: string
   },
 ): string {
-  const decimalPlaces = (number.toString().split('.').at(1) || '').length
+  const decimalPlaces = countDecimals(number)
   const safeDecimals = Math.max(0, Math.min(options?.decimals ?? decimalPlaces, decimalPlaces))
 
+  // minimumFractionDigits: 0 lets Intl drop trailing zeros using the locale's own separator
   const config: Intl.NumberFormatOptions = {
     style: 'percent',
-    minimumFractionDigits: safeDecimals,
+    minimumFractionDigits: 0,
     maximumFractionDigits: safeDecimals,
   }
 
-  let formattedNumber = new Intl.NumberFormat(options?.locale ?? 'en-US', config).format(number)
-  formattedNumber = formattedNumber.replace(/(\.\d*?[1-9])0+%$/, '$1%').replace(/\.0+%$/, '%')
-
-  return formattedNumber
+  return numberFormat(options?.locale ?? 'en-US', config).format(number)
 }
 
 /**
@@ -261,8 +279,8 @@ export function formatFileSize(
   number: number,
   options?: {
     decimals?: number
-    inputUnit?: string
-    outputUnit?: string
+    inputUnit?: map.FileSizeUnit
+    outputUnit?: map.FileSizeUnit | 'auto'
     display?: DisplayLength
     /** @deprecated Use `display` */
     unitDisplay?: DisplayLength
@@ -274,8 +292,8 @@ export function formatFileSize(
   const valueInBytes = number * (map.bytesInUnit.get(inputUnit) ?? 1)
 
   const targetUnit = outputUnit === 'auto'
-    ? Array.from(map.bytesInUnit.keys())
-      .findLast(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
+    ? [...map.bytesInUnit.keys()]
+        .findLast(unit => valueInBytes >= (map.bytesInUnit.get(unit) ?? 0)) ?? inputUnit
     : outputUnit
 
   return formatUnit(valueInBytes / (map.bytesInUnit.get(targetUnit) ?? 1), { unit: targetUnit, decimals, display, locale })
@@ -288,8 +306,8 @@ export function formatLength(
   number: number,
   options?: {
     decimals?: number
-    inputUnit?: string
-    outputUnit?: string
+    inputUnit?: map.LengthUnit
+    outputUnit?: map.LengthUnit | 'auto'
     display?: DisplayLength
     /** @deprecated Use `display` */
     unitDisplay?: DisplayLength
@@ -308,13 +326,15 @@ export function formatLength(
   const valueInMillimeters = number * inputUnitValue.value
 
   const targetUnit = outputUnit === 'auto'
-    ? Array.from(map.lengthUnitConversions.keys())
-      .filter(unit => map.lengthUnitConversions.get(unit)?.system === inputUnitValue.system)
-      .findLast(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value ?? 0)) ?? inputUnit
+    ? [...map.lengthUnitConversions.keys()]
+        .filter(unit => map.lengthUnitConversions.get(unit)?.system === inputUnitValue.system)
+        .findLast(unit => valueInMillimeters >= (map.lengthUnitConversions.get(unit)?.value ?? 0)) ?? inputUnit
     : outputUnit
 
   return formatUnit(valueInMillimeters / (map.lengthUnitConversions.get(targetUnit)?.value ?? 1), { unit: targetUnit, decimals, display, locale })
 }
+
+type TemperatureUnit = 'auto' | 'celsius' | 'fahrenheit'
 
 /**
  * Format and auto calculate temperature into human-readable string
@@ -323,8 +343,8 @@ export function formatTemperature(
   number: number,
   options?: {
     decimals?: number
-    inputUnit?: string
-    outputUnit?: string
+    inputUnit?: TemperatureUnit
+    outputUnit?: TemperatureUnit
     display?: DisplayLength
     /** @deprecated Use `display` */
     unitDisplay?: DisplayLength
@@ -334,7 +354,7 @@ export function formatTemperature(
   const { decimals, locale = 'en-US', inputUnit = 'celsius', outputUnit = 'celsius' } = options ?? {}
   const display = resolveDisplay(options, 'short')
 
-  const validUnits = new Set(['auto', 'celsius', 'fahrenheit'])
+  const validUnits: ReadonlySet<string> = new Set<TemperatureUnit>(['auto', 'celsius', 'fahrenheit'])
 
   if (!validUnits.has(inputUnit) || !validUnits.has(outputUnit)) {
     console.warn('[MODS] Unsupported temperature unit')
@@ -365,7 +385,7 @@ export function formatNumberToWords(
   if (number === 0) return map.numberUnderTwenty.at(0)!
 
   const formatGroup = (num: number): string => {
-    if (num < 20) return map.numberUnderTwenty[num]
+    if (num < 20) return map.numberUnderTwenty[num] ?? ''
     if (num < 100) return `${map.numberTens[Math.floor(num / 10) - 2]}${num % 10 ? `-${map.numberUnderTwenty[num % 10]}` : ''}`
     return `${map.numberUnderTwenty[Math.floor(num / 100)]} hundred${num % 100 ? ` and ${formatGroup(num % 100)}` : ''}`
   }

@@ -8,6 +8,7 @@
     <PageFunction
       name="generateNumber"
       description="Generate a random number"
+      info="Supports up to 15 digits, the largest length that stays within Number.MAX_SAFE_INTEGER"
       params='[{"name":"length","type":"number"}]'
     >
       <GenerateNumber />
@@ -106,7 +107,7 @@
     <PageFunction
       name="getSecureRandomValues"
       description="Returns an array filled with cryptographic random bytes."
-      params='[{"name":"buffer","type":"Uint8Array"}]'
+      params='[{"name":"buffer","type":"T"}]'
     >
       <GetSecureRandomValues />
     </PageFunction>

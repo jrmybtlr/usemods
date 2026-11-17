@@ -260,3 +260,10 @@ test('formatTemperature', () => {
   // Invalid input unit
   expect(mod.formatTemperature(0, { inputUnit: 'kbdd' })).toBe('0')
 })
+
+test('formatters handle locales and exponent notation', () => {
+  expect(mod.formatPercentage(0.125, { locale: 'de-DE' })).toBe('12,5\u00A0%')
+  expect(mod.formatPercentage(0.1, { locale: 'de-DE' })).toBe('10\u00A0%')
+  expect(mod.formatNumber(0.0000001, { decimals: 8 })).toBe('0.0000001')
+  expect(mod.formatNumber(1.5e-7)).toBe('0.00000015')
+})

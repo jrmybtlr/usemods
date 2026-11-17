@@ -32,7 +32,7 @@
     <PageFunction
       name="isEmpty"
       description="Check if any given string, array or object is empty."
-      params='[{"name":"value","type":"string | string[] | number[] | object | null | undefined"}]'
+      params='[{"name":"value","type":"string | unknown[] | object | null | undefined"}]'
     >
       <IsEmpty />
     </PageFunction>
@@ -64,7 +64,7 @@
     <PageFunction
       name="isArray"
       description="Check if any given value is an array."
-      params='[{"name":"value","type":"string[] | number[]"}]'
+      params='[{"name":"value","type":"unknown"}]'
     >
       <IsArray />
     </PageFunction>

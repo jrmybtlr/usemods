@@ -4,56 +4,65 @@
 
 import { isObject } from './validators'
 
+// Element type of an array, or `never` for non-arrays.
+type ItemOf<T> = T extends readonly (infer Item)[] ? Item : never
+
+function compareValues(a: unknown, b: unknown): number {
+  // Values are compared with the native relational operators (numbers, strings, dates)
+  const left = a as number
+  const right = b as number
+  if (left < right) return -1
+  if (left > right) return 1
+  return 0
+}
+
 /**
  * Sort an array or object by a property.
  */
-export function dataSortBy(items: object | string[] | number[], options?: { property?: string, order?: 'asc' | 'desc' }): object | string[] | number[] {
+export function dataSortBy<T extends object>(
+  items: T,
+  options?: { property?: Extract<keyof ItemOf<T>, string>, order?: 'asc' | 'desc' },
+): T {
   const { property, order = 'asc' } = options ?? {}
+  const direction = order === 'asc' ? 1 : -1
+  const valueOf = (item: unknown): unknown => property ? (item as Record<string, unknown>)[property] : item
 
-  const compare = (a: any, b: any) => {
-    const valueA = property ? a[property] : a
-    const valueB = property ? b[property] : b
-
-    if (valueA < valueB) return order === 'asc' ? -1 : 1
-    if (valueA > valueB) return order === 'asc' ? 1 : -1
-    return 0
-  }
-  return Array.isArray(items) ? items.toSorted(compare) : items
+  return Array.isArray(items)
+    ? items.toSorted((a, b) => compareValues(valueOf(a), valueOf(b)) * direction) as T
+    : items
 }
 
 /**
  * Reverse an array or object.
  */
-export function dataReverse<T extends object | string[] | number[]>(
+export function dataReverse<T extends object>(
   items: T,
 ): T {
-  if ((Array.isArray(items) && items.length === 0) || (!Array.isArray(items) && Object.keys(items).length === 0)) {
-    console.warn('[MODS] Warning: dataReverse() expects an object or array as the first argument.')
-    return items
+  if (Array.isArray(items)) {
+    return items.toReversed() as T
   }
   if (isObject(items)) {
     return Object.fromEntries(Object.entries(items).toReversed()) as T
   }
-  else {
-    return (items as string[] | number[]).toReversed() as T
-  }
+  console.warn('[MODS] Warning: dataReverse() expects an object or array as the first argument.')
+  return items
 }
 
 /**
  * Returns single unique values within an array or object
  */
 export function dataRemoveDuplicates<T extends string | number>(...arrays: T[][]): T[] {
-  return Array.from(new Set(arrays.flat()))
+  return [...new Set(arrays.flat())]
 }
 
 /**
  * Flatten an array of arrays or an object of objects into a single array or object. That was hard to say.
  */
-export function dataFlatten<T extends object | string[] | number[]>(items: T): T {
+export function dataFlatten<T extends object>(items: T): T {
   if (isObject(items)) {
-    const flattened: { [key: string]: unknown } = {}
+    const flattened: Record<string, unknown> = {}
 
-    function flattenObject(obj: object, parentKey: string = '') {
+    function flattenObject(obj: Record<string, unknown>, parentKey: string = '') {
       for (const [key, value] of Object.entries(obj)) {
         const newKey = parentKey ? `${parentKey}.${key}` : key
         if (isObject(value)) {
@@ -68,94 +77,83 @@ export function dataFlatten<T extends object | string[] | number[]>(items: T): T
     flattenObject(items)
     return flattened as T
   }
-  else if (Array.isArray(items)) {
-    return items.flatMap(item => Array.isArray(item) ? dataFlatten(item) : item) as T
+  if (Array.isArray(items)) {
+    return items.flat(Infinity) as T
   }
-  else {
-    return items
-  }
+  return items
 }
 
 /**
  * Returns an array without a property or properties.
  */
-export function dataWithout<T extends object | string[] | number[]>(
+export function dataWithout<T extends object>(
   items: T,
-  properties: string | number | string[] | number[],
+  properties: string | number | readonly (string | number)[],
 ): T {
-  const propertyArray = Array.isArray(properties) ? properties : [properties]
+  const exclude = new Set<string | number>(Array.isArray(properties) ? properties : [properties as string | number])
+  if (Array.isArray(items)) {
+    return items.filter(item => !exclude.has(item)) as T
+  }
   if (isObject(items)) {
-    return Object.fromEntries(Object.entries(items).filter(([key]) => !propertyArray.includes(key))) as T
+    // Object keys are strings, so compare numeric properties by their string form too
+    return Object.fromEntries(
+      Object.entries(items).filter(([key]) => !exclude.has(key) && !exclude.has(Number(key))),
+    ) as T
   }
-  else {
-    return (items as string[] | number[]).filter(item => !propertyArray.includes(item)) as T
-  }
+  return items
 }
 
 /**
  * Group an array of objects by a property.
  */
 export function dataGroupBy<T extends object>(
-  items: T[],
-  property: string,
+  items: readonly T[],
+  property: keyof T,
 ): Record<string, T[]> {
   if (!Array.isArray(items)) {
     console.warn('[MODS] Warning: dataGroupBy() expects an array as the first argument.')
     return {}
   }
 
-  // Use a Map so keys like `__proto__` or `constructor` can't collide with
-  // Object.prototype during grouping.
-  const groups = new Map<string, T[]>()
-
-  for (const item of items) {
-    const key = String((item as Record<string, unknown>)[property] ?? '')
-    const group = groups.get(key)
-    if (group) {
-      group.push(item)
-    }
-    else {
-      groups.set(key, [item])
-    }
-  }
-
-  return Object.fromEntries(groups)
+  // Map.groupBy keeps keys like `__proto__` or `constructor` from colliding with
+  // Object.prototype; Object.fromEntries defines them as own data properties.
+  return Object.fromEntries(Map.groupBy(items, item => String(item[property] ?? '')))
 }
 
 /**
  * Pick specific properties from an object.
  */
-export function dataPick<T extends object>(
+export function dataPick<T extends object, K extends keyof T>(
   obj: T,
-  properties: string | string[],
-): Partial<T> {
+  properties: K | readonly K[],
+): Pick<T, K> {
   if (!isObject(obj)) {
     console.warn('[MODS] Warning: dataPick() expects an object as the first argument.')
-    return {}
+    return {} as Pick<T, K>
   }
 
-  const keys = Array.isArray(properties) ? properties : [properties]
+  const keys: readonly K[] = Array.isArray(properties) ? properties : [properties as K]
   return Object.fromEntries(
     keys
       .filter(key => Object.hasOwn(obj, key))
-      .map(key => [key, (obj as Record<string, unknown>)[key]]),
-  ) as Partial<T>
+      .map(key => [key, obj[key]]),
+  ) as Pick<T, K>
 }
 
 /**
  * Omit specific properties from an object.
  */
-export function dataOmit<T extends object>(
+export function dataOmit<T extends object, K extends keyof T>(
   obj: T,
-  properties: string | string[],
-): Partial<T> {
+  properties: K | readonly K[],
+): Omit<T, K> {
   if (!isObject(obj)) {
     console.warn('[MODS] Warning: dataOmit() expects an object as the first argument.')
-    return {}
+    return {} as Omit<T, K>
   }
 
-  const keys = new Set(Array.isArray(properties) ? properties : [properties])
+  const keys = new Set<PropertyKey>(Array.isArray(properties) ? properties : [properties as K])
   return Object.fromEntries(
     Object.entries(obj).filter(([key]) => !keys.has(key)),
-  ) as Partial<T>
+  ) as Omit<T, K>
 }

@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { dataPick } from 'usemods'
 
-const key = ref('name')
+const key = ref<'name' | 'age' | 'country'>('name')
 const value = {
   name: 'John',
   age: 25,

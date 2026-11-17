@@ -18,6 +18,8 @@ const nuxtWebPath = resolve(import.meta.dirname, '../nuxt-web')
 const functionPattern = /\/\*\*[\s\S]*?\*\/\s*(export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\([\s\S]*?\)\s*:\s*([\w<>,[\]\s|]+(?:\{[\s\S]*?})?)?)/gms
 const metadataPattern = /\/\/\s+(title|description|lead):\s+([^\r\n]*)/g
 const jsdocPattern = /\/\*\*([\s\S]*?)\*\//g
+// Function signature, allowing an optional generic parameter list before the arguments
+const signaturePattern = /export\s+(?:async\s+)?function\s+\w+\s*(?:<[^(]*?(?:\([^)]*\)[^(]*?)*>)?\s*\(([\s\S]*?)\):\s*([^{]+)/
 
 // Files
 const files = ['formatters', 'dates', 'modifiers', 'generators', 'actions', 'numbers', 'data', 'validators', 'detections', 'devices', 'goodies', 'tailwind']
@@ -191,7 +193,7 @@ provide('pageId', pageId)
     const info = (jsdoc.match(/@info\s+(.*)/) || [])[1]?.trim() || ''
 
     // Extract function signature
-    const signatureMatch = full.match(/export\s+(?:async\s+)?function\s+\w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
+    const signatureMatch = full.match(signaturePattern)
     const params = signatureMatch
       ? parseParams(signatureMatch[1])
       : []
@@ -382,7 +384,7 @@ async function generateMarkdown(file, name) {
     const info = (jsdoc.match(/@info\s+(.*)/) || [])[1]?.trim() || ''
 
     // Extract function signature for return type
-    const signatureMatch = full.match(/export\s+(?:async\s+)?function\s+\w+\s*\(([\s\S]*?)\):\s*([^{]+)/)
+    const signatureMatch = full.match(signaturePattern)
     const params = signatureMatch
       ? parseParams(signatureMatch[1])
       : []
