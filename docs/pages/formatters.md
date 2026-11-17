@@ -448,6 +448,29 @@ formatTextWrap('This is a long title that might wrap')
 
 ---
 
+### `formatPhone(phone: string | number, options?: { pattern?: string }): string`
+
+Format a phone number into a readable string.
+
+**Parameters:**
+- `phone` (string | number): The phone number to format (any non-digit characters are ignored)
+- `options` (object, optional):
+  - `pattern` (string, optional): Format pattern using `#` for each digit. Omit for common US formats
+
+**Returns:** Formatted phone number
+
+**Example:**
+```typescript
+import { formatPhone } from 'usemods'
+
+formatPhone('5551234567') // '(555) 123-4567'
+formatPhone('15551234567') // '+1 (555) 123-4567'
+formatPhone('5551234567', { pattern: '###-###-####' }) // '555-123-4567'
+formatPhone('+61 412 345 678', { pattern: '+## ### ### ###' }) // '+61 412 345 678'
+```
+
+---
+
 ## Usage Examples
 
 ### Currency and Number Formatting
@@ -509,5 +532,6 @@ formatTemperature(25, { outputUnit: 'fahrenheit' }) // '77°F'
 - Currency symbols are automatically determined by locale
 - File size and length units support automatic conversion
 - Temperature conversion handles Celsius and Fahrenheit
+- `formatPhone` ignores non-digit characters, and unfilled pattern placeholders are cut back to the last digit
 - Date formatting respects timezone settings
 - All functions are SSR-compatible

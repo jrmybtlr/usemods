@@ -324,6 +324,51 @@ skewness([1, 2, 3, 4, 5, 10, 10, 10]) // Positive (right-skewed)
 
 ---
 
+### `clamp(value: number, min: number, max: number): number`
+
+Clamps a number between a minimum and maximum value.
+
+**Parameters:**
+- `value` (number): The number to clamp
+- `min` (number): Lower bound
+- `max` (number): Upper bound
+
+**Returns:** The clamped number
+
+**Note:** Bounds are normalized, so the order of `min` and `max` does not matter
+
+**Example:**
+```typescript
+import { clamp } from 'usemods'
+
+clamp(5, 0, 10) // 5
+clamp(-1, 0, 10) // 0
+clamp(15, 0, 10) // 10
+```
+
+---
+
+### `percentageChange(from: number, to: number): number`
+
+Returns the percentage change from one number to another.
+
+**Parameters:**
+- `from` (number): The starting value
+- `to` (number): The ending value
+
+**Returns:** Percentage change, or `NaN` when `from` is `0`
+
+**Example:**
+```typescript
+import { percentageChange } from 'usemods'
+
+percentageChange(100, 150) // 50
+percentageChange(100, 50) // -50
+percentageChange(80, 100) // 25
+```
+
+---
+
 ## Usage Examples
 
 ### Basic Calculations
@@ -390,4 +435,5 @@ const tempRange = range(temperatures) // 7
 - `mode` returns an array if multiple values have the same highest frequency
 - `standardDeviation` supports both population and sample methods
 - `skewness` requires at least 3 values to calculate
+- `clamp` normalizes its bounds, and `percentageChange` returns `NaN` when `from` is `0`
 - Margin and markup functions use different calculation methods (additive vs multiplicative)
