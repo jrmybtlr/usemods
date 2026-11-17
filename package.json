@@ -81,7 +81,7 @@
   },
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "types": "dist/index.d.ts",
   "repository": {
@@ -91,7 +91,7 @@
   "devDependencies": {
     "@rollup/plugin-terser": "^1.0.0",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/node": "^26.5.1",
+    "@types/node": "^24.0.0",
     "changelogen": "^0.6.2",
     "globals": "^17.12.0",
     "rollup": "^4.63.1",
