@@ -559,19 +559,40 @@ export function formatTextWrap(
 
 /**
  * Format a phone number into a readable string
- * @info Use `pattern` with `#` for each digit, or omit for common US formats
+ * @info Use `pattern` with `#` for each digit, or omit for common US formats. Leading `+` and extensions are kept
  */
 export function formatPhone(
   phone: string | number,
   options?: {
     pattern?: string
+    overflow?: 'append' | 'truncate'
   },
 ): string {
-  const digits = String(phone ?? '').replace(/\D/g, '')
+  let input = String(phone ?? '').trim()
+
+  // Split off an extension such as `ext. 89`, `x89` or `#89`.
+  let extension = ''
+  const extensionMatch = input.match(/^(.*\d.*?)\s*(?:ext\.?|extension|x|#)\s*(\d+)$/i)
+  if (extensionMatch) {
+    input = extensionMatch[1]
+    extension = ` ext. ${extensionMatch[2]}`
+  }
+
+  const isInternational = /^(?:\+|00)/.test(input)
+  let digits = input.replace(/\D/g, '')
+  if (input.startsWith('00')) digits = digits.slice(2)
   if (!digits) return ''
 
   const pattern = options?.pattern
   if (pattern) {
+    const slots = [...pattern].filter(char => char === '#').length
+
+    // Skip digits the pattern already writes out, like the `1` in `+1 (###) ###-####`.
+    const literalPrefix = pattern.slice(0, Math.max(0, pattern.indexOf('#'))).replace(/\D/g, '')
+    if (literalPrefix && digits.length > slots && digits.startsWith(literalPrefix)) {
+      digits = digits.slice(literalPrefix.length)
+    }
+
     let index = 0
     let formatted = ''
     let lastFilled = 0
@@ -592,16 +613,24 @@ export function formatPhone(
 
     // Cut back to the last filled digit so partial numbers don't render
     // dangling separators (e.g. `+1 (123) -`).
-    return lastFilled > 0 ? formatted.slice(0, lastFilled) : formatted.trim()
-  }
+    formatted = lastFilled > 0 ? formatted.slice(0, lastFilled) : formatted.trim()
 
-  if (digits.length === 10) {
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
+    // Keep digits that don't fit the pattern unless asked to drop them.
+    const overflow = digits.slice(slots)
+    if (overflow && options?.overflow !== 'truncate') formatted += ` ${overflow}`
+
+    return `${formatted}${extension}`
   }
 
   if (digits.length === 11 && digits.startsWith('1')) {
-    return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`
+    return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}${extension}`
   }
 
-  return digits
+  if (isInternational) return `+${digits}${extension}`
+
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}${extension}`
+  }
+
+  return `${digits}${extension}`
 }

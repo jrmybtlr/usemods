@@ -217,6 +217,21 @@ test('formatPhone', () => {
   expect(mod.formatPhone('12345')).toBe('12345')
   expect(mod.formatPhone('')).toBe('')
   expect(mod.formatPhone(5551234567)).toBe('(555) 123-4567')
+  // International numbers keep their `+`
+  expect(mod.formatPhone('+44 20 7946 0958')).toBe('+442079460958')
+  expect(mod.formatPhone('0044 20 7946 0958')).toBe('+442079460958')
+  expect(mod.formatPhone('+1 555 123 4567')).toBe('+1 (555) 123-4567')
+  // Extensions are kept
+  expect(mod.formatPhone('555-123-4567 ext. 89')).toBe('(555) 123-4567 ext. 89')
+  expect(mod.formatPhone('5551234567x89')).toBe('(555) 123-4567 ext. 89')
+  expect(mod.formatPhone('555 123 4567 #89', { pattern: '###-###-####' })).toBe('555-123-4567 ext. 89')
+  // Extra digits are appended unless truncated
+  expect(mod.formatPhone('12345678901234', { pattern: '(###) ###-####' })).toBe('(123) 456-7890 1234')
+  expect(mod.formatPhone('12345678901234', { pattern: '(###) ###-####', overflow: 'truncate' })).toBe('(123) 456-7890')
+  // Digits written into the pattern are not counted twice
+  expect(mod.formatPhone('15551234567', { pattern: '+1 (###) ###-####' })).toBe('+1 (555) 123-4567')
+  expect(mod.formatPhone('+1 555 123 4567', { pattern: '+1 ###.###.####' })).toBe('+1 555.123.4567')
+  expect(mod.formatPhone('5551234567', { pattern: '+1 (###) ###-####' })).toBe('+1 (555) 123-4567')
 })
 
 test('formatFileSize', () => {
