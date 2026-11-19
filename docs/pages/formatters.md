@@ -448,14 +448,17 @@ formatTextWrap('This is a long title that might wrap')
 
 ---
 
-### `formatPhone(phone: string | number, options?: { pattern?: string }): string`
+### `formatPhone(phone: string | number, options?: { pattern?: string, overflow?: 'append' | 'truncate' }): string`
 
 Format a phone number into a readable string.
 
 **Parameters:**
 - `phone` (string | number): The phone number to format (any non-digit characters are ignored)
 - `options` (object, optional):
-  - `pattern` (string, optional): Format pattern using `#` for each digit. Omit for common US formats
+  - `pattern` (string, optional): Format pattern using `#` for each digit. Omit for common US formats. Digits written into the pattern (like the `1` in `+1 (###) ###-####`) are not repeated from the input
+  - `overflow` ('append' | 'truncate', optional): What to do with digits that don't fit the pattern. Defaults to `'append'`
+
+A leading `+` or `00` is kept as `+`, and extensions (`ext. 89`, `x89`, `#89`) are kept as ` ext. 89`.
 
 **Returns:** Formatted phone number
 
@@ -467,6 +470,9 @@ formatPhone('5551234567') // '(555) 123-4567'
 formatPhone('15551234567') // '+1 (555) 123-4567'
 formatPhone('5551234567', { pattern: '###-###-####' }) // '555-123-4567'
 formatPhone('+61 412 345 678', { pattern: '+## ### ### ###' }) // '+61 412 345 678'
+formatPhone('+44 20 7946 0958') // '+442079460958'
+formatPhone('555-123-4567 ext. 89') // '(555) 123-4567 ext. 89'
+formatPhone('15551234567', { pattern: '+1 (###) ###-####' }) // '+1 (555) 123-4567'
 ```
 
 ---
